@@ -95,3 +95,13 @@ function handleFile()
 
 
 
+// Make Shift-Enter submit the form
+function handleEnter(evt) {
+    if (evt.keyCode == 13 && evt.shiftKey) {
+        if (evt.type == "keypress") {
+            this.form.submit();
+        }
+        evt.preventDefault(); // To make sure that no newline is created as well.
+    }
+}
+$("textarea").keypress(handleEnter);

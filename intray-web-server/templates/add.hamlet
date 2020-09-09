@@ -3,6 +3,7 @@
 <div .ui .segment>
   <form
     .ui .form
+    id="inputForm"
     method=post
     enctype=multipart/form-data
     action=@{AddR}>
@@ -11,6 +12,7 @@
     <div .field .text-input .changable>
       <textarea 
         name="contents" 
+        id="textArea"
         autofocus>
 
     <div .field .image-input .changable style="display: none;">

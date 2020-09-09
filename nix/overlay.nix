@@ -153,7 +153,7 @@ with final.haskell.lib;
                       );
                   hsTlsRepo =
                     final.fetchFromGitHub {
-                      owner = "ocheron";
+                      owner = "vincenthz";
                       repo = "hs-tls";
                       rev = "8d2201a7e73f826633a9537b98a24096252950cc";
                       sha256 =

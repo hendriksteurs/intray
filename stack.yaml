@@ -16,7 +16,7 @@ extra-deps:
 
 # https://github.com/vincenthz/hs-tls/issues/421
 # see also nix/overlay.nix.
-- github: ocheron/hs-tls
+- github: vincenthz/hs-tls
   commit: 8d2201a7e73f826633a9537b98a24096252950cc
   subdirs:
     - core

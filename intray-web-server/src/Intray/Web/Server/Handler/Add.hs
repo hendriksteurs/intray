@@ -39,11 +39,9 @@ postAddR =
   withLogin $ \t -> do
     getPostParams >>= (liftIO . print)
     tfr <- runInputPostResult newItemTextForm
-    let goOn errs = do
+    let goOn _ = do
           ifr <- runInputPostResult newItemImageForm
           case ifr of
-            FormFailure ts -> invalidArgs $ ts ++ errs
-            FormMissing -> invalidArgs $ [] ++ errs
             FormSuccess fi -> do
               rawImageData <- fileSourceByteString fi
               itemData <-
@@ -55,6 +53,7 @@ postAddR =
                   Nothing -> invalidArgs ["Unsupported image type."]
                   Just typ -> pure $ ImageItem typ
               pure TypedItem {..}
+            _ -> redirect AddR -- There's nothing we can do with the errors, so just redirect so the user can continue.
     ti <-
       case tfr of
         FormSuccess ta -> pure $ textTypedItem $ unTextarea ta
