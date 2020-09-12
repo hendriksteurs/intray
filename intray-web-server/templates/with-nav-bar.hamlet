@@ -8,6 +8,8 @@
         Add item
       <a .item href=@{ProcessR}>
         Process
+      <a .item href=@{IncompletionListR}>
+        Incompletion List
       <a .item href=@{AccountR}>
         Account
     <div .right .menu>

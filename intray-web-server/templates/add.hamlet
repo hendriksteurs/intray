@@ -9,7 +9,9 @@
     action=@{AddR}>
 
 
-    <div .field .text-input .changable>
+    <div .field .text-input .changable
+      data-tooltip="Press Shift-Enter to submit"
+      data-position="top left">
       <textarea 
         name="contents" 
         id="textArea"
@@ -33,6 +35,7 @@
         <input id="image" .type .ui .slider .checkbox type="radio" name="type" value="image">
         <label>
           Image
+
 
 
 
