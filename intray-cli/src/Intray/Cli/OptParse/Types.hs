@@ -24,7 +24,7 @@ data Instructions =
 data Command
   = CommandRegister RegisterArgs
   | CommandLogin LoginArgs
-  | CommandPostPostAddItem AddArgs
+  | CommandAddItem AddArgs
   | CommandShowItem
   | CommandDoneItem
   | CommandSize
@@ -51,6 +51,7 @@ data AddArgs =
   AddArgs
     { addArgContents :: [String]
     , addArgReadStdin :: Bool
+    , addArgRemote :: Bool
     }
   deriving (Show, Eq, Generic)
 
@@ -143,7 +144,7 @@ instance YamlSchema SyncStrategy where
 data Dispatch
   = DispatchRegister RegisterSettings
   | DispatchLogin LoginSettings
-  | DispatchPostPostAddItem AddSettings
+  | DispatchAddItem AddSettings
   | DispatchShowItem
   | DispatchDoneItem
   | DispatchSize
@@ -170,6 +171,7 @@ data AddSettings =
   AddSettings
     { addSetContents :: [Text]
     , addSetReadStdin :: Bool
+    , addSetRemote :: Bool
     }
   deriving (Show, Eq, Generic)
 

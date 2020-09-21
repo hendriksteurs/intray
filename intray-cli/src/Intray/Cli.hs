@@ -4,7 +4,6 @@ module Intray.Cli
   ) where
 
 import Import
-
 import Intray.Cli.Commands
 import Intray.Cli.OptParse
 
@@ -18,7 +17,7 @@ dispatch d =
   case d of
     DispatchRegister rs -> register rs
     DispatchLogin ls -> login ls
-    DispatchPostPostAddItem t -> addItem t
+    DispatchAddItem t -> addItem t
     DispatchShowItem -> showItem
     DispatchDoneItem -> doneItem
     DispatchSize -> size

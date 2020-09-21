@@ -83,11 +83,14 @@ combineToInstructions (Arguments cmd Flags {..}) Environment {..} mConf =
               , loginSetPassword =
                   T.pack <$> (loginArgPassword <|> envPassword <|> mc configPassword)
               }
-        CommandPostPostAddItem AddArgs {..} ->
+        CommandAddItem AddArgs {..} ->
           pure $
-          DispatchPostPostAddItem
+          DispatchAddItem
             AddSettings
-              {addSetContents = map T.pack addArgContents, addSetReadStdin = addArgReadStdin}
+              { addSetContents = map T.pack addArgContents
+              , addSetReadStdin = addArgReadStdin
+              , addSetRemote = addArgRemote
+              }
         CommandShowItem -> pure DispatchShowItem
         CommandDoneItem -> pure DispatchDoneItem
         CommandSize -> pure DispatchSize
@@ -218,11 +221,16 @@ parseCommandPostPostAddItem = info parser modifier
   where
     modifier = fullDesc <> progDesc "Add an item"
     parser =
-      CommandPostPostAddItem <$>
+      CommandAddItem <$>
       (AddArgs <$>
        many
          (strArgument (mconcat [help "Give the contents of the item to be added.", metavar "TEXT"])) <*>
-       switch (mconcat [long "stdin", help "Read contents from stdin too"]))
+       switch (mconcat [long "stdin", help "Read contents from stdin too"]) <*>
+       switch
+         (mconcat
+            [ long "remote"
+            , help "Only add the item remotely, not locally. This implies --sync-strategy NeverSync"
+            ]))
 
 parseCommandShowItem :: ParserInfo Command
 parseCommandShowItem = info parser modifier
