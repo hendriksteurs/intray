@@ -139,7 +139,7 @@
   <h2 .ui .header> CLI-Second
   <p>
     Intray is available via
-    <a href="https://github.com/NorfairKing/intray/tree/master/intray-cli">the official Intray command-line client
+    <a href="https://github.com/NorfairKing/intray">the official Intray command-line client
     .
     In addition to the features on the web interface, the command-line client works offline with easy synchronisation.
 
