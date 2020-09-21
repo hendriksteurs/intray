@@ -8,6 +8,7 @@ let
 in
   pkgs.intrayPackages //
 {
+  inherit (pkgs) intrayNotification;
   pre-commit-check = nix-pre-commit-hooks.run {
     src = ./.;
     hooks = {

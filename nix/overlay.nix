@@ -103,6 +103,7 @@ with final.haskell.lib;
               }
           );
     };
+  intrayNotification = import ./notification.nix { pkgs = final; };
   haskellPackages =
     previous.haskellPackages.override (
       old:

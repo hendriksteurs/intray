@@ -1,16 +1,11 @@
-let
-  pkgs = import ./pkgs.nix;
-
-in
-
-  # Use an access key with the 'PermitSync' permission
-
-  { userName
+{ pkgs ? import ./pkgs.nix
+}:
+{ userName
 , accessKey ? null # If this is not set, the script will block to ask for a password.
 , intrayUrl ? "https://api.intray.cs-syd.eu"
 }:
 
-    pkgs.writeShellScript "intray-notification" ''
+pkgs.writeShellScript "intray-notification" ''
   set -eou pipefail
   tempDir="$(mktemp -d intray-notification-XXXXXXXX)"
   export INTRAY_CACHE_DIR="$tempDir"
