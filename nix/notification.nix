@@ -1,7 +1,7 @@
 { pkgs ? import ./pkgs.nix
 }:
 { userName
-, accessKey ? null # If this is not set, the script will block to ask for a password.
+, accessKey
 , intrayUrl ? "https://api.intray.cs-syd.eu"
 }:
 
@@ -14,10 +14,8 @@ pkgs.writeShellScript "intray-notification" ''
   export INTRAY_URL="${intrayUrl}"
   export INTRAY_USERNAME="${userName}"
   export INTRAY_SYNC_STRATEG9="NeverSync"
-  ${pkgs.lib.optionalString (!builtins.isNull accessKey) ''
-      export INTRAY_PASSWORD="${accessKey}"
-  ''}
+  export INTRAY_PASSWORD="${accessKey}"
   ${pkgs.intrayPackages.intray-cli}/bin/intray login
-  ${pkgs.intrayPackages.intray-cli}/bin/intray add --remote $*
+  ${pkgs.intrayPackages.intray-cli}/bin/intray add --remote "$@"
   rm -rf $tempDir
 ''
