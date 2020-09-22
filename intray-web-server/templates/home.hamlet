@@ -181,7 +181,7 @@ $maybe p <- mPricing
                  <p> Full API access
               <div class="ui center aligned segment">
                  <p> A Free command-line application
-           <div class="ui primary fluid button">
+           <a class="ui primary fluid button" href=@{AuthR registerR}>
             Get Started
       <div .ui .card>
         <div .ui .content>
@@ -207,7 +207,7 @@ $maybe p <- mPricing
                    <p> #{show tp} day Trial period
               <div class="ui center aligned segment">
                  <p> Billed anually
-           <div class="ui primary fluid button">
+           <a class="ui primary fluid button" href=@{AuthR registerR}>
             Get Started
 
 

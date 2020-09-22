@@ -70,23 +70,15 @@ environmentParser =
   (\apiEnv (a, b, c, d) -> Environment apiEnv a b c d) <$> API.environmentParser <*>
   Env.prefixed
     "INTRAY_WEB_SERVER_"
-    ((,,,) <$>
-     Env.var
-       (fmap Just . Env.auto)
-       "PORT"
-       (Env.def Nothing <> Env.help "port to run the web server on") <*>
-     Env.var
-       (fmap Just . Env.auto)
-       "ANALYTICS_TRACKING_ID"
-       (Env.def Nothing <> Env.help "google analytics tracking id") <*>
-     Env.var
-       (fmap Just . Env.auto)
-       "SEARCH_CONSOLE_VERIFICATION"
-       (Env.def Nothing <> Env.help "google search console verification id") <*>
+    ((,,,) <$> Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the web server on") <*>
+     Env.var (fmap Just . Env.str) "ANALYTICS_TRACKING_ID" (mE "google analytics tracking id") <*>
      Env.var
        (fmap Just . Env.str)
-       "LOGIN_CACHE_FILE"
-       (Env.def Nothing <> Env.help "google search console verification id"))
+       "SEARCH_CONSOLE_VERIFICATION"
+       (mE "google search console verification id") <*>
+     Env.var (fmap Just . Env.str) "LOGIN_CACHE_FILE" (mE "google search console verification id"))
+  where
+    mE h = Env.def Nothing <> Env.keep <> Env.help h
 
 getArguments :: IO Arguments
 getArguments = do

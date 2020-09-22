@@ -90,11 +90,15 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
        let maxItemsFree =
              fromMaybe 5 $
              serveFlagMaxItemsFree <|> envMaxItemsFree <|> mmc monetisationConfMaxItemsFree
-       pure $
-         MonetisationSettings <$> (StripeSettings <$> plan <*> config <*> publicKey) <*>
-         pure fetcherSets <*>
-         pure retrierSets <*>
-         pure maxItemsFree
+       pure $ do
+         ss <- StripeSettings <$> plan <*> config <*> publicKey
+         pure $
+           MonetisationSettings
+             { monetisationSetStripeSettings = ss
+             , monetisationSetStripeEventsFetcher = fetcherSets
+             , monetisationSetStripeEventsRetrier = retrierSets
+             , monetisationSetMaxItemsFree = maxItemsFree
+             }
   pure
     ( DispatchServe
         ServeSettings
@@ -128,40 +132,20 @@ getEnvironment = Env.parse id environmentParser
 environmentParser :: Env.Parser Env.Error Environment
 environmentParser =
   Env.prefixed "INTRAY_SERVER_" $
-  Environment <$>
-  Env.var (fmap Just . Env.str) "CONFIG_FILE" (Env.def Nothing <> Env.help "Config file") <*>
-  Env.var (fmap Just . Env.str) "HOST" (Env.def Nothing <> Env.help "host to run the api server on") <*>
-  Env.var
-    (fmap Just . Env.auto)
-    "PORT"
-    (Env.def Nothing <> Env.help "port to run the api server on") <*>
-  Env.var (fmap Just . Env.str) "DATABASE" (Env.def Nothing <> Env.help "database file") <*>
-  Env.var
-    (fmap Just . Env.auto)
-    "LOG_LEVEL"
-    (Env.def Nothing <> Env.help "minimal severity of log messages") <*>
-  Env.var
-    (fmap Just . Env.auto)
-    "SIGNING_KEY_FILE"
-    (Env.def Nothing <> Env.help "the file to store the signing key in") <*>
-  Env.var
-    (fmap Just . Env.auto)
-    "STRIPE_PLAN"
-    (Env.def Nothing <> Env.help "stripe plan id for subscriptions") <*>
-  Env.var
-    (fmap Just . Env.auto)
-    "STRIPE_SECRET_KEY"
-    (Env.def Nothing <> Env.help "stripe secret key") <*>
-  Env.var
-    (fmap Just . Env.auto)
-    "STRIPE_PUBLISHABLE_KEY"
-    (Env.def Nothing <> Env.help "stripe publishable key") <*>
+  Environment <$> Env.var (fmap Just . Env.str) "CONFIG_FILE" (mE "Config file") <*>
+  Env.var (fmap Just . Env.str) "HOST" (mE "host to run the api server on") <*>
+  Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the api server on") <*>
+  Env.var (fmap Just . Env.str) "DATABASE" (mE "database file") <*>
+  Env.var (fmap Just . Env.auto) "LOG_LEVEL" (mE "minimal severity of log messages") <*>
+  Env.var (fmap Just . Env.str) "SIGNING_KEY_FILE" (mE "the file to store the signing key in") <*>
+  Env.var (fmap Just . Env.str) "STRIPE_PLAN" (mE "stripe plan id for subscriptions") <*>
+  Env.var (fmap Just . Env.str) "STRIPE_SECRET_KEY" (mE "stripe secret key") <*>
+  Env.var (fmap Just . Env.str) "STRIPE_PUBLISHABLE_KEY" (mE "stripe publishable key") <*>
   looperVarEnv "STRIPE_EVENTS_FETCHER" <*>
   looperVarEnv "STRIPE_EVENTS_RETRIER" <*>
-  Env.var
-    (fmap Just . Env.auto)
-    "MAX_ITEMS_FREE"
-    (Env.def Nothing <> Env.help "maximum items that a free user can have")
+  Env.var (fmap Just . Env.auto) "MAX_ITEMS_FREE" (mE "maximum items that a free user can have")
+  where
+    mE h = Env.def Nothing <> Env.keep <> Env.help h
 
 looperVarEnv :: String -> Env.Parser Env.Error LooperEnvironment
 looperVarEnv n = Env.prefixed "LOOPER_" $ looperEnvironmentParser n

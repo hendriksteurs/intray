@@ -18,4 +18,5 @@ stack install :intray-web-server \
   --fast \
   --ghc-options=-freverse-errors \
   --exec='./scripts/restart-intray-web-server-paid.sh' \
+  --no-nix-pure \
   $@

@@ -5,12 +5,10 @@ module Intray.Web.Server.Handler.Home
   ) where
 
 import Import
-
-import Yesod
-
 import Intray.Client
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.Handler.Pricing
+import Yesod
 
 getHomeR :: Handler Html
 getHomeR = do
