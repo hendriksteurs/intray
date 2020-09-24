@@ -39,4 +39,5 @@ review = do
         "Y" -> cont
         "n" -> stop
         "N" -> stop
+        "" -> stop
         _ -> review
