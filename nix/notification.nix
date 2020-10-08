@@ -16,6 +16,6 @@ pkgs.writeShellScript "intray-notification" ''
   export INTRAY_SYNC_STRATEG9="NeverSync"
   export INTRAY_PASSWORD="${accessKey}"
   ${pkgs.intrayPackages.intray-cli}/bin/intray login
-  ${pkgs.intrayPackages.intray-cli}/bin/intray add --remote "$@"
+  ${pkgs.intrayPackages.intray-cli}/bin/intray add --stdin --remote "$@"
   rm -rf $tempDir
 ''
