@@ -7,7 +7,7 @@
 
 pkgs.writeShellScript "intray-notification" ''
   set -eou pipefail
-  tempDir="$(mktemp -d intray-notification-XXXXXXXX)"
+  tempDir="$(mktemp --tmpdir=/tmp --directory intray-notification-XXXXXXXX)"
   export INTRAY_CACHE_DIR="$tempDir"
   export INTRAY_DATA_DIR="$tempDir"
   export INTRAY_CONFIG_FILE="$tempDir/config.yaml"
