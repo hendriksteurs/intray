@@ -1,8 +1,13 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Intray.Cli.ConcurrentSpec
   ( spec
   ) where
 
 import Control.Concurrent.Async
+import Control.Monad.Reader
+import qualified Data.Text as T
+import Intray.Cli.Commands.Add
 import Intray.Cli.OptParse
 import Intray.Cli.Store
 import Intray.Cli.TestUtils
@@ -23,8 +28,24 @@ spec =
         setEnv "INTRAY_DATA_DIR" $ fromAbsDir dataDir
         intray ["register"]
         intray ["login"]
-        let additions = 2
-        replicateConcurrently_ additions $ intray ["add", "hello", "world"]
+        let additions = 6
+        forConcurrently_ [1 .. additions] $ \i
+            -- We cannot use 'intray' here because that uses 'withArgs' which is not threadsafe and causes segfaults
+         -> do
+          let sets =
+                Settings
+                  { setBaseUrl = Just burl
+                  , setCacheDir = cacheDir
+                  , setDataDir = dataDir
+                  , setSyncStrategy = AlwaysSync
+                  }
+          flip runReaderT sets $
+            addItem
+              AddSettings
+                { addSetContents = ["hello", "world", T.pack (show i)]
+                , addSetReadStdin = False
+                , addSetRemote = False
+                }
         let sets =
               Settings
                 { setBaseUrl = Just burl

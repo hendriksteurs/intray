@@ -75,6 +75,7 @@ tests:
     - bytestring
     - genvalidity-hspec
     - genvalidity-hspec-aeson >=0.1
+    - genvalidity-path
     - hspec
     - intray-api
     - intray-api-gen

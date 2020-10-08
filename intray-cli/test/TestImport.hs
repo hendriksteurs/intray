@@ -6,6 +6,7 @@ import Prelude as X
 
 import Data.ByteString as X (ByteString)
 import Data.Either as X
+import Data.GenValidity.Path as X ()
 import Data.List as X
 import Data.Maybe as X
 import Data.Monoid as X

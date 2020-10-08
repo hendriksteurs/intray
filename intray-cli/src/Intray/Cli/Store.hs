@@ -44,12 +44,21 @@ withClientStore func = void $ withClientStore' (fmap ((,) ()) . func)
 
 withClientStore' :: (CS -> CliM (a, CS)) -> CliM a
 withClientStore' func = do
-  p <- storePath
-  bracket (liftIO $ lockFile (fromAbsFile p) Exclusive) (liftIO . unlockFile) $ \_ -> do
+  p <- storeLockPath
+  bracket
+    (liftIO $ do
+       ensureDir (parent p)
+       lockFile (fromAbsFile p) Exclusive)
+    (liftIO . unlockFile) $ \_ -> do
     before <- readClientStoreOrEmpty
     (r, after) <- func before
     writeClientStore after
     pure r
+
+storeLockPath :: CliM (Path Abs File)
+storeLockPath = do
+  p <- storePath
+  resolveFile' $ fromAbsFile p ++ ".lock"
 
 readClientStore :: CliM (Maybe CS)
 readClientStore = do
