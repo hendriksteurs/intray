@@ -71,6 +71,15 @@ instance Yesod App where
       r -> pure $ maximumContentLength s r
   makeSessionBackend _ =
     Just <$> defaultClientSessionBackend (60 * 24 * 365 * 10) "client_session_key.aes"
+  errorHandler NotFound =
+    fmap toTypedContent $
+    withNavBar $ do
+      setTitle "Page not found"
+      [whamlet|
+      <h1>
+        Page not found
+      |]
+  errorHandler other = defaultErrorHandler other
 
 instance PathPiece Username where
   fromPathPiece = parseUsername
