@@ -24,7 +24,6 @@ import Data.UUID.Typed
 import Import
 import Intray.API.Protected.AccessKey.Types
 import Intray.API.Types
-import Intray.Data
 import Servant.API
 import Servant.API.Generic
 import Servant.Auth.Docs ()

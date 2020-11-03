@@ -19,7 +19,6 @@ import Intray.API.Protected.AccessKey
 import Intray.API.Protected.Account
 import Intray.API.Protected.Item
 import Intray.API.Types
-import Intray.Data
 import Servant.API
 import Servant.API.Generic
 

@@ -7,7 +7,6 @@ import Intray.API.Gen ()
 import Intray.Client
 import Intray.Server.TestUtils
 import Network.HTTP.Types.Status
-import Servant.Client
 import TestImport
 
 spec :: Spec

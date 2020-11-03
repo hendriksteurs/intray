@@ -15,7 +15,6 @@ import Import
 import Intray.Server.Looper.Import
 import Intray.Server.Looper.StripeEventsFetcher
 import Intray.Server.OptParse.Types
-import Looper
 
 data LoopersSettings
   = LoopersSettings

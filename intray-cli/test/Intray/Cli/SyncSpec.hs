@@ -13,8 +13,6 @@ import Intray.Cli.Store
 import Intray.Cli.TestUtils
 import Intray.Client
 import Intray.Server.TestUtils
-import Servant.API
-import Servant.Client
 import TestImport
 
 spec :: Spec

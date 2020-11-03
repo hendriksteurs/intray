@@ -18,7 +18,6 @@ import Intray.Cli.OptParse
 import Intray.Cli.Prompt
 import Intray.Cli.Session
 import Intray.Client
-import Servant
 import Web.Cookie (parseSetCookie, setCookieName)
 
 login :: LoginSettings -> CliM ()

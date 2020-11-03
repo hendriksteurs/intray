@@ -1,6 +1,10 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Intray.Web.Server.Constants where
 
 import Import
+import Language.Haskell.TH
+import System.Environment
 
 development :: Bool
 development =

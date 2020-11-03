@@ -12,7 +12,6 @@ import Intray.API.Gen ()
 import Intray.Client
 import Intray.Server.TestUtils
 import qualified Network.HTTP.Types as Http
-import Servant.Client
 import TestImport
 
 spec :: Spec

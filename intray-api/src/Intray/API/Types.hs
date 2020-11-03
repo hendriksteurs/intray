@@ -52,7 +52,6 @@ import Servant.HTML.Blaze
 import System.IO.Unsafe
 import Text.Blaze as HTML
 import Text.Blaze.Html as HTML
-import Web.Cookie
 import qualified Web.Stripe.Plan as Stripe
 
 type ProtectAPI = Auth '[JWT] AuthCookie
