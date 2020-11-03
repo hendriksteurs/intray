@@ -185,9 +185,9 @@ with final.haskell.lib;
                     name:
                       overrideCabal (
                         # Because there is some nastiness that makes nix think we need the haskell sqlite library.
-                        dontCheck (
-                          self.callCabal2nix name ( persistentRepo + "/${name}" ) {}
-                        )
+                        # dontCheck (
+                        self.callCabal2nix name ( persistentRepo + "/${name}" ) {}
+                        # )
                       ) (
                         old:
                           {
@@ -199,7 +199,6 @@ with final.haskell.lib;
             yesod-static-remote = dontCheck (self.callCabal2nix "yesod-static-remote" yesodStaticRemoteRepo {});
             servant-auth-server = doJailbreak (super.servant-auth-server);
             looper = self.callCabal2nix "looper" looperRepo {};
-            # sqlite = dontCheck (self.callCabal2nix "sqlite" sqliteRepo {});
 
           } // final.lib.genAttrs [
             "stripe-core"
