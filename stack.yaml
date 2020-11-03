@@ -11,17 +11,21 @@ packages:
 - intray-web-server
 extra-deps:
 - envparse-0.4.1@sha256:989902e6368532548f61de1fa245ad2b39176cddd8743b20071af519a709ce30,2842
-- servant-auth-client-0.4.0.0@sha256:68879b7f44d87f73ef68c7bb21006167f5623c4cd6a2a3fce4d5ea3959a8c730,3426
 - servant-flatten-0.2@sha256:276896f7c5cdec5b8f8493f6205fded0cc602d050b58fdb09a6d7c85c3bb0837,1234
 
-- git: https://github.com/haskell-servant/servant-auth
+- github: haskell-servant/servant-auth
   commit: 23971e889f8cbe8790305bda8915f00aa8be5ad9
   subdirs:
     - servant-auth-client
     - servant-auth-docs
     - servant-auth-swagger
     - servant-auth-server
-
+- github: yesodweb/persistent
+  commit: 333be4996eb6eea2dc37d3a14858b668f0b9e381
+  subdirs:
+    - persistent
+    - persistent-sqlite
+    - persistent-template
 - github: NorfairKing/yesod-static-remote
   commit: 22c0a92c1d62f1b8d432003844ef0636a9131b08
 - github: NorfairKing/stripe
