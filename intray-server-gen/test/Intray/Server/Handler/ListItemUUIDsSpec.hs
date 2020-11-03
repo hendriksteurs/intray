@@ -1,17 +1,16 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Server.Handler.ListItemUUIDsSpec
-  ( spec
-  ) where
-
-import TestImport
-
-import Intray.Client
+  ( spec,
+  )
+where
 
 import Intray.API.Gen ()
+import Intray.Client
 import Intray.Server.TestUtils
+import TestImport
 
 spec :: Spec
 spec =

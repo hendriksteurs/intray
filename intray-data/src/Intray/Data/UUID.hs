@@ -3,17 +3,16 @@
 
 module Intray.Data.UUID
   (
-  ) where
-
-import Intray.Data.Import
+  )
+where
 
 import qualified Data.ByteString.Lazy as LB
 import qualified Data.Text as T
 import qualified Data.UUID as UUID
 import Data.UUID.Typed
-
 import Database.Persist
 import Database.Persist.Sql
+import Intray.Data.Import
 
 instance PersistField (UUID a) where
   toPersistValue (UUID uuid) = PersistByteString $ LB.toStrict $ UUID.toByteString uuid

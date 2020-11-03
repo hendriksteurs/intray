@@ -1,6 +1,7 @@
 module Intray.Server.SigningKey
-  ( loadSigningKey
-  ) where
+  ( loadSigningKey,
+  )
+where
 
 import Crypto.JOSE.JWK (JWK)
 import Data.Aeson as JSON

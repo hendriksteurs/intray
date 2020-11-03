@@ -2,18 +2,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Web.Server.TestUtils
-  ( intrayWebServerSpec
-  , withWebServer
-  , withConnectionPoolToo
-  , withExampleAccount
-  , withExampleAccount_
-  , withExampleAccountAndLogin
-  , withExampleAccountAndLogin_
-  , withAdminAccount
-  , withAdminAccount_
-  , withAdminAccountAndLogin
-  , withAdminAccountAndLogin_
-  ) where
+  ( intrayWebServerSpec,
+    withWebServer,
+    withConnectionPoolToo,
+    withExampleAccount,
+    withExampleAccount_,
+    withExampleAccountAndLogin,
+    withExampleAccountAndLogin_,
+    withAdminAccount,
+    withAdminAccount_,
+    withAdminAccountAndLogin,
+    withAdminAccountAndLogin_,
+  )
+where
 
 import Control.Monad.Logger
 import qualified Data.Text as T
@@ -25,7 +26,7 @@ import Intray.Web.Server.Application ()
 import Intray.Web.Server.Foundation
 import qualified Network.HTTP.Client as Http
 import qualified Network.HTTP.Types as Http
-import Servant.Client (ClientEnv(..))
+import Servant.Client (ClientEnv (..))
 import TestImport
 import Yesod.Auth
 import Yesod.Test
@@ -38,28 +39,30 @@ intrayWebServerSpec = API.withIntrayServer . withConnectionPoolToo . withWebServ
 withWebServer :: YesodSpec App -> SpecWith (ClientEnv, ConnectionPool)
 withWebServer =
   yesodSpecWithSiteGeneratorAndArgument
-    (\(ClientEnv _ burl _, pool) -> do
-       man <- liftIO $ Http.newManager Http.defaultManagerSettings
-       pure $
-         App
-           { appHttpManager = man
-           , appStatic = myStatic
-           , appTracking = Nothing
-           , appVerification = Nothing
-           , appAPIBaseUrl = burl
-           , appConnectionPool = pool
-           })
+    ( \(ClientEnv _ burl _, pool) -> do
+        man <- liftIO $ Http.newManager Http.defaultManagerSettings
+        pure $
+          App
+            { appHttpManager = man,
+              appStatic = myStatic,
+              appTracking = Nothing,
+              appVerification = Nothing,
+              appAPIBaseUrl = burl,
+              appConnectionPool = pool
+            }
+    )
 
 withConnectionPoolToo :: SpecWith (ClientEnv, ConnectionPool) -> SpecWith ClientEnv
 withConnectionPoolToo =
   aroundWith $ \func cenv ->
-    runNoLoggingT $
-    withSystemTempDir "intray-web-server" $ \tdir -> do
-      cacheFile <- resolveFile tdir "login-cache.db"
-      withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack $ fromAbsFile cacheFile) 1 $ \pool ->
-        liftIO $ do
-          void $ runSqlPool (runMigrationSilent migrateLoginCache) pool
-          func (cenv, pool)
+    runNoLoggingT
+      $ withSystemTempDir "intray-web-server"
+      $ \tdir -> do
+        cacheFile <- resolveFile tdir "login-cache.db"
+        withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack $ fromAbsFile cacheFile) 1 $ \pool ->
+          liftIO $ do
+            void $ runSqlPool (runMigrationSilent migrateLoginCache) pool
+            func (cenv, pool)
 
 loginTo :: Username -> Text -> YesodExample App ()
 loginTo username passphrase = do
@@ -76,7 +79,7 @@ loginTo username passphrase = do
   liftIO $ loc `shouldBe` Right AddR
 
 withFreshAccount ::
-     Username -> Text -> (Username -> Text -> YesodExample App a) -> YesodExample App a
+  Username -> Text -> (Username -> Text -> YesodExample App a) -> YesodExample App a
 withFreshAccount exampleUsername examplePassphrase func = do
   get $ AuthR registerR
   statusIs 200

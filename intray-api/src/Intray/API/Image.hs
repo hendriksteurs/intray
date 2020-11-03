@@ -15,10 +15,11 @@ downsizeImage contents = do
   pure $
     if w <= maxDim && h <= maxDim
       then contents
-      else let d = maxDim :: Int -- desired
-               (w', h') =
-                 case compare w h of
-                   EQ -> (d, d)
+      else
+        let d = maxDim :: Int -- desired
+            (w', h') =
+              case compare w h of
+                EQ -> (d, d)
                 -- If width is smaller than height, it's a portrait image.
                 -- In that case we want the height to be equal to the desired height
                 -- and the width to be adjusted while keeping the image ratio.
@@ -34,7 +35,7 @@ downsizeImage contents = do
                 --  w / h == (d * w / h) /  d
                 --
                 -- The same reasoning works for the GT case.
-                   LT -> (round (fromIntegral d * fromIntegral w / fromIntegral h :: Double), d)
-                   GT -> (d, round (fromIntegral d * fromIntegral h / fromIntegral w :: Double))
-               image' = scaleBilinear w' h' image
-            in LB.toStrict $ encodePng image'
+                LT -> (round (fromIntegral d * fromIntegral w / fromIntegral h :: Double), d)
+                GT -> (d, round (fromIntegral d * fromIntegral h / fromIntegral w :: Double))
+            image' = scaleBilinear w' h' image
+         in LB.toStrict $ encodePng image'

@@ -1,19 +1,17 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Server.Handler.SyncSpec
-  ( spec
-  ) where
-
-import TestImport
+  ( spec,
+  )
+where
 
 import qualified Data.Map as M
-
-import Intray.Client
-
 import Intray.API.Gen ()
+import Intray.Client
 import Intray.Server.TestUtils
+import TestImport
 
 spec :: Spec
 spec =
@@ -36,13 +34,15 @@ spec =
             let secondStore = mergeSyncResponse firstStore sr2
             secondStore `shouldBe` firstStore
     let maxFree = 2
-    withPaidIntrayServer maxFree $
-      it "syncs at most two items if noly two items are free" $ \cenv ->
+    withPaidIntrayServer maxFree
+      $ it "syncs at most two items if noly two items are free"
+      $ \cenv ->
         forAllValid $ \(i1, i2, i3) ->
           withValidNewUser cenv $ \token -> do
             let store =
-                  addItemToClientStore i3 $
-                  addItemToClientStore i2 $ addItemToClientStore i1 emptyClientStore
+                  addItemToClientStore i3
+                    $ addItemToClientStore i2
+                    $ addItemToClientStore i1 emptyClientStore
             M.size (clientStoreAdded store) `shouldBe` 3
             M.size (clientStoreSynced store) `shouldBe` 0
             sr1 <- runClientOrError cenv $ clientPostSync token $ makeSyncRequest store

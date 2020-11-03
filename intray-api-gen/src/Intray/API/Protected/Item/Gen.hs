@@ -1,14 +1,12 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# OPTIONS_GHC -fno-warn-dodgy-exports #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.API.Protected.Item.Gen where
 
 import Import
-
-import Intray.Data.Gen ()
-
 import Intray.API.Protected
+import Intray.Data.Gen ()
 
 instance GenValid TypedItem where
   genValid = genValidStructurally

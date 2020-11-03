@@ -1,25 +1,21 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.PostChangePassphrase
-  ( servePostChangePassphrase
-  ) where
-
-import Import
+  ( servePostChangePassphrase,
+  )
+where
 
 import Database.Persist
-
-import Servant
-
+import Import
 import Intray.API
-
-import Intray.Server.Types
-
 import Intray.Server.Handler.Utils
+import Intray.Server.Types
+import Servant
 
 servePostChangePassphrase :: AuthCookie -> ChangePassphrase -> IntrayHandler NoContent
 servePostChangePassphrase AuthCookie {..} ChangePassphrase {..} = do

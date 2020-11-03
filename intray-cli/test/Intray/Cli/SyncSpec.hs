@@ -1,29 +1,27 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Cli.SyncSpec
-  ( spec
-  ) where
-
-import TestImport
+  ( spec,
+  )
+where
 
 import qualified Data.Text as T
-
-import Servant.API
-import Servant.Client
-
 import Intray.API.Gen ()
-import Intray.Client
-import Intray.Server.TestUtils
-
 import Intray.Cli.OptParse
 import Intray.Cli.Session (loadToken)
 import Intray.Cli.Store
 import Intray.Cli.TestUtils
+import Intray.Client
+import Intray.Server.TestUtils
+import Servant.API
+import Servant.Client
+import TestImport
 
 spec :: Spec
 spec = do
-  withIntrayServer $
-    it "correctly deletes the local LastSeen after a sync if the item has dissappeared remotely" $ \cenv ->
+  withIntrayServer
+    $ it "correctly deletes the local LastSeen after a sync if the item has dissappeared remotely"
+    $ \cenv ->
       forAllValid $ \ti ->
         withValidNewUserAndData cenv $ \un pw _ ->
           withSystemTempDir "intray-cli-test-data" $ \dataDir ->
@@ -37,10 +35,10 @@ spec = do
               intray ["login"]
               let sets =
                     Settings
-                      { setBaseUrl = Just burl
-                      , setCacheDir = cacheDir
-                      , setDataDir = dataDir
-                      , setSyncStrategy = NeverSync
+                      { setBaseUrl = Just burl,
+                        setCacheDir = cacheDir,
+                        setDataDir = dataDir,
+                        setSyncStrategy = NeverSync
                       }
               mToken <- runReaderT loadToken sets
               token <-
@@ -59,8 +57,9 @@ spec = do
               mLastSeen2 <- runReaderT readLastSeen sets
               mLastSeen2 `shouldSatisfy` isNothing
   let maxFree = 2
-  withPaidIntrayServer maxFree $
-    it "Can add items past the maximum allowed number of free items locally" $ \cenv ->
+  withPaidIntrayServer maxFree
+    $ it "Can add items past the maximum allowed number of free items locally"
+    $ \cenv ->
       withValidNewUserAndData cenv $ \un pw _ ->
         withSystemTempDir "intray-cli-test-data" $ \dataDir ->
           withSystemTempDir "intray-cli-test-cache" $ \cacheDir -> do
@@ -74,10 +73,10 @@ spec = do
             intray ["login"]
             let sets =
                   Settings
-                    { setBaseUrl = Just burl
-                    , setCacheDir = cacheDir
-                    , setDataDir = dataDir
-                    , setSyncStrategy = AlwaysSync
+                    { setBaseUrl = Just burl,
+                      setCacheDir = cacheDir,
+                      setDataDir = dataDir,
+                      setSyncStrategy = AlwaysSync
                     }
             let size = runReaderT readClientStoreSize sets
             size `shouldReturn` 0

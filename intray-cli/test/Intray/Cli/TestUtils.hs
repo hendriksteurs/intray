@@ -1,6 +1,7 @@
 module Intray.Cli.TestUtils
-  ( intray
-  ) where
+  ( intray,
+  )
+where
 
 import Intray.Cli (intrayCli)
 import TestImport

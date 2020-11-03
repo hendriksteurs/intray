@@ -1,9 +1,9 @@
 module Intray.Cli.Commands.Done
-  ( doneItem
-  ) where
+  ( doneItem,
+  )
+where
 
 import Import
-
 import Intray.Cli.OptParse
 import Intray.Cli.Store
 import Intray.Cli.Sync

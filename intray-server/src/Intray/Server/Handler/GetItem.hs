@@ -1,26 +1,22 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.GetItem
-  ( serveGetItem
-  ) where
-
-import Import
+  ( serveGetItem,
+  )
+where
 
 import Database.Persist
-
-import Servant
-
+import Import
 import Intray.API
-
+import Intray.Server.Handler.Utils
 import Intray.Server.Item
 import Intray.Server.Types
-
-import Intray.Server.Handler.Utils
+import Servant
 
 serveGetItem :: AuthCookie -> ItemUUID -> IntrayHandler (ItemInfo TypedItem)
 serveGetItem AuthCookie {..} id_ = do

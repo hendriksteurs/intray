@@ -3,13 +3,14 @@ with lib;
 
 let
   cfg = config.services.intray.notifications;
-in {
+in
+{
   options.services.intray.notifications =
     {
       enable = mkEnableOption "Intray service notifications";
       services =
         mkOption {
-          type = types.listOf ( types.string );
+          type = types.listOf (types.string);
           example = [ "intray-production" ];
           description = "The services to notify on failure for";
         };
@@ -45,10 +46,10 @@ in {
 
           notifyScript =
             serviceName:
-              # This must be a single line.
+            # This must be a single line.
               ''
-            %s -c '[[ "$SERVICE_RESULT" == "success" ]] || ${notificationScript} "${config.networking.hostName}: Systemd user service ${serviceName}.service exited with exit code $EXIT_STATUS"'
-          '';
+                %s -c '[[ "$SERVICE_RESULT" == "success" ]] || ${notificationScript} "${config.networking.hostName}: Systemd user service ${serviceName}.service exited with exit code $EXIT_STATUS"'
+              '';
 
         in
           genAttrs cfg.services (

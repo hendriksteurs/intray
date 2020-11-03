@@ -6,7 +6,8 @@ let
   cfg = config.programs.intray;
 
 
-in {
+in
+{
   options =
     {
       programs.intray =
@@ -62,19 +63,19 @@ in {
       intrayPkgs = (import ./pkgs.nix).intrayPackages;
 
       nullOrOption =
-        name: opt: optionalString ( opt != null ) "${name}: ${opt}";
+        name: opt: optionalString (opt != null) "${name}: ${opt}";
       syncConfig =
-        optionalString ( cfg.sync != null ) ''
-        url: '${cfg.sync.url}'
-        username: '${cfg.sync.username}'
-        sync: NeverSync
-      '';
+        optionalString (cfg.sync != null) ''
+          url: '${cfg.sync.url}'
+          username: '${cfg.sync.username}'
+          sync: NeverSync
+        '';
       configFileContents =
         ''
-        ${nullOrOption "cache-dir" cfg.cache-dir}
-        ${nullOrOption "data-dir" cfg.data-dir}
-        ${syncConfig}
-      '';
+          ${nullOrOption "cache-dir" cfg.cache-dir}
+          ${nullOrOption "data-dir" cfg.data-dir}
+          ${syncConfig}
+        '';
 
       cli = intrayPkgs.intray-cli;
 
@@ -90,9 +91,9 @@ in {
             {
               ExecStart =
                 "${pkgs.writeShellScript "intray-sync" ''
-              ${cli}/bin/intray login --password "${cfg.sync.password}"
-              ${cli}/bin/intray sync
-          ''}";
+                  ${cli}/bin/intray login --password "${cfg.sync.password}"
+                  ${cli}/bin/intray sync
+                ''}";
               Type = "oneshot";
             };
         };
@@ -115,11 +116,11 @@ in {
             };
         };
       services =
-        optionalAttrs ( cfg.sync != null && cfg.sync.enable ) {
+        optionalAttrs (cfg.sync != null && cfg.sync.enable) {
           "${syncIntrayName}" = syncIntrayService;
         };
       timers =
-        optionalAttrs ( cfg.sync != null && cfg.sync.enable ) {
+        optionalAttrs (cfg.sync != null && cfg.sync.enable) {
           "${syncIntrayName}" = syncIntrayTimer;
         };
     in

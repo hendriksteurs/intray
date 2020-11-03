@@ -4,20 +4,21 @@ with lib;
 
 let
   cfg = config.services.intray."${envname}";
-  concatAttrs = attrList: fold ( x: y: x // y ) {} attrList;
-in {
+  concatAttrs = attrList: fold (x: y: x // y) {} attrList;
+in
+{
   options.services.intray."${envname}" =
     {
       enable = mkEnableOption "Intray Service";
       web-hosts =
         mkOption {
-          type = types.listOf ( types.string );
+          type = types.listOf (types.string);
           example = "intray.cs-syd.eu";
           description = "The host to serve web requests on";
         };
       api-hosts =
         mkOption {
-          type = types.listOf ( types.string );
+          type = types.listOf (types.string);
           example = "api.intray.cs-syd.eu";
           description = "The host to serve API requests on";
         };
@@ -58,7 +59,7 @@ in {
         };
       admins =
         mkOption {
-          type = types.nullOr ( types.listOf types.string );
+          type = types.nullOr (types.listOf types.string);
           default = null;
           example = [ "syd" ];
           description =
@@ -66,7 +67,7 @@ in {
         };
       freeloaders =
         mkOption {
-          type = types.nullOr ( types.listOf types.string );
+          type = types.nullOr (types.listOf types.string);
           default = null;
           example = [ "syd" ];
           description =
@@ -120,7 +121,7 @@ in {
                   freeloaders = cfg.freeloaders;
                   log-level = cfg.log-level;
                   monetisation =
-                    optionalAttrs ( !builtins.isNull cfg.monetisation ) {
+                    optionalAttrs (!builtins.isNull cfg.monetisation) {
                       stripe-plan = cfg.monetisation.stripe-plan;
                       stripe-secret-key = cfg.monetisation.stripe-secret-key;
                       stripe-publishable-key =
@@ -131,29 +132,30 @@ in {
                   verification = cfg.verification-tag;
                 };
             in
-              pkgs.writeText "intray-config" ( builtins.toJSON config );
-        in {
-          description = "Intray ${envname} Service";
-          wantedBy = [ "multi-user.target" ];
-          script =
-            ''
-              mkdir -p "${workingDir}"
-              cd "${workingDir}"
-              ${intray-pkgs.intray-web-server}/bin/intray-web-server serve  --config-file ${configFile}
-            '';
-          serviceConfig =
-            {
-              Restart = "always";
-              RestartSec = 1;
-              Nice = 15;
-            };
-          unitConfig =
-            {
-              StartLimitIntervalSec = 0;
-              # ensure Restart=always is always honoured
-            };
+              pkgs.writeText "intray-config" (builtins.toJSON config);
+        in
+          {
+            description = "Intray ${envname} Service";
+            wantedBy = [ "multi-user.target" ];
+            script =
+              ''
+                mkdir -p "${workingDir}"
+                cd "${workingDir}"
+                ${intray-pkgs.intray-web-server}/bin/intray-web-server serve  --config-file ${configFile}
+              '';
+            serviceConfig =
+              {
+                Restart = "always";
+                RestartSec = 1;
+                Nice = 15;
+              };
+            unitConfig =
+              {
+                StartLimitIntervalSec = 0;
+                # ensure Restart=always is always honoured
+              };
 
-        };
+          };
     in
       mkIf cfg.enable {
         systemd.services =

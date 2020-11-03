@@ -4,9 +4,10 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.Server.OptParse
-  ( module Intray.Server.OptParse
-  , module Intray.Server.OptParse.Types
-  ) where
+  ( module Intray.Server.OptParse,
+    module Intray.Server.OptParse.Types,
+  )
+where
 
 import Control.Monad.Logger
 import qualified Data.Text as T
@@ -56,62 +57,67 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
         Nothing -> die $ unwords ["Invalid freeloader username:", s]
         Just u -> pure u
   mmSets <-
-    do let mmc :: (MonetisationConfiguration -> Maybe a) -> Maybe a
-           mmc func = mc confMonetisationConfig >>= func
-       let plan =
-             Stripe.PlanId . T.pack <$>
-             (serveFlagStripePlan <|> envStripePlan <|> mmc monetisationConfStripePlan)
-       let config =
-             (\sk ->
+    do
+      let mmc :: (MonetisationConfiguration -> Maybe a) -> Maybe a
+          mmc func = mc confMonetisationConfig >>= func
+      let plan =
+            Stripe.PlanId . T.pack
+              <$> (serveFlagStripePlan <|> envStripePlan <|> mmc monetisationConfStripePlan)
+      let config =
+            ( \sk ->
                 StripeConfig
-                  { Stripe.secretKey = StripeKey $ TE.encodeUtf8 $ T.pack sk
-                  , stripeEndpoint = Nothing
-                  }) <$>
-             (serveFlagStripeSecretKey <|> envStripeSecretKey <|>
-              mmc monetisationConfStripeSecretKey)
-       let publicKey =
-             T.pack <$>
-             (serveFlagStripePublishableKey <|> envStripePublishableKey <|>
-              mmc monetisationConfStripePublishableKey)
-       let fetcherSets =
-             deriveLooperSettings
-               (seconds 0)
-               (minutes 1)
-               serveFlagLooperStripeEventsFetcher
-               envLooperStripeEventsFetcher
-               (mmc monetisationConfStripeEventsFetcher)
-       let retrierSets =
-             deriveLooperSettings
-               (seconds 30)
-               (hours 24)
-               serveFlagLooperStripeEventsRetrier
-               envLooperStripeEventsRetrier
-               (mmc monetisationConfStripeEventsRetrier)
-       let maxItemsFree =
-             fromMaybe 5 $
-             serveFlagMaxItemsFree <|> envMaxItemsFree <|> mmc monetisationConfMaxItemsFree
-       pure $ do
-         ss <- StripeSettings <$> plan <*> config <*> publicKey
-         pure $
-           MonetisationSettings
-             { monetisationSetStripeSettings = ss
-             , monetisationSetStripeEventsFetcher = fetcherSets
-             , monetisationSetStripeEventsRetrier = retrierSets
-             , monetisationSetMaxItemsFree = maxItemsFree
-             }
+                  { Stripe.secretKey = StripeKey $ TE.encodeUtf8 $ T.pack sk,
+                    stripeEndpoint = Nothing
+                  }
+            )
+              <$> ( serveFlagStripeSecretKey <|> envStripeSecretKey
+                      <|> mmc monetisationConfStripeSecretKey
+                  )
+      let publicKey =
+            T.pack
+              <$> ( serveFlagStripePublishableKey <|> envStripePublishableKey
+                      <|> mmc monetisationConfStripePublishableKey
+                  )
+      let fetcherSets =
+            deriveLooperSettings
+              (seconds 0)
+              (minutes 1)
+              serveFlagLooperStripeEventsFetcher
+              envLooperStripeEventsFetcher
+              (mmc monetisationConfStripeEventsFetcher)
+      let retrierSets =
+            deriveLooperSettings
+              (seconds 30)
+              (hours 24)
+              serveFlagLooperStripeEventsRetrier
+              envLooperStripeEventsRetrier
+              (mmc monetisationConfStripeEventsRetrier)
+      let maxItemsFree =
+            fromMaybe 5 $
+              serveFlagMaxItemsFree <|> envMaxItemsFree <|> mmc monetisationConfMaxItemsFree
+      pure $ do
+        ss <- StripeSettings <$> plan <*> config <*> publicKey
+        pure $
+          MonetisationSettings
+            { monetisationSetStripeSettings = ss,
+              monetisationSetStripeEventsFetcher = fetcherSets,
+              monetisationSetStripeEventsRetrier = retrierSets,
+              monetisationSetMaxItemsFree = maxItemsFree
+            }
   pure
     ( DispatchServe
         ServeSettings
-          { serveSetHost = host
-          , serveSetPort = port
-          , serveSetLogLevel = logLevel
-          , serveSetSigningKeyFile = signingKeyFile
-          , serveSetConnectionInfo = connInfo
-          , serveSetAdmins = admins
-          , serveSetFreeloaders = freeloaders
-          , serveSetMonetisationSettings = mmSets
-          }
-    , Settings)
+          { serveSetHost = host,
+            serveSetPort = port,
+            serveSetLogLevel = logLevel,
+            serveSetSigningKeyFile = signingKeyFile,
+            serveSetConnectionInfo = connInfo,
+            serveSetAdmins = admins,
+            serveSetFreeloaders = freeloaders,
+            serveSetMonetisationSettings = mmSets
+          },
+      Settings
+    )
 
 getConfiguration :: Flags -> Environment -> IO (Maybe Configuration)
 getConfiguration Flags {..} Environment {..} = do
@@ -132,18 +138,18 @@ getEnvironment = Env.parse id environmentParser
 environmentParser :: Env.Parser Env.Error Environment
 environmentParser =
   Env.prefixed "INTRAY_SERVER_" $
-  Environment <$> Env.var (fmap Just . Env.str) "CONFIG_FILE" (mE "Config file") <*>
-  Env.var (fmap Just . Env.str) "HOST" (mE "host to run the api server on") <*>
-  Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the api server on") <*>
-  Env.var (fmap Just . Env.str) "DATABASE" (mE "database file") <*>
-  Env.var (fmap Just . Env.auto) "LOG_LEVEL" (mE "minimal severity of log messages") <*>
-  Env.var (fmap Just . Env.str) "SIGNING_KEY_FILE" (mE "the file to store the signing key in") <*>
-  Env.var (fmap Just . Env.str) "STRIPE_PLAN" (mE "stripe plan id for subscriptions") <*>
-  Env.var (fmap Just . Env.str) "STRIPE_SECRET_KEY" (mE "stripe secret key") <*>
-  Env.var (fmap Just . Env.str) "STRIPE_PUBLISHABLE_KEY" (mE "stripe publishable key") <*>
-  looperVarEnv "STRIPE_EVENTS_FETCHER" <*>
-  looperVarEnv "STRIPE_EVENTS_RETRIER" <*>
-  Env.var (fmap Just . Env.auto) "MAX_ITEMS_FREE" (mE "maximum items that a free user can have")
+    Environment <$> Env.var (fmap Just . Env.str) "CONFIG_FILE" (mE "Config file")
+      <*> Env.var (fmap Just . Env.str) "HOST" (mE "host to run the api server on")
+      <*> Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the api server on")
+      <*> Env.var (fmap Just . Env.str) "DATABASE" (mE "database file")
+      <*> Env.var (fmap Just . Env.auto) "LOG_LEVEL" (mE "minimal severity of log messages")
+      <*> Env.var (fmap Just . Env.str) "SIGNING_KEY_FILE" (mE "the file to store the signing key in")
+      <*> Env.var (fmap Just . Env.str) "STRIPE_PLAN" (mE "stripe plan id for subscriptions")
+      <*> Env.var (fmap Just . Env.str) "STRIPE_SECRET_KEY" (mE "stripe secret key")
+      <*> Env.var (fmap Just . Env.str) "STRIPE_PUBLISHABLE_KEY" (mE "stripe publishable key")
+      <*> looperVarEnv "STRIPE_EVENTS_FETCHER"
+      <*> looperVarEnv "STRIPE_EVENTS_RETRIER"
+      <*> Env.var (fmap Just . Env.auto) "MAX_ITEMS_FREE" (mE "maximum items that a free user can have")
   where
     mE h = Env.def Nothing <> Env.keep <> Env.help h
 
@@ -166,10 +172,10 @@ argParser = info (helper <*> parseArgs) (fullDesc <> footerDoc (Just $ OptParse.
   where
     footerStr =
       unlines
-        [ Env.helpDoc environmentParser
-        , ""
-        , "Configuration file format:"
-        , T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
+        [ Env.helpDoc environmentParser,
+          "",
+          "Configuration file format:",
+          T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
         ]
 
 parseArgs :: Parser Arguments
@@ -186,78 +192,85 @@ parseCommandServe = info parser modifier
 
 parseServeFlags :: Parser ServeFlags
 parseServeFlags =
-  ServeFlags <$>
-  option
-    (Just <$> str)
-    (mconcat [long "api-host", value Nothing, metavar "HOST", help "the host to serve on"]) <*>
-  option
-    (Just <$> auto)
-    (mconcat [long "api-port", value Nothing, metavar "PORT", help "the port to serve on"]) <*>
-  option
-    (Just . T.pack <$> str)
-    (mconcat
-       [ long "database"
-       , value Nothing
-       , metavar "DATABASE_CONNECTION_STRING"
-       , help "The sqlite connection string"
-       ]) <*>
-  many (strOption (mconcat [long "admin", metavar "USERNAME", help "An admin"])) <*>
-  many (strOption (mconcat [long "freeloader", metavar "USERNAME", help "A freeloader"])) <*>
-  option
-    (Just <$> auto)
-    (mconcat
-       [ long "log-level"
-       , metavar "LOG_LEVEL"
-       , value Nothing
-       , help $
-         "the log level, possible values: " <> show [LevelDebug, LevelInfo, LevelWarn, LevelError]
-       ]) <*>
-  option
-    (Just <$> str)
-    (mconcat
-       [ long "signing-key-file"
-       , value Nothing
-       , metavar "FILEPATH"
-       , help "the file to store the signing key in"
-       ]) <*>
-  option
-    (Just <$> str)
-    (mconcat
-       [ long "stripe-plan"
-       , value Nothing
-       , metavar "PLAN_ID"
-       , help "The product pricing plan for stripe"
-       ]) <*>
-  option
-    (Just <$> str)
-    (mconcat
-       [ long "stripe-secret-key"
-       , value Nothing
-       , metavar "SECRET_KEY"
-       , help "The secret key for stripe"
-       ]) <*>
-  option
-    (Just <$> str)
-    (mconcat
-       [ long "stripe-publishable-key"
-       , value Nothing
-       , metavar "PUBLISHABLE_KEY"
-       , help "The publishable key for stripe"
-       ]) <*>
-  getLooperFlags "stripe-events-fetcher" <*>
-  getLooperFlags "stripe-events-retrier" <*>
-  option
-    (Just <$> auto)
-    (mconcat
-       [ long "max-items-free"
-       , value Nothing
-       , metavar "INT"
-       , help "How many items a user can sync in the free plan"
-       ])
+  ServeFlags
+    <$> option
+      (Just <$> str)
+      (mconcat [long "api-host", value Nothing, metavar "HOST", help "the host to serve on"])
+    <*> option
+      (Just <$> auto)
+      (mconcat [long "api-port", value Nothing, metavar "PORT", help "the port to serve on"])
+    <*> option
+      (Just . T.pack <$> str)
+      ( mconcat
+          [ long "database",
+            value Nothing,
+            metavar "DATABASE_CONNECTION_STRING",
+            help "The sqlite connection string"
+          ]
+      )
+    <*> many (strOption (mconcat [long "admin", metavar "USERNAME", help "An admin"]))
+    <*> many (strOption (mconcat [long "freeloader", metavar "USERNAME", help "A freeloader"]))
+    <*> option
+      (Just <$> auto)
+      ( mconcat
+          [ long "log-level",
+            metavar "LOG_LEVEL",
+            value Nothing,
+            help $
+              "the log level, possible values: " <> show [LevelDebug, LevelInfo, LevelWarn, LevelError]
+          ]
+      )
+    <*> option
+      (Just <$> str)
+      ( mconcat
+          [ long "signing-key-file",
+            value Nothing,
+            metavar "FILEPATH",
+            help "the file to store the signing key in"
+          ]
+      )
+    <*> option
+      (Just <$> str)
+      ( mconcat
+          [ long "stripe-plan",
+            value Nothing,
+            metavar "PLAN_ID",
+            help "The product pricing plan for stripe"
+          ]
+      )
+    <*> option
+      (Just <$> str)
+      ( mconcat
+          [ long "stripe-secret-key",
+            value Nothing,
+            metavar "SECRET_KEY",
+            help "The secret key for stripe"
+          ]
+      )
+    <*> option
+      (Just <$> str)
+      ( mconcat
+          [ long "stripe-publishable-key",
+            value Nothing,
+            metavar "PUBLISHABLE_KEY",
+            help "The publishable key for stripe"
+          ]
+      )
+    <*> getLooperFlags "stripe-events-fetcher"
+    <*> getLooperFlags "stripe-events-retrier"
+    <*> option
+      (Just <$> auto)
+      ( mconcat
+          [ long "max-items-free",
+            value Nothing,
+            metavar "INT",
+            help "How many items a user can sync in the free plan"
+          ]
+      )
 
 parseFlags :: Parser Flags
 parseFlags =
-  Flags <$>
-  option
-    (Just <$> str)
-    (mconcat [long "config-file", value Nothing, metavar "FILEPATH", help "The config file"])
+  Flags
+    <$> option
+      (Just <$> str)
+      (mconcat [long "config-file", value Nothing, metavar "FILEPATH", help "The config file"])

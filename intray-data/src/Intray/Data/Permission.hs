@@ -1,21 +1,19 @@
-{-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Intray.Data.Permission where
 
-import Intray.Data.Import
-
 import Data.Aeson
 import qualified Data.Set as S
 import Data.Set (Set)
 import qualified Data.Text as T
-import Text.Read
-
 import Database.Persist
 import Database.Persist.Sql
+import Intray.Data.Import
+import Text.Read
 
 data Permission
   = PermitAdd
@@ -59,22 +57,22 @@ instance PersistFieldSql Permission where
 userPermissions :: Set Permission
 userPermissions =
   S.fromList
-    [ PermitAdd
-    , PermitShow
-    , PermitSize
-    , PermitDelete
-    , PermitGetItem
-    , PermitGetItems
-    , PermitGetItemUUIDs
-    , PermitSync
-    , PermitDeleteAccount
-    , PermitGetAccountInfo
-    , PermitPostChangePassphrase
-    , PermitPostAddAccessKey
-    , PermitGetAccessKey
-    , PermitGetAccessKeys
-    , PermitDeleteAccessKey
-    , PermitGetPermissions
+    [ PermitAdd,
+      PermitShow,
+      PermitSize,
+      PermitDelete,
+      PermitGetItem,
+      PermitGetItems,
+      PermitGetItemUUIDs,
+      PermitSync,
+      PermitDeleteAccount,
+      PermitGetAccountInfo,
+      PermitPostChangePassphrase,
+      PermitPostAddAccessKey,
+      PermitGetAccessKey,
+      PermitGetAccessKeys,
+      PermitDeleteAccessKey,
+      PermitGetPermissions
     ]
 
 adminOnlyPermissions :: Set Permission

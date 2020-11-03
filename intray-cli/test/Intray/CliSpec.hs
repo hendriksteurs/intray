@@ -1,6 +1,7 @@
 module Intray.CliSpec
-  ( spec
-  ) where
+  ( spec,
+  )
+where
 
 import Intray.Cli.TestUtils
 import Intray.Server.TestUtils

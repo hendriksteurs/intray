@@ -1,16 +1,14 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.Data.InstanceSpec
-  ( spec
-  ) where
-
-import TestImport
-
-import Test.Validity.Aeson
+  ( spec,
+  )
+where
 
 import Intray.Data
-
 import Intray.Data.Gen ()
+import Test.Validity.Aeson
+import TestImport
 
 spec :: Spec
 spec = do

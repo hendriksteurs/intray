@@ -6,48 +6,45 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.API.Protected.AccessKey
-  ( IntrayProtectedAccessKeyAPI
-  , IntrayProtectedAccessKeySite(..)
-  , AccessKeyUUID
-  , AccessKeyInfo(..)
-  , AddAccessKey(..)
-  , AccessKeyCreated(..)
-  , PostAddAccessKey
-  , GetAccessKey
-  , GetAccessKeys
-  , DeleteAccessKey
-  , module Data.UUID.Typed
-  ) where
+  ( IntrayProtectedAccessKeyAPI,
+    IntrayProtectedAccessKeySite (..),
+    AccessKeyUUID,
+    AccessKeyInfo (..),
+    AddAccessKey (..),
+    AccessKeyCreated (..),
+    PostAddAccessKey,
+    GetAccessKey,
+    GetAccessKeys,
+    DeleteAccessKey,
+    module Data.UUID.Typed,
+  )
+where
 
+import Data.UUID.Typed
 import Import
-
+import Intray.API.Protected.AccessKey.Types
+import Intray.API.Types
+import Intray.Data
 import Servant.API
 import Servant.API.Generic
 import Servant.Auth.Docs ()
 
-import Data.UUID.Typed
-
-import Intray.Data
-
-import Intray.API.Protected.AccessKey.Types
-import Intray.API.Types
-
 type IntrayProtectedAccessKeyAPI = ToServantApi IntrayProtectedAccessKeySite
 
-data IntrayProtectedAccessKeySite route =
-  IntrayProtectedAccessKeySite
-    { postAddAccessKey :: !(route :- PostAddAccessKey)
-    , getAccessKey :: !(route :- GetAccessKey)
-    , getAccessKeys :: !(route :- GetAccessKeys)
-    , deleteAccessKey :: !(route :- DeleteAccessKey)
-    }
+data IntrayProtectedAccessKeySite route
+  = IntrayProtectedAccessKeySite
+      { postAddAccessKey :: !(route :- PostAddAccessKey),
+        getAccessKey :: !(route :- GetAccessKey),
+        getAccessKeys :: !(route :- GetAccessKeys),
+        deleteAccessKey :: !(route :- DeleteAccessKey)
+      }
   deriving (Generic)
 
-type PostAddAccessKey
-   = ProtectAPI :> ReqBody '[ JSON] AddAccessKey :> Post '[ JSON] AccessKeyCreated
+type PostAddAccessKey =
+  ProtectAPI :> ReqBody '[JSON] AddAccessKey :> Post '[JSON] AccessKeyCreated
 
-type GetAccessKey = ProtectAPI :> Capture "uuid" AccessKeyUUID :> Get '[ JSON] AccessKeyInfo
+type GetAccessKey = ProtectAPI :> Capture "uuid" AccessKeyUUID :> Get '[JSON] AccessKeyInfo
 
-type GetAccessKeys = ProtectAPI :> Get '[ JSON] [AccessKeyInfo]
+type GetAccessKeys = ProtectAPI :> Get '[JSON] [AccessKeyInfo]
 
-type DeleteAccessKey = ProtectAPI :> Capture "uuid" AccessKeyUUID :> Delete '[ JSON] NoContent
+type DeleteAccessKey = ProtectAPI :> Capture "uuid" AccessKeyUUID :> Delete '[JSON] NoContent

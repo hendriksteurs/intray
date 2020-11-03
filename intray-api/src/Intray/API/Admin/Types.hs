@@ -8,21 +8,18 @@
 
 module Intray.API.Admin.Types where
 
-import Import
-
 import Data.Aeson as JSON
-
+import Import
+import Intray.API.Types ()
 import Servant.Docs
 
-import Intray.API.Types ()
-
-data AdminStats =
-  AdminStats
-    { adminStatsNbAccounts :: !Word
-    , adminStatsSubscribedUsers :: !Word
-    , adminStatsNbItems :: !Word
-    , adminStatsActiveUsers :: !ActiveUsers
-    }
+data AdminStats
+  = AdminStats
+      { adminStatsNbAccounts :: !Word,
+        adminStatsSubscribedUsers :: !Word,
+        adminStatsNbItems :: !Word,
+        adminStatsActiveUsers :: !ActiveUsers
+      }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity AdminStats
@@ -30,27 +27,28 @@ instance Validity AdminStats
 instance FromJSON AdminStats where
   parseJSON =
     withObject "AdminStats" $ \o ->
-      AdminStats <$> o .: "accounts" <*> o .: "subscribed-users" <*> o .: "items" <*>
-      o .: "active-users"
+      AdminStats <$> o .: "accounts" <*> o .: "subscribed-users" <*> o .: "items"
+        <*> o
+        .: "active-users"
 
 instance ToJSON AdminStats where
   toJSON AdminStats {..} =
     object
-      [ "accounts" .= adminStatsNbAccounts
-      , "items" .= adminStatsNbItems
-      , "active-users" .= adminStatsActiveUsers
-      , "subscribed-users" .= adminStatsSubscribedUsers
+      [ "accounts" .= adminStatsNbAccounts,
+        "items" .= adminStatsNbItems,
+        "active-users" .= adminStatsActiveUsers,
+        "subscribed-users" .= adminStatsSubscribedUsers
       ]
 
 instance ToSample AdminStats
 
-data ActiveUsers =
-  ActiveUsers
-    { activeUsersDaily :: !Word
-    , activeUsersWeekly :: !Word
-    , activeUsersMonthly :: !Word
-    , activeUsersYearly :: !Word
-    }
+data ActiveUsers
+  = ActiveUsers
+      { activeUsersDaily :: !Word,
+        activeUsersWeekly :: !Word,
+        activeUsersMonthly :: !Word,
+        activeUsersYearly :: !Word
+      }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity ActiveUsers
@@ -63,10 +61,10 @@ instance FromJSON ActiveUsers where
 instance ToJSON ActiveUsers where
   toJSON ActiveUsers {..} =
     object
-      [ "daily" .= activeUsersDaily
-      , "weekly" .= activeUsersWeekly
-      , "monthly" .= activeUsersMonthly
-      , "yearly" .= activeUsersYearly
+      [ "daily" .= activeUsersDaily,
+        "weekly" .= activeUsersWeekly,
+        "monthly" .= activeUsersMonthly,
+        "yearly" .= activeUsersYearly
       ]
 
 instance ToSample ActiveUsers

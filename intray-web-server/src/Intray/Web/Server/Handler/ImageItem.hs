@@ -1,8 +1,9 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Web.Server.Handler.ImageItem
-  ( getImageItemR
-  ) where
+  ( getImageItemR,
+  )
+where
 
 import qualified Data.Text.Encoding as TE
 import Import

@@ -5,10 +5,9 @@
 
 module Intray.Web.Server.Application where
 
-import Yesod
-import Yesod.Auth
-
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.Handler
+import Yesod
+import Yesod.Auth
 
 mkYesodDispatch "App" resourcesApp

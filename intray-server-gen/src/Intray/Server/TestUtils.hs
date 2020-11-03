@@ -5,24 +5,25 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Server.TestUtils
-  ( withIntrayServer
-  , withFreeIntrayServer
-  , withPaidIntrayServer
-  , setupTestHttpManager
-  , cleanupIntrayTestServer
-  , runClient
-  , runClientOrError
-  , randomRegistration
-  , withAdmin
-  , withValidNewUser
-  , withValidNewUserAndData
-  , requiresAdmin
-  , withNewUser'sAccessKey
-  , login
-  , failsWithOutPermissions
-  , failsWithOutPermission
-  , module Servant.Client
-  ) where
+  ( withIntrayServer,
+    withFreeIntrayServer,
+    withPaidIntrayServer,
+    setupTestHttpManager,
+    cleanupIntrayTestServer,
+    runClient,
+    runClientOrError,
+    randomRegistration,
+    withAdmin,
+    withValidNewUser,
+    withValidNewUserAndData,
+    requiresAdmin,
+    withNewUser'sAccessKey,
+    login,
+    failsWithOutPermissions,
+    failsWithOutPermission,
+    module Servant.Client,
+  )
+where
 
 import Control.Monad.Logger
 import Control.Monad.Trans.Resource (runResourceT)
@@ -60,8 +61,9 @@ withIntrayServer specFunc = do
 
 withPaidIntrayServer :: Int -> SpecWith ClientEnv -> Spec
 withPaidIntrayServer maxFree specFunc =
-  around (withPaidIntrayTestApp maxFree) $
-  modifyMaxShrinks (const 0) $ modifyMaxSuccess (`div` 20) specFunc
+  around (withPaidIntrayTestApp maxFree)
+    $ modifyMaxShrinks (const 0)
+    $ modifyMaxSuccess (`div` 20) specFunc
 
 withFreeIntrayServer :: SpecWith ClientEnv -> Spec
 withFreeIntrayServer specFunc =
@@ -89,26 +91,26 @@ withPaidIntrayTestApp maxFree func = do
   let planName = PlanId "dummyPlan"
       dummyPlan =
         Stripe.Plan
-          { planInterval = Year
-          , planName = "dummy plan"
-          , planCreated = now
-          , planAmount = 1200
-          , planCurrency = CHF
-          , planId = planName
-          , planObject = "plan"
-          , planLiveMode = False
-          , planIntervalCount = Nothing
-          , planTrialPeriodDays = Nothing
-          , planMetaData = MetaData []
-          , planDescription = Nothing
+          { planInterval = Year,
+            planName = "dummy plan",
+            planCreated = now,
+            planAmount = 1200,
+            planCurrency = CHF,
+            planId = planName,
+            planObject = "plan",
+            planLiveMode = False,
+            planIntervalCount = Nothing,
+            planTrialPeriodDays = Nothing,
+            planMetaData = MetaData [],
+            planDescription = Nothing
           }
   monetisationEnvPlanCache <- newCache Nothing
   Cache.insert monetisationEnvPlanCache planName dummyPlan
   let monetisationEnvStripeSettings =
         StripeSettings
-          { stripeSetPlan = planName
-          , stripeSetStripeConfig = error "should not try to access stripe during testing"
-          , stripeSetPublishableKey = "Example, should not be used."
+          { stripeSetPlan = planName,
+            stripeSetStripeConfig = error "should not try to access stripe during testing",
+            stripeSetPublishableKey = "Example, should not be used."
           }
   let monetisationEnvMaxItemsFree = maxFree
   withIntrayTestApp (Just MonetisationEnv {..}) func
@@ -125,13 +127,13 @@ withIntrayTestApp menv func =
     let cookieCfg = defaultCookieSettings
     let intrayEnv =
           IntrayServerEnv
-            { envHost = "localhost"
-            , envConnectionPool = pool
-            , envCookieSettings = cookieCfg
-            , envJWTSettings = jwtCfg
-            , envAdmins = [fromJust $ parseUsername "admin"]
-            , envFreeloaders = []
-            , envMonetisation = menv
+            { envHost = "localhost",
+              envConnectionPool = pool,
+              envCookieSettings = cookieCfg,
+              envJWTSettings = jwtCfg,
+              envAdmins = [fromJust $ parseUsername "admin"],
+              envFreeloaders = [],
+              envMonetisation = menv
             }
     let app = serveWithContext intrayAPI (intrayAppContext intrayEnv) (makeIntrayServer intrayEnv)
     testWithApplication (pure app) $ \port ->
@@ -164,8 +166,8 @@ randomRegistration = do
   u2 <- nextRandomUUID :: IO (UUID Text)
   pure
     Registration
-      { registrationUsername = fromJust $ parseUsername $ uuidText u1
-      , registrationPassword = uuidText u2
+      { registrationUsername = fromJust $ parseUsername $ uuidText u1,
+        registrationPassword = uuidText u2
       }
 
 withValidNewUserAndData :: ClientEnv -> (Username -> Text -> Token -> IO ()) -> Expectation

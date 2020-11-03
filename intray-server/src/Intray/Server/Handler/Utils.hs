@@ -3,20 +3,17 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Server.Handler.Utils
-  ( runDb
-  , deleteAccountFully
-  ) where
-
-import Import
+  ( runDb,
+    deleteAccountFully,
+  )
+where
 
 import Database.Persist
 import Database.Persist.Sqlite
-
-import Servant
-
+import Import
 import Intray.API
-
 import Intray.Server.Types
+import Servant
 
 runDb :: (MonadReader IntrayServerEnv m, MonadIO m) => SqlPersistT IO b -> m b
 runDb query = do

@@ -1,9 +1,9 @@
 module Intray.Cli.Commands.Logout
-  ( logout
-  ) where
+  ( logout,
+  )
+where
 
 import Import
-
 import Intray.Cli.OptParse
 import Intray.Cli.Path
 

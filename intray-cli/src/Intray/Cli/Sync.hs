@@ -1,10 +1,11 @@
 module Intray.Cli.Sync
-  ( withClientStoreAndSync
-  , modifyClientStoreAndSync
-  , anyUnsyncedWarning
-  , syncAndGet
-  , syncAndReturn
-  ) where
+  ( withClientStoreAndSync,
+    modifyClientStoreAndSync,
+    anyUnsyncedWarning,
+    syncAndGet,
+    syncAndReturn,
+  )
+where
 
 import Import
 import Intray.Cli.Client
@@ -28,8 +29,9 @@ withClientStoreAndSync func =
       Just errOrClientStore ->
         case errOrClientStore of
           Left err -> do
-            liftIO $
-              putStrLn $ unlines ["Sync failed, but store still modified succesfully:", show err]
+            liftIO
+              $ putStrLn
+              $ unlines ["Sync failed, but store still modified succesfully:", show err]
             pure processed
           Right r -> do
             let after = mergeSyncResponse processed r
@@ -62,14 +64,14 @@ syncAndGet func =
 
 anyUnsyncedWarning :: CS -> CliM ()
 anyUnsyncedWarning after =
-  when (anyUnsynced after) $
-  liftIO $
-  putStrLn $
-  unlines
-    [ "Not all added items were synchronized in the most recent synchronisation."
-    , "This may have occurred if you have not subscribed with your sync server."
-    , "If that is the case, please navigate to your sync server's web interface to subscribe."
-    ]
+  when (anyUnsynced after)
+    $ liftIO
+    $ putStrLn
+    $ unlines
+      [ "Not all added items were synchronized in the most recent synchronisation.",
+        "This may have occurred if you have not subscribed with your sync server.",
+        "If that is the case, please navigate to your sync server's web interface to subscribe."
+      ]
 
 syncAndReturn :: (CS -> a) -> CliM a
 syncAndReturn func = syncAndGet $ pure . func

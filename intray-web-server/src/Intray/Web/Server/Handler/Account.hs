@@ -3,9 +3,10 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.Account
-  ( getAccountR
-  , postAccountDeleteR
-  ) where
+  ( getAccountR,
+    postAccountDeleteR,
+  )
+where
 
 import Data.Time
 import Import
@@ -53,8 +54,8 @@ accountInfoSegment (Just ai@AccountInfo {..}) mp = do
           $maybe _ <- mp
             <p>
               Status: ^{subbedWidget}
-        |]
-      , case accountInfoStatus of
+        |],
+        case accountInfoStatus of
           HasNotPaid _ -> maybe mempty (pricingStripeForm ai) mp
           _ -> mempty -- Already subscribed or no payment necessary
       ]

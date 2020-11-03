@@ -2,8 +2,9 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.Home
-  ( getHomeR
-  ) where
+  ( getHomeR,
+  )
+where
 
 import Import
 import Intray.Client

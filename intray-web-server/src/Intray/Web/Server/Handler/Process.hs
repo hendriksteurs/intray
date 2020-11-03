@@ -1,22 +1,20 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE QuasiQuotes #-}
 
 module Intray.Web.Server.Handler.Process
-  ( getProcessR
-  , postDoneR
-  ) where
+  ( getProcessR,
+    postDoneR,
+  )
+where
 
 import Import
-
-import Yesod
-
 import Intray.API
 import Intray.Client
-
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.Time
+import Yesod
 
 getProcessR :: Handler Html
 getProcessR =
@@ -38,10 +36,10 @@ makeItemInfoWidget ItemInfo {..} = do
   timestampWidget <- makeTimestampWidgetNow itemInfoCreated
   pure $(widgetFile "item")
 
-newtype DoneItem =
-  DoneItem
-    { doneItemUUID :: ItemUUID
-    }
+newtype DoneItem
+  = DoneItem
+      { doneItemUUID :: ItemUUID
+      }
 
 doneItemForm :: FormInput Handler DoneItem
 doneItemForm = DoneItem <$> ireq hiddenField "item"

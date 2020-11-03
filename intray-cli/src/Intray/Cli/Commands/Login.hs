@@ -5,24 +5,21 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Cli.Commands.Login
-  ( login
-  ) where
-
-import Import
+  ( login,
+  )
+where
 
 import qualified Data.Text as T
 import Data.Text.Encoding (encodeUtf8)
-import Servant
-import Web.Cookie (parseSetCookie, setCookieName)
-
+import Import
 import Intray.API
-
-import Intray.Client
-
 import Intray.Cli.Client
 import Intray.Cli.OptParse
 import Intray.Cli.Prompt
 import Intray.Cli.Session
+import Intray.Client
+import Servant
+import Web.Cookie (parseSetCookie, setCookieName)
 
 login :: LoginSettings -> CliM ()
 login LoginSettings {..} = do
@@ -31,9 +28,9 @@ login LoginSettings {..} = do
     runSingleClientOrErr $ do
       loginForm <-
         liftIO $
-        runReaderT
-          (LoginForm <$> promptUsername loginSetUsername <*> promptPassword loginSetPassword)
-          sets
+          runReaderT
+            (LoginForm <$> promptUsername loginSetUsername <*> promptPassword loginSetPassword)
+            sets
       clientPostLogin loginForm
   case mRes of
     Nothing -> liftIO $ die "No server configured."

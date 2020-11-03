@@ -2,8 +2,9 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Server.Handler.PostSync
-  ( servePostSync
-  ) where
+  ( servePostSync,
+  )
+where
 
 import qualified Data.Map as M
 import Data.Mergeless
@@ -18,27 +19,27 @@ import Intray.Server.Item
 import Intray.Server.Types
 
 servePostSync ::
-     AuthCookie
-  -> SyncRequest ClientId ItemUUID (AddedItem TypedItem)
-  -> IntrayHandler (SyncResponse ClientId ItemUUID (AddedItem TypedItem))
+  AuthCookie ->
+  SyncRequest ClientId ItemUUID (AddedItem TypedItem) ->
+  IntrayHandler (SyncResponse ClientId ItemUUID (AddedItem TypedItem))
 servePostSync AuthCookie {..} sr = do
   ps <- getUserPaidStatus authCookieUserUUID
   doSync ps authCookieUserUUID sr
 
 doSync ::
-     PaidStatus
-  -> AccountUUID
-  -> SyncRequest ClientId ItemUUID (AddedItem TypedItem)
-  -> IntrayHandler (SyncResponse ClientId ItemUUID (AddedItem TypedItem))
+  PaidStatus ->
+  AccountUUID ->
+  SyncRequest ClientId ItemUUID (AddedItem TypedItem) ->
+  IntrayHandler (SyncResponse ClientId ItemUUID (AddedItem TypedItem))
 doSync ps userId =
-  runDb .
-  serverProcessSyncWithCustomIdQuery
-    nextRandomUUID
-    IntrayItemIdentifier
-    [IntrayItemUserId ==. userId]
-    makeAdded
-    (makeAddedIntrayItem userId) .
-  modifySyncRequest
+  runDb
+    . serverProcessSyncWithCustomIdQuery
+      nextRandomUUID
+      IntrayItemIdentifier
+      [IntrayItemUserId ==. userId]
+      makeAdded
+      (makeAddedIntrayItem userId)
+    . modifySyncRequest
   where
     modifySyncRequest sr =
       let modAddedFunc =

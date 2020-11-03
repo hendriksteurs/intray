@@ -3,12 +3,13 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.Web.Server.OptParse
-  ( getInstructions
-  , Instructions
-  , Dispatch(..)
-  , Settings(..)
-  , ServeSettings(..)
-  ) where
+  ( getInstructions,
+    Instructions,
+    Dispatch (..),
+    Settings (..),
+    ServeSettings (..),
+  )
+where
 
 import qualified Data.Text as T
 import qualified Env
@@ -38,21 +39,22 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
       envAPIEnvironment
       (confAPIConfiguration <$> mConf)
   let port = fromMaybe 8000 $ serveFlagPort <|> envPort <|> mc confPort
-  when (API.serveSetPort apiSets == port) $
-    die $
-    unlines ["Web server port and API port must not be the same.", "They are both: " ++ show port]
+  when (API.serveSetPort apiSets == port)
+    $ die
+    $ unlines ["Web server port and API port must not be the same.", "They are both: " ++ show port]
   pure
     ( DispatchServe
         ServeSettings
-          { serveSetAPISettings = apiSets
-          , serveSetPort = port
-          , serveSetTracking = serveFlagTracking <|> envTracking <|> mc confTracking
-          , serveSetVerification = serveFlagVerification <|> envVerification <|> mc confVerification
-          , serveSetLoginCacheFile =
+          { serveSetAPISettings = apiSets,
+            serveSetPort = port,
+            serveSetTracking = serveFlagTracking <|> envTracking <|> mc confTracking,
+            serveSetVerification = serveFlagVerification <|> envVerification <|> mc confVerification,
+            serveSetLoginCacheFile =
               fromMaybe "intray-web-server.db" $
-              serveFlagLoginCacheFile <|> envLoginCacheFile <|> mc confLoginCacheFile
-          }
-    , Settings)
+                serveFlagLoginCacheFile <|> envLoginCacheFile <|> mc confLoginCacheFile
+          },
+      Settings
+    )
 
 getConfiguration :: Flags -> Environment -> IO (Maybe Configuration)
 getConfiguration Flags {..} Environment {..} = do
@@ -67,16 +69,17 @@ getEnvironment = Env.parse id environmentParser
 
 environmentParser :: Env.Parser Env.Error Environment
 environmentParser =
-  (\apiEnv (a, b, c, d) -> Environment apiEnv a b c d) <$> API.environmentParser <*>
-  Env.prefixed
-    "INTRAY_WEB_SERVER_"
-    ((,,,) <$> Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the web server on") <*>
-     Env.var (fmap Just . Env.str) "ANALYTICS_TRACKING_ID" (mE "google analytics tracking id") <*>
-     Env.var
-       (fmap Just . Env.str)
-       "SEARCH_CONSOLE_VERIFICATION"
-       (mE "google search console verification id") <*>
-     Env.var (fmap Just . Env.str) "LOGIN_CACHE_FILE" (mE "google search console verification id"))
+  (\apiEnv (a, b, c, d) -> Environment apiEnv a b c d) <$> API.environmentParser
+    <*> Env.prefixed
+      "INTRAY_WEB_SERVER_"
+      ( (,,,) <$> Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the web server on")
+          <*> Env.var (fmap Just . Env.str) "ANALYTICS_TRACKING_ID" (mE "google analytics tracking id")
+          <*> Env.var
+            (fmap Just . Env.str)
+            "SEARCH_CONSOLE_VERIFICATION"
+            (mE "google search console verification id")
+          <*> Env.var (fmap Just . Env.str) "LOGIN_CACHE_FILE" (mE "google search console verification id")
+      )
   where
     mE h = Env.def Nothing <> Env.keep <> Env.help h
 
@@ -96,10 +99,10 @@ argParser = info (helper <*> parseArgs) (fullDesc <> footerDoc (Just $ OptParse.
   where
     footerStr =
       unlines
-        [ Env.helpDoc environmentParser
-        , ""
-        , "Configuration file format:"
-        , T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
+        [ Env.helpDoc environmentParser,
+          "",
+          "Configuration file format:",
+          T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
         ]
 
 parseArgs :: Parser Arguments
@@ -112,35 +115,39 @@ parseCommandServe :: ParserInfo Command
 parseCommandServe = info parser modifier
   where
     parser =
-      CommandServe <$>
-      (ServeFlags <$> API.parseServeFlags <*>
-       option
-         (Just <$> auto)
-         (mconcat [long "web-port", metavar "PORT", value Nothing, help "the port to serve on"]) <*>
-       option
-         (Just . T.pack <$> str)
-         (mconcat
-            [ long "analytics-tracking-id"
-            , value Nothing
-            , metavar "TRACKING_ID"
-            , help "The google analytics tracking ID"
-            ]) <*>
-       option
-         (Just . T.pack <$> str)
-         (mconcat
-            [ long "search-console-verification"
-            , value Nothing
-            , metavar "VERIFICATION_TAG"
-            , help "The contents of the google search console verification tag"
-            ]) <*>
-       option
-         (Just <$> str)
-         (mconcat
-            [ long "login-cache-file"
-            , value Nothing
-            , metavar "FILEPATH"
-            , help "The file to store the login cache database in"
-            ]))
+      CommandServe
+        <$> ( ServeFlags <$> API.parseServeFlags
+                <*> option
+                  (Just <$> auto)
+                  (mconcat [long "web-port", metavar "PORT", value Nothing, help "the port to serve on"])
+                <*> option
+                  (Just . T.pack <$> str)
+                  ( mconcat
+                      [ long "analytics-tracking-id",
+                        value Nothing,
+                        metavar "TRACKING_ID",
+                        help "The google analytics tracking ID"
+                      ]
+                  )
+                <*> option
+                  (Just . T.pack <$> str)
+                  ( mconcat
+                      [ long "search-console-verification",
+                        value Nothing,
+                        metavar "VERIFICATION_TAG",
+                        help "The contents of the google search console verification tag"
+                      ]
+                  )
+                <*> option
+                  (Just <$> str)
+                  ( mconcat
+                      [ long "login-cache-file",
+                        value Nothing,
+                        metavar "FILEPATH",
+                        help "The file to store the login cache database in"
+                      ]
+                  )
+            )
     modifier = fullDesc <> progDesc "Serve requests" <> YamlParse.confDesc @Configuration
 
 parseFlags :: Parser Flags

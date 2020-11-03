@@ -4,23 +4,20 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.AccessKeys
-  ( getAccessKeysR
-  , postAccessKeysR
-  , postAccessKeyRevokeR
-  ) where
-
-import Import
+  ( getAccessKeysR,
+    postAccessKeysR,
+    postAccessKeyRevokeR,
+  )
+where
 
 import Data.Set (Set)
 import qualified Data.Set as S
 import qualified Data.Text as T
-
-import Yesod
-
+import Import
 import Intray.Client
-
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.Time
+import Yesod
 
 getAccessKeysR :: Handler Html
 getAccessKeysR =
@@ -80,9 +77,10 @@ makeNewAccessKeyForm (Just permissions) = do
 
 newAccessKeyForm :: Set Permission -> FormInput Handler AddAccessKey
 newAccessKeyForm ps =
-  AddAccessKey <$> ireq textField "name" <*>
-  (S.fromList . map fst . filter snd <$>
-   traverse (\p -> (,) p <$> ireq checkBoxField (T.pack $ show p)) (S.toList ps))
+  AddAccessKey <$> ireq textField "name"
+    <*> ( S.fromList . map fst . filter snd
+            <$> traverse (\p -> (,) p <$> ireq checkBoxField (T.pack $ show p)) (S.toList ps)
+        )
 
 postAccessKeysR :: Handler Html
 postAccessKeysR =

@@ -3,8 +3,9 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Cli.Commands.Add
-  ( addItem
-  ) where
+  ( addItem,
+  )
+where
 
 import qualified Data.Text as T
 import qualified Data.Text.IO as T
@@ -36,8 +37,8 @@ addItem AddSettings {..} = do
         modStore = addItemToClientStore AddedItem {addedItemContents = ti, addedItemCreated = now}
     if addSetRemote
       then withToken $ \token -> do
-             mr <- runSingleClientOrErr $ clientPostAddItem token ti
-             case mr of
-               Nothing -> liftIO $ die "Not logged in."
-               Just _ -> pure ()
+        mr <- runSingleClientOrErr $ clientPostAddItem token ti
+        case mr of
+          Nothing -> liftIO $ die "Not logged in."
+          Just _ -> pure ()
       else modifyClientStoreAndSync modStore

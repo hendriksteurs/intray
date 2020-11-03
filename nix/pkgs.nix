@@ -1,5 +1,5 @@
 let
-  pkgsv = import ( import ./nixpkgs.nix );
+  pkgsv = import (import ./nixpkgs.nix);
   pkgs = pkgsv {};
   validity-overlay =
     import (
@@ -20,15 +20,15 @@ let
     );
 
 in
-  pkgsv {
-    overlays =
-      [
-        validity-overlay
-        pretty-relative-time-overlay
-        mergeless-overlay
-        yamlparse-applicative-overlay
-        ( import ./gitignore-src.nix )
-        ( import ./overlay.nix )
-      ];
-    config.allowUnfree = true;
-  }
+pkgsv {
+  overlays =
+    [
+      validity-overlay
+      pretty-relative-time-overlay
+      mergeless-overlay
+      yamlparse-applicative-overlay
+      (import ./gitignore-src.nix)
+      (import ./overlay.nix)
+    ];
+  config.allowUnfree = true;
+}

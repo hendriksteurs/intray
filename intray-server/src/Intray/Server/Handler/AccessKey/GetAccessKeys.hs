@@ -1,22 +1,19 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.AccessKey.GetAccessKeys
-  ( serveGetAccessKeys
-  ) where
-
-import Import
+  ( serveGetAccessKeys,
+  )
+where
 
 import Database.Persist
-
+import Import
 import Intray.API
-
-import Intray.Server.Types
-
 import Intray.Server.Handler.AccessKey.GetAccessKey (makeAccessKeyInfo)
 import Intray.Server.Handler.Utils
+import Intray.Server.Types
 
 serveGetAccessKeys :: AuthCookie -> IntrayHandler [AccessKeyInfo]
 serveGetAccessKeys AuthCookie {..} = do

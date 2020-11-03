@@ -1,30 +1,26 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.Public.PostLogin
-  ( servePostLogin
-  ) where
-
-import Import
+  ( servePostLogin,
+  )
+where
 
 import Control.Monad.Except
 import Data.Text.Encoding (decodeUtf8)
 import Data.Time
 import Database.Persist
-
+import Import
+import Intray.API
+import Intray.Server.Handler.Utils
+import Intray.Server.Types
 import Servant hiding (BadPassword, NoSuchUser)
 import Servant.Auth.Server as Auth
 
-import Intray.API
-
-import Intray.Server.Types
-
-import Intray.Server.Handler.Utils
-
-servePostLogin :: LoginForm -> IntrayHandler (Headers '[ Header "Set-Cookie" Text] NoContent)
+servePostLogin :: LoginForm -> IntrayHandler (Headers '[Header "Set-Cookie" Text] NoContent)
 servePostLogin LoginForm {..} = do
   me <- runDb $ getBy $ UniqueUsername loginFormUsername
   case me of

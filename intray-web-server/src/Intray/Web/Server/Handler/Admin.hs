@@ -2,22 +2,18 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.Admin
-  ( getAdminR
-  , postAdminAccountDeleteR
-  ) where
-
-import Import
+  ( getAdminR,
+    postAdminAccountDeleteR,
+  )
+where
 
 import Data.Time
-
-import Text.Time.Pretty
-
-import Yesod
-
+import Import
 import Intray.Client
-
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.Time
+import Text.Time.Pretty
+import Yesod
 
 getAdminR :: Handler Html
 getAdminR =

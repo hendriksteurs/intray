@@ -1,28 +1,24 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Intray.Server.Looper.StripeEventsFetcher where
 
+import Conduit
 import Data.Aeson
 import qualified Data.Text as T
-
-import qualified Web.Stripe as Stripe
-import Web.Stripe as Stripe ((-&-))
-import qualified Web.Stripe.Customer as Stripe
-import qualified Web.Stripe.Event as Stripe
-import qualified Web.Stripe.Session as Stripe
-
-import Conduit
-import Web.Stripe.Conduit
-
 import Database.Persist
-
 import Intray.Data
 import Intray.Server.Looper.DB
 import Intray.Server.Looper.Import
 import Intray.Server.Looper.Stripe
 import Intray.Server.OptParse.Types
+import qualified Web.Stripe as Stripe
+import Web.Stripe as Stripe ((-&-))
+import Web.Stripe.Conduit
+import qualified Web.Stripe.Customer as Stripe
+import qualified Web.Stripe.Event as Stripe
+import qualified Web.Stripe.Session as Stripe
 
 stripeEventsFetcherLooper :: Looper ()
 stripeEventsFetcherLooper = do
@@ -68,9 +64,9 @@ handleEvent Stripe.Event {..} =
                       case parseUUID (Stripe.getClientReferenceId crid) of
                         Just au ->
                           completePayment eventId au $
-                          case eCus of
-                            Stripe.Id cid -> cid
-                            Stripe.Expanded c -> Stripe.customerId c
+                            case eCus of
+                              Stripe.Id cid -> cid
+                              Stripe.Expanded c -> Stripe.customerId c
                         Nothing -> err "Client reference id didn't look like an AccountUUID"
                     Nothing -> err "No client reference id"
                 _ -> err "Unknown session mode"
@@ -79,19 +75,19 @@ handleEvent Stripe.Event {..} =
 
 completePayment :: Stripe.EventId -> AccountUUID -> Stripe.CustomerId -> Looper StripeEvent
 completePayment eventId account cid = do
-  void $
-    looperDB $
-    upsertBy
+  void
+    $ looperDB
+    $ upsertBy
       (UniqueCustomerUser account)
       (Customer {customerUser = account, customerStripeCustomer = cid})
       [CustomerStripeCustomer =. cid]
   pure StripeEvent {stripeEventEvent = eventId, stripeEventError = Nothing}
 
 looperStripeOrErr ::
-     FromJSON (Stripe.StripeReturn a)
-  => Stripe.StripeRequest a
-  -> (Stripe.StripeReturn a -> Looper ())
-  -> Looper ()
+  FromJSON (Stripe.StripeReturn a) =>
+  Stripe.StripeRequest a ->
+  (Stripe.StripeReturn a -> Looper ()) ->
+  Looper ()
 looperStripeOrErr r func = do
   errOrRes <- runStripeLooper r
   case errOrRes of

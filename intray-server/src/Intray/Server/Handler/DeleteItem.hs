@@ -1,24 +1,20 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.DeleteItem
-  ( serveDeleteItem
-  ) where
-
-import Import
+  ( serveDeleteItem,
+  )
+where
 
 import Database.Persist
-
-import Servant
-
+import Import
 import Intray.API
-
-import Intray.Server.Types
-
 import Intray.Server.Handler.Utils
+import Intray.Server.Types
+import Servant
 
 serveDeleteItem :: AuthCookie -> ItemUUID -> IntrayHandler NoContent
 serveDeleteItem AuthCookie {..} id_ = do

@@ -7,16 +7,17 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.Cli.OptParse
-  ( Instructions(..)
-  , getInstructions
-  , Settings(..)
-  , SyncStrategy(..)
-  , Dispatch(..)
-  , RegisterSettings(..)
-  , LoginSettings(..)
-  , AddSettings(..)
-  , CliM
-  ) where
+  ( Instructions (..),
+    getInstructions,
+    Settings (..),
+    SyncStrategy (..),
+    Dispatch (..),
+    RegisterSettings (..),
+    LoginSettings (..),
+    AddSettings (..),
+    CliM,
+  )
+where
 
 import qualified Data.Text as T
 import qualified Env
@@ -57,40 +58,41 @@ combineToInstructions (Arguments cmd Flags {..}) Environment {..} mConf =
           Just d -> resolveDir' d
       let setSyncStrategy =
             fromMaybe
-              (case setBaseUrl of
-                 Nothing -> NeverSync
-                 Just _ -> AlwaysSync) $
-            flagSyncStrategy <|> envSyncStrategy <|> mc configSyncStrategy
+              ( case setBaseUrl of
+                  Nothing -> NeverSync
+                  Just _ -> AlwaysSync
+              )
+              $ flagSyncStrategy <|> envSyncStrategy <|> mc configSyncStrategy
       pure Settings {..}
     getDispatch =
       case cmd of
         CommandRegister RegisterArgs {..} ->
           pure $
-          DispatchRegister
-            RegisterSettings
-              { registerSetUsername =
-                  (T.pack <$> (registerArgUsername <|> envUsername <|> mc configUsername)) >>=
-                  parseUsername
-              , registerSetPassword = T.pack <$> (registerArgPassword <|> envPassword)
-              }
+            DispatchRegister
+              RegisterSettings
+                { registerSetUsername =
+                    (T.pack <$> (registerArgUsername <|> envUsername <|> mc configUsername))
+                      >>= parseUsername,
+                  registerSetPassword = T.pack <$> (registerArgPassword <|> envPassword)
+                }
         CommandLogin LoginArgs {..} ->
           pure $
-          DispatchLogin
-            LoginSettings
-              { loginSetUsername =
-                  (T.pack <$> (loginArgUsername <|> envUsername <|> mc configUsername)) >>=
-                  parseUsername
-              , loginSetPassword =
-                  T.pack <$> (loginArgPassword <|> envPassword <|> mc configPassword)
-              }
+            DispatchLogin
+              LoginSettings
+                { loginSetUsername =
+                    (T.pack <$> (loginArgUsername <|> envUsername <|> mc configUsername))
+                      >>= parseUsername,
+                  loginSetPassword =
+                    T.pack <$> (loginArgPassword <|> envPassword <|> mc configPassword)
+                }
         CommandAddItem AddArgs {..} ->
           pure $
-          DispatchAddItem
-            AddSettings
-              { addSetContents = map T.pack addArgContents
-              , addSetReadStdin = addArgReadStdin
-              , addSetRemote = addArgRemote
-              }
+            DispatchAddItem
+              AddSettings
+                { addSetContents = map T.pack addArgContents,
+                  addSetReadStdin = addArgReadStdin,
+                  addSetRemote = addArgRemote
+                }
         CommandShowItem -> pure DispatchShowItem
         CommandDoneItem -> pure DispatchDoneItem
         CommandSize -> pure DispatchSize
@@ -109,11 +111,13 @@ getConfiguration Flags {..} Environment {..} =
 defaultConfigFiles :: IO [Path Abs File]
 defaultConfigFiles =
   sequence
-    [ do xdgConfigDir <- getXdgDir XdgConfig (Just [reldir|intray|])
-         resolveFile xdgConfigDir "config.yaml"
-    , do homeDir <- getHomeDir
-         intrayDir <- resolveDir homeDir ".intray"
-         resolveFile intrayDir "config.yaml"
+    [ do
+        xdgConfigDir <- getXdgDir XdgConfig (Just [reldir|intray|])
+        resolveFile xdgConfigDir "config.yaml",
+      do
+        homeDir <- getHomeDir
+        intrayDir <- resolveDir homeDir ".intray"
+        resolveFile intrayDir "config.yaml"
     ]
 
 getEnvironment :: IO Environment
@@ -122,13 +126,13 @@ getEnvironment = Env.parse (Env.header "Environment") environmentParser
 environmentParser :: Env.Parser Env.Error Environment
 environmentParser =
   Env.prefixed "INTRAY_" $
-  Environment <$> Env.var (fmap Just . Env.str) "CONFIG_FILE" (mE <> Env.help "Config file") <*>
-  Env.var (fmap Just . Env.str) "URL" (mE <> Env.help "sync server url") <*>
-  Env.var (fmap Just . Env.str) "USERNAME" (mE <> Env.help "Sync username") <*>
-  Env.var (fmap Just . Env.str) "PASSWORD" (mE <> Env.help "Sync username") <*>
-  Env.var (fmap Just . Env.str) "CACHE_DIR" (mE <> Env.help "cache directory") <*>
-  Env.var (fmap Just . Env.str) "DATA_DIR" (mE <> Env.help "data directory") <*>
-  Env.var (fmap Just . Env.auto) "SYNC_STRATEGY" (mE <> Env.help "Sync strategy")
+    Environment <$> Env.var (fmap Just . Env.str) "CONFIG_FILE" (mE <> Env.help "Config file")
+      <*> Env.var (fmap Just . Env.str) "URL" (mE <> Env.help "sync server url")
+      <*> Env.var (fmap Just . Env.str) "USERNAME" (mE <> Env.help "Sync username")
+      <*> Env.var (fmap Just . Env.str) "PASSWORD" (mE <> Env.help "Sync username")
+      <*> Env.var (fmap Just . Env.str) "CACHE_DIR" (mE <> Env.help "cache directory")
+      <*> Env.var (fmap Just . Env.str) "DATA_DIR" (mE <> Env.help "data directory")
+      <*> Env.var (fmap Just . Env.auto) "SYNC_STRATEGY" (mE <> Env.help "Sync strategy")
   where
     mE = Env.def Nothing <> Env.keep
 
@@ -149,10 +153,10 @@ argParser = info (helper <*> parseArgs) (fullDesc <> footerDoc (Just $ OptParse.
   where
     footerStr =
       unlines
-        [ Env.helpDoc environmentParser
-        , ""
-        , "Configuration file format:"
-        , T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
+        [ Env.helpDoc environmentParser,
+          "",
+          "Configuration file format:",
+          T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
         ]
 
 parseArgs :: Parser Arguments
@@ -161,68 +165,75 @@ parseArgs = Arguments <$> parseCommand <*> parseFlags
 parseCommand :: Parser Command
 parseCommand =
   hsubparser $
-  mconcat
-    [ command "register" parseCommandRegister
-    , command "login" parseCommandLogin
-    , command "add" parseCommandPostPostAddItem
-    , command "show" parseCommandShowItem
-    , command "done" parseCommandDoneItem
-    , command "size" parseCommandSize
-    , command "review" parseCommandReview
-    , command "logout" parseCommandLogout
-    , command "sync" parseCommandSync
-    ]
+    mconcat
+      [ command "register" parseCommandRegister,
+        command "login" parseCommandLogin,
+        command "add" parseCommandPostPostAddItem,
+        command "show" parseCommandShowItem,
+        command "done" parseCommandDoneItem,
+        command "size" parseCommandSize,
+        command "review" parseCommandReview,
+        command "logout" parseCommandLogout,
+        command "sync" parseCommandSync
+      ]
 
 parseCommandRegister :: ParserInfo Command
 parseCommandRegister = info parser modifier
   where
     modifier = fullDesc <> progDesc "Register user"
     parser =
-      CommandRegister <$>
-      (RegisterArgs <$>
-       option
-         (Just <$> str)
-         (mconcat
-            [long "username", help "The username to register", value Nothing, metavar "USERNAME"]) <*>
-       option
-         (Just <$> str)
-         (mconcat
-            [ long "password"
-            , help "The password to register with. If absent, a prompt will ask for the password."
-            , value Nothing
-            , metavar "PASSWORD"
-            ]))
+      CommandRegister
+        <$> ( RegisterArgs
+                <$> option
+                  (Just <$> str)
+                  ( mconcat
+                      [long "username", help "The username to register", value Nothing, metavar "USERNAME"]
+                  )
+                <*> option
+                  (Just <$> str)
+                  ( mconcat
+                      [ long "password",
+                        help "The password to register with. If absent, a prompt will ask for the password.",
+                        value Nothing,
+                        metavar "PASSWORD"
+                      ]
+                  )
+            )
 
 parseCommandLogin :: ParserInfo Command
 parseCommandLogin = info parser modifier
   where
     modifier = fullDesc <> progDesc "Login user"
     parser =
-      CommandLogin <$>
-      (LoginArgs <$>
-       option
-         (Just <$> str)
-         (mconcat [long "username", help "The username to login", value Nothing, metavar "USERNAME"]) <*>
-       option
-         (Just <$> str)
-         (mconcat
-            [long "password", help "The password to login with", value Nothing, metavar "PASSWORD"]))
+      CommandLogin
+        <$> ( LoginArgs
+                <$> option
+                  (Just <$> str)
+                  (mconcat [long "username", help "The username to login", value Nothing, metavar "USERNAME"])
+                <*> option
+                  (Just <$> str)
+                  ( mconcat
+                      [long "password", help "The password to login with", value Nothing, metavar "PASSWORD"]
+                  )
+            )
 
 parseCommandPostPostAddItem :: ParserInfo Command
 parseCommandPostPostAddItem = info parser modifier
   where
     modifier = fullDesc <> progDesc "Add an item"
     parser =
-      CommandAddItem <$>
-      (AddArgs <$>
-       many
-         (strArgument (mconcat [help "Give the contents of the item to be added.", metavar "TEXT"])) <*>
-       switch (mconcat [long "stdin", help "Read contents from stdin too"]) <*>
-       switch
-         (mconcat
-            [ long "remote"
-            , help "Only add the item remotely, not locally. This implies --sync-strategy NeverSync"
-            ]))
+      CommandAddItem
+        <$> ( AddArgs
+                <$> many
+                  (strArgument (mconcat [help "Give the contents of the item to be added.", metavar "TEXT"]))
+                <*> switch (mconcat [long "stdin", help "Read contents from stdin too"])
+                <*> switch
+                  ( mconcat
+                      [ long "remote",
+                        help "Only add the item remotely, not locally. This implies --sync-strategy NeverSync"
+                      ]
+                  )
+            )
 
 parseCommandShowItem :: ParserInfo Command
 parseCommandShowItem = info parser modifier
@@ -262,33 +273,36 @@ parseCommandSync = info parser modifier
 
 parseFlags :: Parser Flags
 parseFlags =
-  Flags <$>
-  option
-    (Just <$> str)
-    (mconcat
-       [ long "config-file"
-       , help "Give the path to an altenative config file"
-       , value Nothing
-       , metavar "FILEPATH"
-       ]) <*>
-  option
-    (Just <$> str)
-    (mconcat [long "url", help "The url of the server.", value Nothing, metavar "URL"]) <*>
-  option
-    (Just <$> str)
-    (mconcat
-       [ long "cache-dir"
-       , help "The directory to use for caching"
-       , value Nothing
-       , metavar "FILEPATH"
-       ]) <*>
-  option
-    (Just <$> str)
-    (mconcat
-       [long "data-dir", help "The directory to use for data", value Nothing, metavar "FILEPATH"]) <*>
-  syncStrategyOpt
+  Flags
+    <$> option
+      (Just <$> str)
+      ( mconcat
+          [ long "config-file",
+            help "Give the path to an altenative config file",
+            value Nothing,
+            metavar "FILEPATH"
+          ]
+      )
+    <*> option
+      (Just <$> str)
+      (mconcat [long "url", help "The url of the server.", value Nothing, metavar "URL"])
+    <*> option
+      (Just <$> str)
+      ( mconcat
+          [ long "cache-dir",
+            help "The directory to use for caching",
+            value Nothing,
+            metavar "FILEPATH"
+          ]
+      )
+    <*> option
+      (Just <$> str)
+      ( mconcat
+          [long "data-dir", help "The directory to use for data", value Nothing, metavar "FILEPATH"]
+      )
+    <*> syncStrategyOpt
 
 syncStrategyOpt :: Parser (Maybe SyncStrategy)
 syncStrategyOpt =
-  flag Nothing (Just NeverSync) (mconcat [long "no-sync", help "Do not try to sync."]) <|>
-  flag Nothing (Just AlwaysSync) (mconcat [long "sync", help "Definitely try to sync."])
+  flag Nothing (Just NeverSync) (mconcat [long "no-sync", help "Do not try to sync."])
+    <|> flag Nothing (Just AlwaysSync) (mconcat [long "sync", help "Definitely try to sync."])

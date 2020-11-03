@@ -1,8 +1,9 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Cli.Commands.Sync
-  ( sync
-  ) where
+  ( sync,
+  )
+where
 
 import Import
 import Intray.Cli.Client
@@ -31,8 +32,8 @@ sync =
 showMergeStats :: SyncRequest ci si a -> SyncResponse ci si a -> String
 showMergeStats SyncRequest {..} SyncResponse {..} =
   unlines
-    [ unwords [show $ length syncResponseServerAdded, "added   remotely"]
-    , unwords [show $ length syncResponseServerDeleted, "deleted remotely"]
-    , unwords [show $ length syncResponseClientAdded, "added   locally"]
-    , unwords [show $ length syncResponseClientDeleted, "deleted locally"]
+    [ unwords [show $ length syncResponseServerAdded, "added   remotely"],
+      unwords [show $ length syncResponseServerDeleted, "deleted remotely"],
+      unwords [show $ length syncResponseClientAdded, "added   locally"],
+      unwords [show $ length syncResponseClientDeleted, "deleted locally"]
     ]

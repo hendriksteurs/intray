@@ -1,21 +1,17 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.GetItems where
 
-import Import
-
 import Database.Persist
-
+import Import
 import Intray.API
-
+import Intray.Server.Handler.Utils
 import Intray.Server.Item
 import Intray.Server.Types
-
-import Intray.Server.Handler.Utils
 
 serveGetItems :: AuthCookie -> IntrayHandler [ItemInfo TypedItem]
 serveGetItems AuthCookie {..} = do

@@ -1,88 +1,87 @@
 module Intray.Server.Serve
-  ( intrayServer
-  ) where
+  ( intrayServer,
+  )
+where
 
 import Data.Set (Set)
 import qualified Data.Set as S
-
+import Intray.API
+import Intray.Server.Handler
+import Intray.Server.Types
 import Servant.Auth.Server
 import Servant.Server
 import Servant.Server.Generic
 
-import Intray.API
-
-import Intray.Server.Types
-
-import Intray.Server.Handler
-
 intrayServer :: IntraySite (AsServerT IntrayHandler)
 intrayServer =
   IntraySite
-    {openSite = genericServerT intrayOpenServer, adminSite = genericServerT intrayAdminServer}
+    { openSite = genericServerT intrayOpenServer,
+      adminSite = genericServerT intrayAdminServer
+    }
 
 intrayOpenServer :: IntrayOpenSite (AsServerT IntrayHandler)
 intrayOpenServer =
   IntrayOpenSite
-    { protectedSite = genericServerT intrayProtectedServer
-    , publicSite = genericServerT intrayPublicServer
+    { protectedSite = genericServerT intrayProtectedServer,
+      publicSite = genericServerT intrayPublicServer
     }
 
 intrayProtectedServer :: IntrayProtectedSite (AsServerT IntrayHandler)
 intrayProtectedServer =
   IntrayProtectedSite
-    { protectedItemSite = genericServerT intrayProtectedItemServer
-    , protectedAccountSite = genericServerT intrayProtectedAccountServer
-    , protectedAccessKeySite = genericServerT intrayProtectedAccessKeyServer
-    , getPermissions = withAuthResultAndPermission PermitGetPermissions serveGetPermissions
+    { protectedItemSite = genericServerT intrayProtectedItemServer,
+      protectedAccountSite = genericServerT intrayProtectedAccountServer,
+      protectedAccessKeySite = genericServerT intrayProtectedAccessKeyServer,
+      getPermissions = withAuthResultAndPermission PermitGetPermissions serveGetPermissions
     }
 
 intrayProtectedItemServer :: IntrayProtectedItemSite (AsServerT IntrayHandler)
 intrayProtectedItemServer =
   IntrayProtectedItemSite
-    { getShowItem = withAuthResultAndPermission PermitShow serveGetShowItem
-    , getIntraySize = withAuthResultAndPermission PermitSize serveGetIntraySize
-    , getItemUUIDs = withAuthResultAndPermission PermitGetItemUUIDs serveGetItemUUIDs
-    , getItems = withAuthResultAndPermission PermitGetItems serveGetItems
-    , postAddItem = withAuthResultAndPermission PermitAdd servePostAddItem
-    , getItem = withAuthResultAndPermission PermitGetItem serveGetItem
-    , deleteItem = withAuthResultAndPermission PermitDelete serveDeleteItem
-    , postSync = withAuthResultAndPermission PermitSync servePostSync
+    { getShowItem = withAuthResultAndPermission PermitShow serveGetShowItem,
+      getIntraySize = withAuthResultAndPermission PermitSize serveGetIntraySize,
+      getItemUUIDs = withAuthResultAndPermission PermitGetItemUUIDs serveGetItemUUIDs,
+      getItems = withAuthResultAndPermission PermitGetItems serveGetItems,
+      postAddItem = withAuthResultAndPermission PermitAdd servePostAddItem,
+      getItem = withAuthResultAndPermission PermitGetItem serveGetItem,
+      deleteItem = withAuthResultAndPermission PermitDelete serveDeleteItem,
+      postSync = withAuthResultAndPermission PermitSync servePostSync
     }
 
 intrayProtectedAccountServer :: IntrayProtectedAccountSite (AsServerT IntrayHandler)
 intrayProtectedAccountServer =
   IntrayProtectedAccountSite
-    { getAccountInfo = withAuthResultAndPermission PermitGetAccountInfo serveGetAccountInfo
-    , postChangePassphrase =
-        withAuthResultAndPermission PermitPostChangePassphrase servePostChangePassphrase
-    , deleteAccount = withAuthResultAndPermission PermitDeleteAccount serveDeleteAccount
+    { getAccountInfo = withAuthResultAndPermission PermitGetAccountInfo serveGetAccountInfo,
+      postChangePassphrase =
+        withAuthResultAndPermission PermitPostChangePassphrase servePostChangePassphrase,
+      deleteAccount = withAuthResultAndPermission PermitDeleteAccount serveDeleteAccount
     }
 
 intrayProtectedAccessKeyServer :: IntrayProtectedAccessKeySite (AsServerT IntrayHandler)
 intrayProtectedAccessKeyServer =
   IntrayProtectedAccessKeySite
-    { postAddAccessKey = withAuthResultAndPermission PermitPostAddAccessKey servePostAddAccessKey
-    , getAccessKey = withAuthResultAndPermission PermitGetAccessKey serveGetAccessKey
-    , getAccessKeys = withAuthResultAndPermission PermitGetAccessKeys serveGetAccessKeys
-    , deleteAccessKey = withAuthResultAndPermission PermitDeleteAccessKey serveDeleteAccessKey
+    { postAddAccessKey = withAuthResultAndPermission PermitPostAddAccessKey servePostAddAccessKey,
+      getAccessKey = withAuthResultAndPermission PermitGetAccessKey serveGetAccessKey,
+      getAccessKeys = withAuthResultAndPermission PermitGetAccessKeys serveGetAccessKeys,
+      deleteAccessKey = withAuthResultAndPermission PermitDeleteAccessKey serveDeleteAccessKey
     }
 
 intrayAdminServer :: IntrayAdminSite (AsServerT IntrayHandler)
 intrayAdminServer =
   IntrayAdminSite
-    { adminGetStats = withAuthResultAndPermission PermitAdminGetStats serveAdminGetStats
-    , adminDeleteAccount =
-        withAuthResultAndPermission PermitAdminDeleteAccount serveAdminDeleteAccount
-    , adminGetAccounts = withAuthResultAndPermission PermitAdminGetAccounts serveAdminGetAccounts
+    { adminGetStats = withAuthResultAndPermission PermitAdminGetStats serveAdminGetStats,
+      adminDeleteAccount =
+        withAuthResultAndPermission PermitAdminDeleteAccount serveAdminDeleteAccount,
+      adminGetAccounts = withAuthResultAndPermission PermitAdminGetAccounts serveAdminGetAccounts
     }
 
 intrayPublicServer :: IntrayPublicSite (AsServerT IntrayHandler)
 intrayPublicServer =
   IntrayPublicSite
-    { postRegister = servePostRegister
-    , postLogin = servePostLogin
-    , getDocs = serveGetDocs
-    , getPricing = serveGetPricing
+    { postRegister = servePostRegister,
+      postLogin = servePostLogin,
+      getDocs = serveGetDocs,
+      getPricing = serveGetPricing
     }
 
 withAuthResult :: ThrowAll a => (AuthCookie -> a) -> (AuthResult AuthCookie -> a)
@@ -92,7 +91,7 @@ withAuthResult func ar =
     _ -> throwAll err401
 
 withAuthResultAndPermission ::
-     ThrowAll a => Permission -> (AuthCookie -> a) -> (AuthResult AuthCookie -> a)
+  ThrowAll a => Permission -> (AuthCookie -> a) -> (AuthResult AuthCookie -> a)
 withAuthResultAndPermission p func =
   withAuthResult (\ac -> withPermission (authCookiePermissions ac) p (func ac))
 

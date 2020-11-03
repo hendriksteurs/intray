@@ -1,11 +1,11 @@
 module Intray.Cli.Path
-  ( sessionPath
-  , lastSeenItemPath
-  , storePath
-  ) where
+  ( sessionPath,
+    lastSeenItemPath,
+    storePath,
+  )
+where
 
 import Import
-
 import Intray.Cli.OptParse
 
 sessionPath :: CliM (Path Abs File)

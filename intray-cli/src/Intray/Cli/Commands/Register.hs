@@ -4,18 +4,16 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Cli.Commands.Register
-  ( register
-  ) where
+  ( register,
+  )
+where
 
 import Import
-
 import Intray.API
-
-import Intray.Client
-
 import Intray.Cli.Client
 import Intray.Cli.OptParse
 import Intray.Cli.Prompt
+import Intray.Client
 
 register :: RegisterSettings -> CliM ()
 register RegisterSettings {..} = do

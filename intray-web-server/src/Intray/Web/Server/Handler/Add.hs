@@ -4,9 +4,10 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.Add
-  ( getAddR
-  , postAddR
-  ) where
+  ( getAddR,
+    postAddR,
+  )
+where
 
 import qualified Data.Text as T
 import Import

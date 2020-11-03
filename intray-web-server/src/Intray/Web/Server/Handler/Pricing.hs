@@ -1,16 +1,15 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Web.Server.Handler.Pricing
-  ( pricingShowAmountPerMonth
-  , showAmountForPricing
-  ) where
+  ( pricingShowAmountPerMonth,
+    showAmountForPricing,
+  )
+where
 
 import Import
-
+import Intray.Client
 import Web.Stripe as Stripe
 import Web.Stripe.Types as Stripe
-
-import Intray.Client
 
 pricingShowAmountPerMonth :: Pricing -> String
 pricingShowAmountPerMonth Pricing {..} =

@@ -1,22 +1,19 @@
 module Intray.Cli.Session
-  ( withToken
-  , loadToken
-  , loadSession
-  , saveSession
-  ) where
-
-import Import
+  ( withToken,
+    loadToken,
+    loadSession,
+    saveSession,
+  )
+where
 
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Builder as SBB
 import qualified Data.ByteString.Lazy as LB
-
-import Web.Cookie
-
-import Servant.Auth.Client
-
+import Import
 import Intray.Cli.OptParse
 import Intray.Cli.Path
+import Servant.Auth.Client
+import Web.Cookie
 
 withToken :: (Token -> CliM a) -> CliM a
 withToken func = do

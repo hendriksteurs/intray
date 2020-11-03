@@ -4,7 +4,6 @@
 module Intray.API.Admin.Gen where
 
 import Import
-
 import Intray.API
 import Intray.Data.Gen ()
 

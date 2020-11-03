@@ -6,9 +6,10 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.GetAccountInfo
-  ( serveGetAccountInfo
-  , getAccountSubscribed
-  ) where
+  ( serveGetAccountInfo,
+    getAccountSubscribed,
+  )
+where
 
 import Data.Ord
 import Data.Time
@@ -32,13 +33,13 @@ serveGetAccountInfo AuthCookie {..} = do
       ups <- getUserPaidStatus authCookieUserUUID
       pure
         AccountInfo
-          { accountInfoUUID = authCookieUserUUID
-          , accountInfoUsername = userUsername
-          , accountInfoCreatedTimestamp = userCreatedTimestamp
-          , accountInfoLastLogin = userLastLogin
-          , accountInfoAdmin = userUsername `elem` admins
-          , accountInfoCount = c
-          , accountInfoStatus = ups
+          { accountInfoUUID = authCookieUserUUID,
+            accountInfoUsername = userUsername,
+            accountInfoCreatedTimestamp = userCreatedTimestamp,
+            accountInfoLastLogin = userLastLogin,
+            accountInfoAdmin = userUsername `elem` admins,
+            accountInfoCount = c,
+            accountInfoStatus = ups
           }
 
 getAccountSubscribed :: AccountUUID -> IntrayHandler (Maybe UTCTime)
@@ -58,4 +59,4 @@ getAccountSubscribed aid = do
           pure $
             case sortOn Down $ map subscriptionCurrentPeriodEnd relevantSubs of
               [] -> Nothing
-              (end:_) -> Just end
+              (end : _) -> Just end

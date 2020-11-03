@@ -1,26 +1,22 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.AccessKey.GetAccessKey
-  ( serveGetAccessKey
-  , makeAccessKeyInfo
-  ) where
-
-import Import
+  ( serveGetAccessKey,
+    makeAccessKeyInfo,
+  )
+where
 
 import Database.Persist
-
+import Import
+import Intray.API
+import Intray.Server.Handler.Utils
+import Intray.Server.Types
 import Servant hiding (BadPassword, NoSuchUser)
 import Servant.Auth.Server as Auth
-
-import Intray.API
-
-import Intray.Server.Types
-
-import Intray.Server.Handler.Utils
 
 serveGetAccessKey :: AuthCookie -> AccessKeyUUID -> IntrayHandler AccessKeyInfo
 serveGetAccessKey AuthCookie {..} uuid = do
@@ -32,8 +28,8 @@ serveGetAccessKey AuthCookie {..} uuid = do
 makeAccessKeyInfo :: AccessKey -> AccessKeyInfo
 makeAccessKeyInfo AccessKey {..} =
   AccessKeyInfo
-    { accessKeyInfoUUID = accessKeyIdentifier
-    , accessKeyInfoName = accessKeyName
-    , accessKeyInfoCreatedTimestamp = accessKeyCreatedTimestamp
-    , accessKeyInfoPermissions = accessKeyPermissions
+    { accessKeyInfoUUID = accessKeyIdentifier,
+      accessKeyInfoName = accessKeyName,
+      accessKeyInfoCreatedTimestamp = accessKeyCreatedTimestamp,
+      accessKeyInfoPermissions = accessKeyPermissions
     }

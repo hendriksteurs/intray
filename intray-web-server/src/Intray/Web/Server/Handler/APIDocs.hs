@@ -1,8 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Web.Server.Handler.APIDocs
-  ( getAPIDocsR
-  ) where
+  ( getAPIDocsR,
+  )
+where
 
 import Import
 import Intray.API

@@ -1,29 +1,25 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.PostAddItem
-  ( servePostAddItem
-  ) where
-
-import Import
+  ( servePostAddItem,
+  )
+where
 
 import Data.Time
 import Data.UUID.Typed
 import Database.Persist
-
-import Servant hiding (BadPassword, NoSuchUser)
-import Servant.Auth.Server as Auth
-
+import Import
 import Intray.API
-
 import Intray.Server.Handler.Stripe
+import Intray.Server.Handler.Utils
 import Intray.Server.Item
 import Intray.Server.Types
-
-import Intray.Server.Handler.Utils
+import Servant hiding (BadPassword, NoSuchUser)
+import Servant.Auth.Server as Auth
 
 servePostAddItem :: AuthCookie -> TypedItem -> IntrayHandler ItemUUID
 servePostAddItem AuthCookie {..} typedItem = do

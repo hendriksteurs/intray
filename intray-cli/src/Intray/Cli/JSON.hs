@@ -1,9 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Cli.JSON
-  ( writeJSON
-  , readJSON
-  ) where
+  ( writeJSON,
+    readJSON,
+  )
+where
 
 import Data.Aeson as JSON
 import Data.Aeson.Encode.Pretty as JSON
@@ -21,11 +22,11 @@ readJSON p extraErr =
         case JSON.eitherDecode contents of
           Left err ->
             die $
-            unlines
-              [ unwords ["Unable to decode JSON file", fromAbsFile p, ", got error:", err]
-              , ""
-              , extraErr
-              ]
+              unlines
+                [ unwords ["Unable to decode JSON file", fromAbsFile p, ", got error:", err],
+                  "",
+                  extraErr
+                ]
           Right a -> pure a
 
 writeJSON :: (MonadIO m, ToJSON a) => Path Abs File -> a -> m ()

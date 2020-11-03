@@ -1,22 +1,19 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.GetIntraySize
-  ( serveGetIntraySize
-  ) where
-
-import Import
+  ( serveGetIntraySize,
+  )
+where
 
 import Database.Persist
-
+import Import
 import Intray.API
-
-import Intray.Server.Types
-
 import Intray.Server.Handler.Utils
+import Intray.Server.Types
 
 serveGetIntraySize :: AuthCookie -> IntrayHandler Int
 serveGetIntraySize AuthCookie {..} = runDb $ count [IntrayItemUserId ==. authCookieUserUUID]

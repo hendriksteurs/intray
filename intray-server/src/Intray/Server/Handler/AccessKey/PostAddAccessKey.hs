@@ -5,24 +5,19 @@
 {-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.AccessKey.PostAddAccessKey
-  ( servePostAddAccessKey
-  ) where
-
-import Import
+  ( servePostAddAccessKey,
+  )
+where
 
 import qualified Data.Set as S
 import Data.Time
-
 import Database.Persist
-
+import Import
+import Intray.API
+import Intray.Server.Handler.Utils
+import Intray.Server.Types
 import Servant hiding (BadPassword, NoSuchUser)
 import Servant.Auth.Server as Auth
-
-import Intray.API
-
-import Intray.Server.Types
-
-import Intray.Server.Handler.Utils
 
 servePostAddAccessKey :: AuthCookie -> AddAccessKey -> IntrayHandler AccessKeyCreated
 servePostAddAccessKey AuthCookie {..} AddAccessKey {..} = do
@@ -38,16 +33,16 @@ servePostAddAccessKey AuthCookie {..} AddAccessKey {..} = do
       runDb $
         insert_
           AccessKey
-            { accessKeyIdentifier = uuid
-            , accessKeyUser = authCookieUserUUID
-            , accessKeyName = addAccessKeyName
-            , accessKeyHashedKey = hp
-            , accessKeyCreatedTimestamp = now
-            , accessKeyPermissions = perms
+            { accessKeyIdentifier = uuid,
+              accessKeyUser = authCookieUserUUID,
+              accessKeyName = addAccessKeyName,
+              accessKeyHashedKey = hp,
+              accessKeyCreatedTimestamp = now,
+              accessKeyPermissions = perms
             }
       pure
         AccessKeyCreated
-          { accessKeyCreatedCreatedTimestamp = now
-          , accessKeyCreatedKey = secret
-          , accessKeyCreatedUUID = uuid
+          { accessKeyCreatedCreatedTimestamp = now,
+            accessKeyCreatedKey = secret,
+            accessKeyCreatedUUID = uuid
           }

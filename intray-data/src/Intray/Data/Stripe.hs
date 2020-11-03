@@ -1,13 +1,12 @@
-{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE StandaloneDeriving #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.Data.Stripe where
 
-import Web.Stripe.Types as Stripe
-
 import Database.Persist
 import Database.Persist.Sql
+import Web.Stripe.Types as Stripe
 
 deriving instance PersistField CustomerId
 

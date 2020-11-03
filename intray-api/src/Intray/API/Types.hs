@@ -10,29 +10,28 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.API.Types
-  ( ProtectAPI
-  , AuthCookie(..)
-  , Permission(..)
-  , userPermissions
-  , adminPermissions
-  , Registration(..)
-  , LoginForm(..)
-  , GetDocsResponse(..)
-  , HashedPassword
-  , passwordHash
-  , validatePassword
-  , ItemUUID
-  , AccountUUID
-  , AccessKeyUUID
-  , Username
-  , parseUsername
-  , parseUsernameWithError
-  , usernameText
-  , Pricing(..)
-  , module Data.UUID.Typed
-  ) where
-
-import Import
+  ( ProtectAPI,
+    AuthCookie (..),
+    Permission (..),
+    userPermissions,
+    adminPermissions,
+    Registration (..),
+    LoginForm (..),
+    GetDocsResponse (..),
+    HashedPassword,
+    passwordHash,
+    validatePassword,
+    ItemUUID,
+    AccountUUID,
+    AccessKeyUUID,
+    Username,
+    parseUsername,
+    parseUsernameWithError,
+    usernameText,
+    Pricing (..),
+    module Data.UUID.Typed,
+  )
+where
 
 import Data.Aeson as JSON
 import Data.Hashable
@@ -42,31 +41,27 @@ import qualified Data.Text as T
 import Data.Time
 import qualified Data.UUID as UUID
 import Data.UUID.Typed
-import System.IO.Unsafe
-
-import Text.Blaze as HTML
-import Text.Blaze.Html as HTML
-
-import Web.Cookie
-
+import Import
+import Intray.Data
 import Servant.API
 import Servant.Auth
 import Servant.Auth.Docs ()
 import Servant.Auth.Server
 import Servant.Docs
 import Servant.HTML.Blaze
-
+import System.IO.Unsafe
+import Text.Blaze as HTML
+import Text.Blaze.Html as HTML
+import Web.Cookie
 import qualified Web.Stripe.Plan as Stripe
 
-import Intray.Data
+type ProtectAPI = Auth '[JWT] AuthCookie
 
-type ProtectAPI = Auth '[ JWT] AuthCookie
-
-data AuthCookie =
-  AuthCookie
-    { authCookieUserUUID :: AccountUUID
-    , authCookiePermissions :: Set Permission
-    }
+data AuthCookie
+  = AuthCookie
+      { authCookieUserUUID :: AccountUUID,
+        authCookiePermissions :: Set Permission
+      }
   deriving (Show, Eq, Ord, Generic)
 
 instance FromJSON AuthCookie
@@ -105,11 +100,11 @@ instance ToSample Int where
 instance ToSample Word where
   toSamples Proxy = singleSample 42
 
-data Registration =
-  Registration
-    { registrationUsername :: Username
-    , registrationPassword :: Text
-    }
+data Registration
+  = Registration
+      { registrationUsername :: Username,
+        registrationPassword :: Text
+      }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity Registration
@@ -124,11 +119,11 @@ instance FromJSON Registration where
 
 instance ToSample Registration
 
-data LoginForm =
-  LoginForm
-    { loginFormUsername :: Username
-    , loginFormPassword :: Text
-    }
+data LoginForm
+  = LoginForm
+      { loginFormUsername :: Username,
+        loginFormPassword :: Text
+      }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity LoginForm
@@ -146,10 +141,10 @@ instance ToSample Username
 instance ToSample SetCookie where
   toSamples Proxy = singleSample def
 
-newtype GetDocsResponse =
-  GetDocsResponse
-    { unGetDocsResponse :: HTML.Html
-    }
+newtype GetDocsResponse
+  = GetDocsResponse
+      { unGetDocsResponse :: HTML.Html
+      }
   deriving (Generic)
 
 instance MimeUnrender HTML GetDocsResponse where
@@ -169,15 +164,15 @@ instance (Ord a, ToSample a) => ToSample (Set a) where
 instance ToSample AccessKeySecret where
   toSamples Proxy = singleSample $ unsafePerformIO generateRandomAccessKeySecret
 
-data Pricing =
-  Pricing
-    { pricingPlan :: !Stripe.PlanId
-    , pricingTrialPeriod :: !(Maybe Int)
-    , pricingPrice :: !Stripe.Amount
-    , pricingCurrency :: !Stripe.Currency
-    , pricingStripePublishableKey :: !Text
-    , pricingMaxItemsFree :: !Int
-    }
+data Pricing
+  = Pricing
+      { pricingPlan :: !Stripe.PlanId,
+        pricingTrialPeriod :: !(Maybe Int),
+        pricingPrice :: !Stripe.Amount,
+        pricingCurrency :: !Stripe.Currency,
+        pricingStripePublishableKey :: !Text,
+        pricingMaxItemsFree :: !Int
+      }
   deriving (Show, Eq, Generic)
 
 instance Validity Pricing
@@ -185,31 +180,33 @@ instance Validity Pricing
 instance FromJSON Pricing where
   parseJSON =
     withObject "Pricing" $ \o ->
-      Pricing <$> o .: "plan" <*> o .:? "trial-period" <*> o .: "price" <*> o .: "currency" <*>
-      o .: "publishable-key" <*>
-      o .: "max-items-free"
+      Pricing <$> o .: "plan" <*> o .:? "trial-period" <*> o .: "price" <*> o .: "currency"
+        <*> o
+        .: "publishable-key"
+        <*> o
+        .: "max-items-free"
 
 instance ToJSON Pricing where
   toJSON Pricing {..} =
     object
-      [ "plan" .= pricingPlan
-      , "trial-period" .= pricingTrialPeriod
-      , "price" .= pricingPrice
-      , "currency" .= pricingCurrency
-      , "publishable-key" .= pricingStripePublishableKey
-      , "max-items-free" .= pricingMaxItemsFree
+      [ "plan" .= pricingPlan,
+        "trial-period" .= pricingTrialPeriod,
+        "price" .= pricingPrice,
+        "currency" .= pricingCurrency,
+        "publishable-key" .= pricingStripePublishableKey,
+        "max-items-free" .= pricingMaxItemsFree
       ]
 
 instance ToSample Pricing where
   toSamples Proxy =
     singleSample
       Pricing
-        { pricingPrice = Stripe.Amount 100
-        , pricingTrialPeriod = Just 30
-        , pricingCurrency = Stripe.CHF
-        , pricingPlan = Stripe.PlanId "plan_FiN2Zsdv0DP0kh"
-        , pricingStripePublishableKey = "pk_test_zV5qVP1IQTjE9QYulRZpfD8C00cqGOnQ91"
-        , pricingMaxItemsFree = 5
+        { pricingPrice = Stripe.Amount 100,
+          pricingTrialPeriod = Just 30,
+          pricingCurrency = Stripe.CHF,
+          pricingPlan = Stripe.PlanId "plan_FiN2Zsdv0DP0kh",
+          pricingStripePublishableKey = "pk_test_zV5qVP1IQTjE9QYulRZpfD8C00cqGOnQ91",
+          pricingMaxItemsFree = 5
         }
 
 instance Validity Stripe.Currency where

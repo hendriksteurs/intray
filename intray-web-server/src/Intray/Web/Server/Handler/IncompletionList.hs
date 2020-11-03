@@ -1,8 +1,9 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.IncompletionList
-  ( getIncompletionListR
-  ) where
+  ( getIncompletionListR,
+  )
+where
 
 import Intray.Web.Server.Foundation
 import Yesod

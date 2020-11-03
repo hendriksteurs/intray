@@ -1,20 +1,17 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Intray.Server.Handler.Public.GetPricing
-  ( serveGetPricing
-  ) where
-
-import Import
+  ( serveGetPricing,
+  )
+where
 
 import Data.Cache as Cache
-
-import Web.Stripe.Plan as Stripe
-
+import Import
 import Intray.API
-
 import Intray.Server.Handler.Stripe
 import Intray.Server.OptParse.Types
 import Intray.Server.Types
+import Web.Stripe.Plan as Stripe
 
 serveGetPricing :: IntrayHandler (Maybe Pricing)
 serveGetPricing = do

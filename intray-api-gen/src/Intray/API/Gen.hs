@@ -1,24 +1,22 @@
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# OPTIONS_GHC -fno-warn-dodgy-exports #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.API.Gen
-  ( module Intray.API.Gen
-  , module Intray.API.Admin.Gen
-  , module Intray.API.Protected.Gen
-  ) where
+  ( module Intray.API.Gen,
+    module Intray.API.Admin.Gen,
+    module Intray.API.Protected.Gen,
+  )
+where
 
 import Import
-
-import Web.Stripe.Types as Stripe
-
 import Intray.API
-import Intray.Data.Gen ()
-
 import Intray.API.Admin.Gen ()
 import Intray.API.Protected.Gen ()
+import Intray.Data.Gen ()
+import Web.Stripe.Types as Stripe
 
 instance GenValid Registration where
   genValid = genValidStructurally

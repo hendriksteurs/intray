@@ -1,7 +1,6 @@
 let
   pkgs = import ./nix/pkgs.nix;
 in
-  pkgs.intrayPackages //
-{
+pkgs.intrayPackages // {
   inherit (pkgs) intrayNotification;
 }

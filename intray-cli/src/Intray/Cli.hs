@@ -1,7 +1,8 @@
 module Intray.Cli
-  ( intrayCli
-  , dispatch
-  ) where
+  ( intrayCli,
+    dispatch,
+  )
+where
 
 import Import
 import Intray.Cli.Commands

@@ -1,18 +1,17 @@
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Server.Handler.ListItemsSpec
-  ( spec
-  ) where
-
-import TestImport
+  ( spec,
+  )
+where
 
 import Intray.API
-import Intray.Client
-
 import Intray.API.Gen ()
+import Intray.Client
 import Intray.Server.TestUtils
+import TestImport
 
 spec :: Spec
 spec =

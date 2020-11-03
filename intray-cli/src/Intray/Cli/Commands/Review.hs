@@ -1,8 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Cli.Commands.Review
-  ( review
-  ) where
+  ( review,
+  )
+where
 
 import Data.Time
 import Import

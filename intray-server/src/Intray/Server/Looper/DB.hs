@@ -2,13 +2,12 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Intray.Server.Looper.DB
-  ( looperDB
-  ) where
-
-import Import
+  ( looperDB,
+  )
+where
 
 import Database.Persist.Sqlite (SqlPersistT, runSqlPool)
-
+import Import
 import Intray.Server.Looper.Import
 
 looperDB :: SqlPersistT IO b -> Looper b

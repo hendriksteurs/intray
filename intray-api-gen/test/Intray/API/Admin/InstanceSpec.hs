@@ -1,16 +1,14 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.API.Admin.InstanceSpec
-  ( spec
-  ) where
-
-import TestImport
-
-import Test.Validity.Aeson
-
-import Intray.API.Admin.Types
+  ( spec,
+  )
+where
 
 import Intray.API.Admin.Gen ()
+import Intray.API.Admin.Types
+import Test.Validity.Aeson
+import TestImport
 
 spec :: Spec
 spec = do

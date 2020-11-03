@@ -28,8 +28,8 @@ instance GenValid Username where
       Nothing -> genValid
     where
       textGen =
-        T.pack <$>
-        ((:) <$> charGen <*> ((:) <$> charGen <*> ((:) <$> charGen <*> genListOf charGen)))
+        T.pack
+          <$> ((:) <$> charGen <*> ((:) <$> charGen <*> ((:) <$> charGen <*> genListOf charGen)))
       charGen = choose ('\NUL', '\255') `suchThat` validUsernameChar
   shrinkValid = shrinkValidStructurally
 

@@ -4,8 +4,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Cli.Commands.Show
-  ( showItem
-  ) where
+  ( showItem,
+  )
+where
 
 import Data.Time
 import Import

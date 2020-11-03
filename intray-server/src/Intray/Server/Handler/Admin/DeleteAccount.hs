@@ -1,22 +1,19 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.Admin.DeleteAccount
-  ( serveAdminDeleteAccount
-  ) where
+  ( serveAdminDeleteAccount,
+  )
+where
 
 import Import
-
-import Servant
-
 import Intray.API
-
-import Intray.Server.Types
-
 import Intray.Server.Handler.Utils
+import Intray.Server.Types
+import Servant
 
 serveAdminDeleteAccount :: AuthCookie -> AccountUUID -> IntrayHandler NoContent
 serveAdminDeleteAccount AuthCookie {..} uuid = do

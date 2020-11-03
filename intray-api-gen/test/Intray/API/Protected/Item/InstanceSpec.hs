@@ -1,15 +1,14 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.API.Protected.Item.InstanceSpec
-  ( spec
-  ) where
-
-import TestImport
-
-import Test.Validity.Aeson
+  ( spec,
+  )
+where
 
 import Intray.API.Protected.Item.Gen ()
 import Intray.API.Protected.Item.Types
+import Test.Validity.Aeson
+import TestImport
 
 spec :: Spec
 spec = do

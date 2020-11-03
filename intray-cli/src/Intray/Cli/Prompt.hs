@@ -1,35 +1,32 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Cli.Prompt
-  ( promptUsername
-  , promptPassword
-  , prompt
-  ) where
-
-import Import
-
-import qualified Data.Text.IO as T
+  ( promptUsername,
+    promptPassword,
+    prompt,
+  )
+where
 
 import Control.Exception
-import System.IO
-
-import Intray.Data
-
+import qualified Data.Text.IO as T
+import Import
 import Intray.Cli.OptParse
+import Intray.Data
+import System.IO
 
 promptUsername :: Maybe Username -> CliM Username
 promptUsername mun =
   liftIO $
-  case mun of
-    Nothing -> promptUntil "username" parseUsername
-    Just un -> pure un
+    case mun of
+      Nothing -> promptUntil "username" parseUsername
+      Just un -> pure un
 
 promptPassword :: Maybe Text -> CliM Text
 promptPassword mp =
   liftIO $
-  case mp of
-    Nothing -> promptSecret "password"
-    Just pw -> pure pw
+    case mp of
+      Nothing -> promptSecret "password"
+      Just pw -> pure pw
 
 promptUntil :: Text -> (Text -> Maybe a) -> IO a
 promptUntil p func = do

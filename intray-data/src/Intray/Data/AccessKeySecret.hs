@@ -6,25 +6,24 @@
 {-# LANGUAGE TypeFamilies #-}
 
 module Intray.Data.AccessKeySecret
-  ( AccessKeySecret
-  , generateRandomAccessKeySecret
-  , accessKeySecretText
-  , parseAccessKeySecretText
-  ) where
-
-import Intray.Data.Import
+  ( AccessKeySecret,
+    generateRandomAccessKeySecret,
+    accessKeySecretText,
+    parseAccessKeySecretText,
+  )
+where
 
 import Data.Aeson as JSON
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Base16 as SB16
 import qualified Data.Text.Encoding as TE
-import System.Random
-
 import Database.Persist
 import Database.Persist.Sql
+import Intray.Data.Import
+import System.Random
 
-newtype AccessKeySecret =
-  AccessKeySecret ByteString
+newtype AccessKeySecret
+  = AccessKeySecret ByteString
   deriving (Show, Eq, Ord, Generic, PersistField, PersistFieldSql)
 
 instance Validity AccessKeySecret

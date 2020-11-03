@@ -1,13 +1,10 @@
 module Intray.Web.Server.Widget where
 
-import Import
-
 import Data.Default
-import Language.Haskell.TH.Syntax (Exp, Q)
-
-import Yesod.Default.Util (WidgetFileSettings, widgetFileNoReload, widgetFileReload)
-
+import Import
 import Intray.Web.Server.Constants
+import Language.Haskell.TH.Syntax (Exp, Q)
+import Yesod.Default.Util (WidgetFileSettings, widgetFileNoReload, widgetFileReload)
 
 widgetFile :: String -> Q Exp
 widgetFile =

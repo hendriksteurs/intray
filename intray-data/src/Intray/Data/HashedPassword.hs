@@ -3,26 +3,25 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Data.HashedPassword
-  ( passwordHash
-  , HashedPassword()
-  , validatePassword
-  ) where
-
-import Intray.Data.Import
+  ( passwordHash,
+    HashedPassword (),
+    validatePassword,
+  )
+where
 
 import qualified Crypto.BCrypt as BCrypt
 import qualified Data.Text.Encoding as TE
-
 import Database.Persist.Sql
+import Intray.Data.Import
 
-newtype HashedPassword =
-  HashedPassword ByteString
+newtype HashedPassword
+  = HashedPassword ByteString
   deriving (Show, Eq, Read, Generic, PersistField, PersistFieldSql)
 
 instance Validity HashedPassword where
   validate (HashedPassword password) =
     declare "The password uses our chosen hashing policy" $
-    BCrypt.hashUsesPolicy hashingpolicy password
+      BCrypt.hashUsesPolicy hashingpolicy password
 
 hashingpolicy :: BCrypt.HashingPolicy
 hashingpolicy = BCrypt.fastBcryptHashingPolicy
