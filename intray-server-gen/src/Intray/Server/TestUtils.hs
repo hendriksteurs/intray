@@ -8,8 +8,10 @@ module Intray.Server.TestUtils
   ( withIntrayServer,
     withFreeIntrayServer,
     withPaidIntrayServer,
+    withFreeIntrayTestApp,
+    withPaidIntrayTestApp,
+    withIntrayTestApp,
     setupTestHttpManager,
-    cleanupIntrayTestServer,
     runClient,
     runClientOrError,
     randomRegistration,
@@ -138,11 +140,6 @@ withIntrayTestApp menv func =
     let app = serveWithContext intrayAPI (intrayAppContext intrayEnv) (makeIntrayServer intrayEnv)
     testWithApplication (pure app) $ \port ->
       func $ ClientEnv man (BaseUrl Http "127.0.0.1" port "") Nothing
-
-cleanupIntrayTestServer :: IO ()
-cleanupIntrayTestServer = do
-  f <- resolveFile' testdbFile
-  ignoringAbsence $ removeFile f
 
 runClient :: ClientEnv -> ClientM a -> IO (Either ClientError a)
 runClient = flip runClientM
