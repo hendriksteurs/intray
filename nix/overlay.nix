@@ -191,14 +191,6 @@ with final.haskell.lib;
                       sha256 =
                         "sha256:1j76s7666vadm4q1ma73crkrks6q6nskzb3jqaf6rp2qmw1phfpr";
                     };
-                  sqliteRepo =
-                    final.fetchFromGitHub {
-                      owner = "GaloisInc";
-                      repo = "sqlite";
-                      rev = "e93ee84000c1d1eedbc23036c4a20ffd07e3145f";
-                      sha256 =
-                        "sha256:1ia3i97lcpsgi4zmk67hi2f2crffpiqndhl11dllw1mkqr92hklk";
-                    };
                   typedUuidPkg =
                     name:
                       self.callCabal2nix name (typedUuidRepo + "/${name}") {};
@@ -216,9 +208,7 @@ with final.haskell.lib;
                     name:
                       overrideCabal (
                         # Because there is some nastiness that makes nix think we need the haskell sqlite library.
-                        # dontCheck (
                         self.callCabal2nix name (persistentRepo + "/${name}") {}
-                        # )
                       ) (
                         old:
                           {
