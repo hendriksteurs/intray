@@ -72,7 +72,7 @@ withFreeIntrayServer specFunc =
   around withFreeIntrayTestApp $ modifyMaxShrinks (const 0) $ modifyMaxSuccess (`div` 20) specFunc
 
 testdbFile :: String
-testdbFile = "test.db"
+testdbFile = "intray-test.db"
 
 withIntrayTestConn :: (ConnectionPool -> IO a) -> IO a
 withIntrayTestConn func =
