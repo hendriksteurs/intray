@@ -80,8 +80,8 @@ withIntrayTestConn func =
     dbPath <- resolveFile tdir testdbFile
     let connInfo = mkSqliteConnectionInfo (T.pack (fromAbsFile dbPath)) & walEnabled .~ False
     runNoLoggingT $ do
-      p <- createSqlitePoolFromInfo connInfo 4
-      void $ runResourceT $ flip runSqlPool p $ runMigrationSilent migrateAll
+      p <- createSqlitePoolFromInfo connInfo 1
+      void $ runResourceT $ flip runSqlPool p $ runMigrationQuiet migrateAll
       liftIO $ func p
 
 setupTestHttpManager :: IO HTTP.Manager
