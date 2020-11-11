@@ -11,18 +11,14 @@ where
 
 import Control.Monad.Logger
 import qualified Data.Text as T
-import qualified Data.Text.Encoding as TE
 import Database.Persist.Sqlite
 import qualified Env
 import Import
 import Intray.API
 import Intray.Server.OptParse.Types
-import Looper
 import Options.Applicative
 import qualified Options.Applicative.Help as OptParse
 import qualified System.Environment as System
-import Web.Stripe.Client as Stripe
-import Web.Stripe.Types as Stripe
 import qualified YamlParse.Applicative as YamlParse
 
 getInstructions :: IO Instructions
@@ -61,15 +57,10 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
       let mmc :: (MonetisationConfiguration -> Maybe a) -> Maybe a
           mmc func = mc confMonetisationConfig >>= func
       let plan =
-            Stripe.PlanId . T.pack
+            T.pack
               <$> (serveFlagStripePlan <|> envStripePlan <|> mmc monetisationConfStripePlan)
-      let config =
-            ( \sk ->
-                StripeConfig
-                  { Stripe.secretKey = StripeKey $ TE.encodeUtf8 $ T.pack sk,
-                    stripeEndpoint = Nothing
-                  }
-            )
+      let secretKey =
+            T.pack
               <$> ( serveFlagStripeSecretKey <|> envStripeSecretKey
                       <|> mmc monetisationConfStripeSecretKey
                   )
@@ -78,30 +69,14 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
               <$> ( serveFlagStripePublishableKey <|> envStripePublishableKey
                       <|> mmc monetisationConfStripePublishableKey
                   )
-      let fetcherSets =
-            deriveLooperSettings
-              (seconds 0)
-              (minutes 1)
-              serveFlagLooperStripeEventsFetcher
-              envLooperStripeEventsFetcher
-              (mmc monetisationConfStripeEventsFetcher)
-      let retrierSets =
-            deriveLooperSettings
-              (seconds 30)
-              (hours 24)
-              serveFlagLooperStripeEventsRetrier
-              envLooperStripeEventsRetrier
-              (mmc monetisationConfStripeEventsRetrier)
       let maxItemsFree =
             fromMaybe 5 $
               serveFlagMaxItemsFree <|> envMaxItemsFree <|> mmc monetisationConfMaxItemsFree
       pure $ do
-        ss <- StripeSettings <$> plan <*> config <*> publicKey
+        ss <- StripeSettings <$> plan <*> publicKey <*> secretKey
         pure $
           MonetisationSettings
             { monetisationSetStripeSettings = ss,
-              monetisationSetStripeEventsFetcher = fetcherSets,
-              monetisationSetStripeEventsRetrier = retrierSets,
               monetisationSetMaxItemsFree = maxItemsFree
             }
   pure
@@ -147,14 +122,9 @@ environmentParser =
       <*> Env.var (fmap Just . Env.str) "STRIPE_PLAN" (mE "stripe plan id for subscriptions")
       <*> Env.var (fmap Just . Env.str) "STRIPE_SECRET_KEY" (mE "stripe secret key")
       <*> Env.var (fmap Just . Env.str) "STRIPE_PUBLISHABLE_KEY" (mE "stripe publishable key")
-      <*> looperVarEnv "STRIPE_EVENTS_FETCHER"
-      <*> looperVarEnv "STRIPE_EVENTS_RETRIER"
       <*> Env.var (fmap Just . Env.auto) "MAX_ITEMS_FREE" (mE "maximum items that a free user can have")
   where
     mE h = Env.def Nothing <> Env.keep <> Env.help h
-
-looperVarEnv :: String -> Env.Parser Env.Error LooperEnvironment
-looperVarEnv n = Env.prefixed "LOOPER_" $ looperEnvironmentParser n
 
 getArguments :: IO Arguments
 getArguments = do
@@ -256,8 +226,6 @@ parseServeFlags =
             help "The publishable key for stripe"
           ]
       )
-    <*> getLooperFlags "stripe-events-fetcher"
-    <*> getLooperFlags "stripe-events-retrier"
     <*> option
       (Just <$> auto)
       ( mconcat

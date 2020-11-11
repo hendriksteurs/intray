@@ -16,11 +16,9 @@ import Data.Time
 import Database.Persist
 import Import
 import Intray.API
-import Intray.Server.Handler.Stripe
 import Intray.Server.Handler.Utils
 import Intray.Server.Types
 import Servant
-import Web.Stripe.Subscription as Stripe
 
 serveGetAccountInfo :: AuthCookie -> IntrayHandler AccountInfo
 serveGetAccountInfo AuthCookie {..} = do

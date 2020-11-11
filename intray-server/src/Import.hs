@@ -18,5 +18,5 @@ import Path as X
 import Path.IO as X
 import System.Exit as X
 import Text.Read as X (readMaybe)
-import Text.Show.Pretty as X
+import Text.Show.Pretty as X (pPrint, ppShow)
 import Prelude as X hiding (head, init, last, tail)

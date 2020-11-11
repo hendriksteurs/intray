@@ -11,6 +11,7 @@ module Intray.Client
   )
 where
 
+import Data.Aeson as JSON
 import Data.Mergeless
 import qualified Data.UUID.Typed
 import Import
@@ -68,5 +69,7 @@ clientAdminGetStats :: Token -> ClientM AdminStats
 clientAdminDeleteAccount :: Token -> AccountUUID -> ClientM NoContent
 
 clientAdminGetAccounts :: Token -> ClientM [AccountInfo]
-clientGetShowItem :<|> clientGetSize :<|> clientGetItemUUIDs :<|> clientGetItems :<|> clientPostAddItem :<|> clientGetItem :<|> clientDeleteItem :<|> clientPostSync :<|> clientGetAccountInfo :<|> clientPostChangePassphrase :<|> clientDeleteAccount :<|> clientPostAddAccessKey :<|> clientGetAccessKey :<|> clientGetAccessKeys :<|> clientDeleteAccessKey :<|> clientGetPermissions :<|> clientPostRegister :<|> clientPostLogin :<|> clientGetDocs :<|> clientGetPricing :<|> clientAdminGetStats :<|> clientAdminDeleteAccount :<|> clientAdminGetAccounts =
+
+clientPostStripeWebhook :: Maybe Text -> JSON.Value -> ClientM NoContent
+clientGetShowItem :<|> clientGetSize :<|> clientGetItemUUIDs :<|> clientGetItems :<|> clientPostAddItem :<|> clientGetItem :<|> clientDeleteItem :<|> clientPostSync :<|> clientGetAccountInfo :<|> clientPostChangePassphrase :<|> clientDeleteAccount :<|> clientPostAddAccessKey :<|> clientGetAccessKey :<|> clientGetAccessKeys :<|> clientDeleteAccessKey :<|> clientGetPermissions :<|> clientPostRegister :<|> clientPostLogin :<|> clientGetDocs :<|> clientGetPricing :<|> clientAdminGetStats :<|> clientAdminDeleteAccount :<|> clientAdminGetAccounts :<|> clientPostStripeWebhook =
   client (flatten intrayAPI)

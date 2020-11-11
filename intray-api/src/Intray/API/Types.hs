@@ -52,7 +52,6 @@ import Servant.HTML.Blaze
 import System.IO.Unsafe
 import Text.Blaze as HTML
 import Text.Blaze.Html as HTML
-import qualified Web.Stripe.Plan as Stripe
 
 type ProtectAPI = Auth '[JWT] AuthCookie
 
@@ -165,10 +164,10 @@ instance ToSample AccessKeySecret where
 
 data Pricing
   = Pricing
-      { pricingPlan :: !Stripe.PlanId,
+      { pricingPlan :: !Text, -- Plan id
         pricingTrialPeriod :: !(Maybe Int),
-        pricingPrice :: !Stripe.Amount,
-        pricingCurrency :: !Stripe.Currency,
+        pricingPrice :: !Int, -- In cents
+        pricingCurrency :: !Text, -- Abbreviation
         pricingStripePublishableKey :: !Text,
         pricingMaxItemsFree :: !Int
       }
@@ -200,33 +199,10 @@ instance ToSample Pricing where
   toSamples Proxy =
     singleSample
       Pricing
-        { pricingPrice = Stripe.Amount 100,
+        { pricingPrice = 100,
           pricingTrialPeriod = Just 30,
-          pricingCurrency = Stripe.CHF,
-          pricingPlan = Stripe.PlanId "plan_FiN2Zsdv0DP0kh",
+          pricingCurrency = "CHF",
+          pricingPlan = "plan_FiN2Zsdv0DP0kh",
           pricingStripePublishableKey = "pk_test_zV5qVP1IQTjE9QYulRZpfD8C00cqGOnQ91",
           pricingMaxItemsFree = 5
         }
-
-instance Validity Stripe.Currency where
-  validate = trivialValidation
-
-instance ToJSON Stripe.Currency where
-  toJSON c = toJSON $ T.toLower $ T.pack $ show c
-
-deriving instance Validity Stripe.PlanId
-
-deriving instance Hashable Stripe.PlanId
-
-deriving instance ToJSON Stripe.PlanId
-
-deriving instance FromJSON Stripe.PlanId
-
-instance Validity Stripe.Amount where
-  validate (Stripe.Amount a) = delve "getAmount" a
-
-instance ToJSON Stripe.Amount where
-  toJSON (Stripe.Amount a) = toJSON a
-
-instance FromJSON Stripe.Amount where
-  parseJSON v = Stripe.Amount <$> parseJSON v

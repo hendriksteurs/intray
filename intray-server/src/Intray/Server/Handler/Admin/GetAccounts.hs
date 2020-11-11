@@ -12,7 +12,6 @@ where
 import Database.Persist
 import Import
 import Intray.API
-import Intray.Server.Handler.Stripe
 import Intray.Server.Handler.Utils
 import Intray.Server.Types
 

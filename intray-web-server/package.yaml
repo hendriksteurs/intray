@@ -40,8 +40,6 @@ library:
   - servant-auth-client
   - servant-client
   - shakespeare
-  - stripe-core
-  - stripe-haskell
   - template-haskell
   - text
   - time

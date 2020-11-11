@@ -13,8 +13,11 @@ check_set INTRAY_SERVER_STRIPE_PLAN
 check_set INTRAY_SERVER_STRIPE_SECRET_KEY
 check_set INTRAY_SERVER_STRIPE_PUBLISHABLE_KEY
 
+killall stripe || true
+stripe listen --forward-to localhost:8000/stripe-webhook &
+
 stack install :intray-web-server \
-  --file-watch \
+  --file-watch --watch-all \
   --fast \
   --ghc-options=-freverse-errors \
   --exec='./scripts/restart-intray-web-server-paid.sh' \

@@ -4,6 +4,7 @@ module Intray.Server.Types
   )
 where
 
+import Control.Monad.Logger
 import Data.Cache
 import Database.Persist.Sqlite
 import Import
@@ -11,7 +12,7 @@ import Intray.API
 import Intray.Server.OptParse.Types
 import Servant
 import Servant.Auth.Server
-import Web.Stripe.Plan as Stripe
+import StripeAPI as Stripe
 
 data IntrayServerEnv
   = IntrayServerEnv
@@ -28,7 +29,7 @@ data MonetisationEnv
   = MonetisationEnv
       { monetisationEnvStripeSettings :: StripeSettings,
         monetisationEnvMaxItemsFree :: !Int,
-        monetisationEnvPlanCache :: !(Cache Stripe.PlanId Stripe.Plan)
+        monetisationEnvPlanCache :: !(Cache Text Stripe.Plan)
       }
 
-type IntrayHandler = ReaderT IntrayServerEnv Handler
+type IntrayHandler = LoggingT (ReaderT IntrayServerEnv Handler)

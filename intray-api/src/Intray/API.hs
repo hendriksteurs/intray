@@ -15,6 +15,7 @@ module Intray.API
   )
 where
 
+import Data.Aeson as JSON
 import Data.UUID.Typed
 import Import
 import Intray.API.Admin
@@ -34,7 +35,8 @@ type IntrayAPI = ToServantApi IntraySite
 data IntraySite route
   = IntraySite
       { openSite :: !(route :- ToServantApi IntrayOpenSite),
-        adminSite :: !(route :- "admin" :> ToServantApi IntrayAdminSite)
+        adminSite :: !(route :- "admin" :> ToServantApi IntrayAdminSite),
+        postStripeWebhook :: !(route :- PostStripeWebhook)
       }
   deriving (Generic)
 
@@ -70,3 +72,5 @@ type PostLogin =
 type GetDocs = Get '[HTML] GetDocsResponse
 
 type GetPricing = "pricing" :> Get '[JSON] (Maybe Pricing)
+
+type PostStripeWebhook = "stripe-webhook" :> Header' '[Strict] "Stripe-Signature" Text :> ReqBody '[JSON] JSON.Value :> Post '[JSON] NoContent

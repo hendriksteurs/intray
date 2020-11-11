@@ -7,9 +7,6 @@ import Data.Aeson hiding (object)
 import Database.Persist.Sqlite
 import Import
 import Intray.API
-import Looper
-import Web.Stripe.Client as Stripe
-import Web.Stripe.Types as Stripe
 import YamlParse.Applicative
 
 type Arguments = (Command, Flags)
@@ -32,8 +29,6 @@ data ServeFlags
         serveFlagStripePlan :: !(Maybe String),
         serveFlagStripeSecretKey :: !(Maybe String),
         serveFlagStripePublishableKey :: !(Maybe String),
-        serveFlagLooperStripeEventsFetcher :: LooperFlags,
-        serveFlagLooperStripeEventsRetrier :: LooperFlags,
         serveFlagMaxItemsFree :: !(Maybe Int)
       }
   deriving (Show, Eq)
@@ -79,8 +74,6 @@ data MonetisationConfiguration
       { monetisationConfStripePlan :: !(Maybe String),
         monetisationConfStripeSecretKey :: !(Maybe String),
         monetisationConfStripePublishableKey :: !(Maybe String),
-        monetisationConfStripeEventsFetcher :: !(Maybe LooperConfiguration),
-        monetisationConfStripeEventsRetrier :: !(Maybe LooperConfiguration),
         monetisationConfMaxItemsFree :: !(Maybe Int)
       }
   deriving (Show, Eq)
@@ -97,8 +90,6 @@ instance YamlSchema MonetisationConfiguration where
           "The stripe identifier of the stripe plan used to checkout a subscription"
         <*> optionalField "stripe-secret-key" "The secret key for calling the stripe api"
         <*> optionalField "stripe-publishable-key" "The publishable key for calling the stripe api"
-        <*> optionalField "events-fetcher" "The configuration for the stripe events fetcher"
-        <*> optionalField "events-retrier" "The configuration for the stripe events fetcher"
         <*> optionalField "max-items-free" "The number of items a free user can have on the server"
 
 data Environment
@@ -112,8 +103,6 @@ data Environment
         envStripePlan :: !(Maybe String),
         envStripeSecretKey :: !(Maybe String),
         envStripePublishableKey :: !(Maybe String),
-        envLooperStripeEventsFetcher :: LooperEnvironment,
-        envLooperStripeEventsRetrier :: LooperEnvironment,
         envMaxItemsFree :: !(Maybe Int)
       }
   deriving (Show, Eq)
@@ -142,16 +131,14 @@ data ServeSettings
 data MonetisationSettings
   = MonetisationSettings
       { monetisationSetStripeSettings :: !StripeSettings,
-        monetisationSetStripeEventsFetcher :: LooperSettings,
-        monetisationSetStripeEventsRetrier :: LooperSettings,
         monetisationSetMaxItemsFree :: !Int
       }
   deriving (Show)
 
 data StripeSettings
   = StripeSettings
-      { stripeSetPlan :: !Stripe.PlanId,
-        stripeSetStripeConfig :: StripeConfig,
-        stripeSetPublishableKey :: Text
+      { stripeSetPlan :: !Text,
+        stripeSetPublishableKey :: !Text,
+        stripeSetSecretKey :: !Text
       }
   deriving (Show)

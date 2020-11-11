@@ -151,14 +151,6 @@ with final.haskell.lib;
                       sha256 =
                         "sha256:12b8na513xq5smlgwvqaqpplj8blfl452vdq0j2kv40qaw6y9qp7";
                     };
-                  stripeHaskellRepo =
-                    final.fetchFromGitHub {
-                      owner = "NorfairKing";
-                      repo = "stripe";
-                      rev = "008e992cae9c9bdb025bcf575c1bdf1037632a8a";
-                      sha256 =
-                        "sha256:1sxp8phdw1ahndy6h9q4ad0hdfraxyy5qnjd7w80v6m83py419gk";
-                    };
                   yesodStaticRemoteRepo =
                     final.fetchFromGitHub {
                       owner = "NorfairKing";
@@ -194,11 +186,6 @@ with final.haskell.lib;
                   typedUuidPkg =
                     name:
                       self.callCabal2nix name (typedUuidRepo + "/${name}") {};
-                  stripeHaskellPkg =
-                    name:
-                      dontCheck (
-                        self.callCabal2nix name (stripeHaskellRepo + "/${name}") {}
-                      );
                   servantAuthPkg =
                     name:
                       doJailbreak (
@@ -222,11 +209,6 @@ with final.haskell.lib;
                     looper = self.callCabal2nix "looper" looperRepo {};
 
                   } // final.lib.genAttrs [
-                    "stripe-core"
-                    "stripe-haskell"
-                    "stripe-http-client"
-                    "stripe-http-streams"
-                  ] stripeHaskellPkg // final.lib.genAttrs [
                     "typed-uuid"
                     "genvalidity-typed-uuid"
                   ] typedUuidPkg // final.lib.genAttrs [

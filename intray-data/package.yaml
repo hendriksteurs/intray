@@ -34,8 +34,6 @@ library:
   - uuid
   - validity
   - validity-bytestring
-  - stripe-core
-  - stripe-haskell
   - validity-containers
   - validity-text
   - validity-time

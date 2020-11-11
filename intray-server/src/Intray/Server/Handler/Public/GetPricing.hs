@@ -8,10 +8,9 @@ where
 import Data.Cache as Cache
 import Import
 import Intray.API
-import Intray.Server.Handler.Stripe
 import Intray.Server.OptParse.Types
 import Intray.Server.Types
-import Web.Stripe.Plan as Stripe
+import StripeAPI as Stripe
 
 serveGetPricing :: IntrayHandler (Maybe Pricing)
 serveGetPricing = do
@@ -22,13 +21,13 @@ serveGetPricing = do
     Stripe.Plan {..} <-
       case mPlan of
         Nothing -> do
-          plan <- runStripeHandlerOrErrorWith monetisationEnvStripeSettings $ getPlan stripeSetPlan
+          plan <- undefined -- runStripeHandlerOrErrorWith monetisationEnvStripeSettings $ getPlan stripeSetPlan
           liftIO $ Cache.insert monetisationEnvPlanCache stripeSetPlan plan
           pure plan
         Just plan -> pure plan
     let pricingPlan = stripeSetPlan
         pricingTrialPeriod = planTrialPeriodDays
-        pricingPrice = Stripe.Amount planAmount
+        pricingPrice = undefined -- Stripe.Amount planAmount
         pricingCurrency = planCurrency
         pricingStripePublishableKey = stripeSetPublishableKey
         pricingMaxItemsFree = monetisationEnvMaxItemsFree

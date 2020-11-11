@@ -9,6 +9,7 @@ packages:
 - intray-server
 - intray-server-gen
 - intray-web-server
+- stripe-api
 extra-deps:
 - envparse-0.4.1@sha256:989902e6368532548f61de1fa245ad2b39176cddd8743b20071af519a709ce30,2842
 - servant-flatten-0.2@sha256:276896f7c5cdec5b8f8493f6205fded0cc602d050b58fdb09a6d7c85c3bb0837,1234
@@ -28,15 +29,8 @@ extra-deps:
     - persistent-template
 - github: NorfairKing/yesod-static-remote
   commit: 22c0a92c1d62f1b8d432003844ef0636a9131b08
-- github: NorfairKing/stripe
-  commit: 008e992cae9c9bdb025bcf575c1bdf1037632a8a
-  subdirs:
-    - stripe-core
-    - stripe-haskell
-    - stripe-http-client
-    - stripe-http-streams
 - github: NorfairKing/mergeless
-  commit: 39191fea2885ccd6dc4aa5deeb578be179e9659f
+  commit: 370ceea253e71f47a20c8876f6f347b0c280aafe
   subdirs:
     - mergeless
     - genvalidity-mergeless
@@ -84,9 +78,7 @@ extra-deps:
     - typed-uuid
     - genvalidity-typed-uuid
 - github: NorfairKing/pretty-relative-time
-  commit: fc62907b36f6f7348d6ae0e97aceb4d41039d57b
-- github: NorfairKing/looper
-  commit: 8d6e69e99c5eb8f5f01b6bc36a2112962cb8d343
+  commit: 1c0ca0e24b2a5973e5ccf4e83d24097a22bb9a4a
 - github: NorfairKing/yamlparse-applicative
   commit: 1d381a4cbc9736a2defc916a93cfcf8000ee7e37
   subdirs:
