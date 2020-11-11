@@ -14,7 +14,7 @@ check_set INTRAY_SERVER_STRIPE_SECRET_KEY
 check_set INTRAY_SERVER_STRIPE_PUBLISHABLE_KEY
 
 stack install :intray-web-server \
-  --file-watch \
+  --file-watch --watch-all \
   --fast \
   --ghc-options=-freverse-errors \
   --exec='./scripts/restart-intray-web-server-paid.sh' \

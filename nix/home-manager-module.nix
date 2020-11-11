@@ -68,6 +68,7 @@ in
         optionalString (cfg.sync != null) ''
           url: '${cfg.sync.url}'
           username: '${cfg.sync.username}'
+          password: '${cfg.sync.password}'
           sync: NeverSync
         '';
       configFileContents =
@@ -91,7 +92,7 @@ in
             {
               ExecStart =
                 "${pkgs.writeShellScript "intray-sync" ''
-                  ${cli}/bin/intray login --password "${cfg.sync.password}"
+                  ${cli}/bin/intray login
                   ${cli}/bin/intray sync
                 ''}";
               Type = "oneshot";

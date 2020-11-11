@@ -13,13 +13,15 @@ in
       web-hosts =
         mkOption {
           type = types.listOf (types.string);
-          example = "intray.cs-syd.eu";
+          example = [ "intray.cs-syd.eu" ];
+          default = [];
           description = "The host to serve web requests on";
         };
       api-hosts =
         mkOption {
           type = types.listOf (types.string);
-          example = "api.intray.cs-syd.eu";
+          example = [ "api.intray.cs-syd.eu" ];
+          default = [];
           description = "The host to serve API requests on";
         };
       web-port =
@@ -39,7 +41,7 @@ in
       log-level =
         mkOption {
           type = types.string;
-          default = "LevelWarning";
+          default = "LevelWarn";
           example = "LevelInfo";
           description = "The log level";
         };
@@ -114,8 +116,9 @@ in
           configFile =
             let
               config =
-                {
+                optionalAttrs (cfg.api-hosts != []) {
                   api-host = head cfg.api-hosts;
+                } // {
                   api-port = cfg.api-port;
                   admins = cfg.admins;
                   freeloaders = cfg.freeloaders;
@@ -156,6 +159,26 @@ in
               };
 
           };
+      api-host = optionalAttrs (cfg.api-hosts != []) {
+        "${head (cfg.api-hosts)}" =
+          {
+            enableACME = true;
+            forceSSL = true;
+            locations."/".proxyPass =
+              "http://localhost:${builtins.toString (cfg.api-port)}";
+            serverAliases = tail cfg.api-hosts;
+          };
+      };
+      web-host = optionalAttrs (cfg.web-hosts != []) {
+        "${head (cfg.web-hosts)}" =
+          {
+            enableACME = true;
+            forceSSL = true;
+            locations."/".proxyPass =
+              "http://localhost:${builtins.toString (cfg.web-port)}";
+            serverAliases = tail cfg.web-hosts;
+          };
+      };
     in
       mkIf cfg.enable {
         systemd.services =
@@ -163,24 +186,6 @@ in
             "intray-${envname}" = intray-service;
           };
         networking.firewall.allowedTCPPorts = [ cfg.web-port cfg.api-port ];
-        services.nginx.virtualHosts =
-          {
-            "${head (cfg.web-hosts)}" =
-              {
-                enableACME = true;
-                forceSSL = true;
-                locations."/".proxyPass =
-                  "http://localhost:${builtins.toString (cfg.web-port)}";
-                serverAliases = tail cfg.web-hosts;
-              };
-            "${head (cfg.api-hosts)}" =
-              {
-                enableACME = true;
-                forceSSL = true;
-                locations."/".proxyPass =
-                  "http://localhost:${builtins.toString (cfg.api-port)}";
-                serverAliases = tail cfg.api-hosts;
-              };
-          };
+        services.nginx.virtualHosts = api-host // web-host;
       };
 }

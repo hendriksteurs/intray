@@ -134,6 +134,12 @@ with final.haskell.lib;
                 }
             );
       };
+  intrayRelease =
+    final.symlinkJoin {
+      name = "sparep-release";
+      paths = final.lib.attrValues final.intrayPackages;
+    };
+
   intrayNotification = import ./notification.nix { pkgs = final; };
   haskellPackages =
     previous.haskellPackages.override (
