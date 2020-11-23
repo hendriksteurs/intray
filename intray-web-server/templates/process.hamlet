@@ -7,3 +7,8 @@ $maybe itemWidget <- mItemWidget
 $nothing
   <div .ui .segment>
     <h2> You are done processing.
+
+<img .ui .large .centered .image
+  alt="Getting Things Done Flowchart"
+  src=@{StaticR static_gtd_flowchart_jpg}>
+

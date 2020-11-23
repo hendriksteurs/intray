@@ -4,7 +4,7 @@ set -e
 set -x
 
 stack install :intray-web-server \
-  --file-watch \
+  --file-watch --watch-all \
   --fast \
   --ghc-options=-freverse-errors \
   --exec='./scripts/restart-intray-web-server-free.sh' \
