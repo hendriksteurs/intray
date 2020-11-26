@@ -62,7 +62,7 @@ mkYesodData "App" $(parseRoutesFile "routes")
 instance Yesod App where
   defaultLayout widget = do
     pc <- widgetToPageContent $ do
-      toWidgetHead [hamlet|<link rel="icon" href=@{StaticR static_favicon_ico} sizes="32x32" type="image/x-icon">|]
+      toWidgetHead [hamlet|<link rel="icon" href=@{StaticR static_favicon_ico} sizes="16x16 24x24 32x32 48x48 64x64" type="image/x-icon">|]
       $(widgetFile "default-body")
     app <- getYesod
     withUrlRenderer $(hamletFile "templates/default-page.hamlet")
