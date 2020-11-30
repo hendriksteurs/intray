@@ -352,10 +352,11 @@ $maybe p <- mPricing
         <div .description>
           <p>
             Intray was built specifically to act as the first part in a GTD process.
-            Use it as the "in-basket" in the following flowchart.
-        <img .ui .large .centered .image
-          alt="Getting Things Done Flowchart"
-          src=@{StaticR static_gtd_flowchart_jpg}>
+            Use it as the "In basket" in the following flowchart.
+          <p>
+            <img .ui .large .centered .image
+              alt="Getting Things Done Flowchart"
+              src=@{StaticR static_gtd_flowchart_jpg}>
 
 
 <div .ui .huge .padded .segment>
