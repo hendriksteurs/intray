@@ -12,14 +12,14 @@ in
       enable = mkEnableOption "Intray Service";
       web-hosts =
         mkOption {
-          type = types.listOf (types.string);
+          type = types.listOf types.str;
           example = [ "intray.cs-syd.eu" ];
           default = [];
           description = "The host to serve web requests on";
         };
       api-hosts =
         mkOption {
-          type = types.listOf (types.string);
+          type = types.listOf types.str;
           example = [ "api.intray.cs-syd.eu" ];
           default = [];
           description = "The host to serve API requests on";
@@ -40,28 +40,28 @@ in
         };
       log-level =
         mkOption {
-          type = types.string;
+          type = types.str;
           default = "LevelWarn";
           example = "LevelInfo";
           description = "The log level";
         };
       tracking-id =
         mkOption {
-          type = types.nullOr types.string;
+          type = types.nullOr types.str;
           default = null;
           example = "UA-53296133-1";
           description = "The tracking id for google analytics";
         };
       verification-tag =
         mkOption {
-          type = types.nullOr types.string;
+          type = types.nullOr types.str;
           default = null;
           example = "ADkAx2F-JQO9KJBBdLfAGuJ_OMqPOsX5MdGDsfd0Ggw";
           description = "The verification tag for google search console";
         };
       admins =
         mkOption {
-          type = types.nullOr (types.listOf types.string);
+          type = types.nullOr (types.listOf types.str);
           default = null;
           example = [ "syd" ];
           description =
@@ -69,7 +69,7 @@ in
         };
       freeloaders =
         mkOption {
-          type = types.nullOr (types.listOf types.string);
+          type = types.nullOr (types.listOf types.str);
           default = null;
           example = [ "syd" ];
           description =
@@ -85,19 +85,19 @@ in
                   {
                     stripe-plan =
                       mkOption {
-                        type = types.string;
+                        type = types.str;
                         example = "plan_XXXXXXXXXXXXXX";
                         description = "Stripe plan for subscriptions.";
                       };
                     stripe-secret-key =
                       mkOption {
-                        type = types.string;
+                        type = types.str;
                         example = "sk_test_XXXXXXXXXXXXXXXXXXXXXXXX";
                         description = "Stripe secret key.";
                       };
                     stripe-publishable-key =
                       mkOption {
-                        type = types.string;
+                        type = types.str;
                         example = "pk_test_XXXXXXXXXXXXXXXXXXXXXXXX";
                         description = "Stripe publishable key.";
                       };

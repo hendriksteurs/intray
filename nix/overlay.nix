@@ -136,7 +136,7 @@ with final.haskell.lib;
       };
   intrayRelease =
     final.symlinkJoin {
-      name = "sparep-release";
+      name = "intray-release";
       paths = final.lib.attrValues final.intrayPackages;
     };
 
