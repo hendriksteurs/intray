@@ -38,7 +38,6 @@ newItemImageForm = ireq fileField "image"
 postAddR :: Handler Html
 postAddR =
   withLogin $ \t -> do
-    getPostParams >>= (liftIO . print)
     tfr <- runInputPostResult newItemTextForm
     let goOn _ = do
           ifr <- runInputPostResult newItemImageForm

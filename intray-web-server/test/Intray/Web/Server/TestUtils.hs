@@ -55,14 +55,14 @@ withWebServer =
 withConnectionPoolToo :: SpecWith (ClientEnv, ConnectionPool) -> SpecWith ClientEnv
 withConnectionPoolToo =
   aroundWith $ \func cenv ->
-    runNoLoggingT
-      $ withSystemTempDir "intray-web-server"
-      $ \tdir -> do
-        cacheFile <- resolveFile tdir "login-cache.db"
-        withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack $ fromAbsFile cacheFile) 1 $ \pool ->
-          liftIO $ do
-            void $ runSqlPool (runMigrationSilent migrateLoginCache) pool
-            func (cenv, pool)
+    runNoLoggingT $
+      withSystemTempDir "intray-web-server" $
+        \tdir -> do
+          cacheFile <- resolveFile tdir "login-cache.db"
+          withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack $ fromAbsFile cacheFile) 1 $ \pool ->
+            liftIO $ do
+              void $ runSqlPool (runMigrationSilent migrateLoginCache) pool
+              func (cenv, pool)
 
 loginTo :: Username -> Text -> YesodExample App ()
 loginTo username passphrase = do
