@@ -16,7 +16,7 @@ spec =
         withExampleAccount_ $ do
           get AddR
           statusIs 200
-      yit "manages to add an item with a newline" $ \cenv ->
+      yit "manages to add an item with a newline" $ do
         withExampleAccount_ $ do
           get AddR
           statusIs 200

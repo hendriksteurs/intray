@@ -41,8 +41,19 @@ extra-deps:
     - mergeless
     - genvalidity-mergeless
     - mergeless-persistent
+
+- github: NorfairKing/sydtest
+  commit: 1343035eb300163cbd97e1b921ddfe0f23af88c9
+  subdirs:
+    - sydtest
+    - sydtest-discover
+    - sydtest-persistent-sqlite
+    - sydtest-servant
+    - sydtest-wai
+    - sydtest-yesod
+
 - github: NorfairKing/validity
-  commit: 83c45a62637fb3be7eb17edbee99141705250f65
+  commit: 0f52f3ba57d099f3d3ced38a2eeae39954906306
   subdirs:
   - genvalidity
   - genvalidity-aeson
