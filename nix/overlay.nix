@@ -177,9 +177,8 @@ with final.haskell.lib;
                     final.fetchFromGitHub {
                       owner = "NorfairKing";
                       repo = "looper";
-                      rev = "8d6e69e99c5eb8f5f01b6bc36a2112962cb8d343";
-                      sha256 =
-                        "sha256:1sx5gc41vrmvcgrbh7g83zhrpqwz339g4fq0m1c15hhlz4480lh8";
+                      rev = "fd6d31b0ccc1a850aa1435b2fc21dcb9807eacb3";
+                      sha256 = "sha256:0p10jc3ila5yhhzipzklwcqx768qw66yr71xh9qa7dkjn18d6v04";
                     };
                   servantAuthRepo =
                     final.fetchFromGitHub {
