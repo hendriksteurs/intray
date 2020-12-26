@@ -7,7 +7,7 @@ where
 
 import Intray.API.Protected.Account.Gen ()
 import Intray.API.Protected.Account.Types
-import Test.Validity.Aeson
+import Test.Syd.Validity.Aeson
 import TestImport
 
 spec :: Spec

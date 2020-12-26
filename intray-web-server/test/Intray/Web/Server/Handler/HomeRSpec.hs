@@ -2,8 +2,8 @@ module Intray.Web.Server.Handler.HomeRSpec where
 
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.TestUtils
+import Test.Syd.Yesod
 import TestImport
-import Yesod.Test
 
 spec :: Spec
 spec =

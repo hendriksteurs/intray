@@ -7,7 +7,7 @@ where
 
 import Intray.Data
 import Intray.Data.Gen ()
-import Test.Validity.Aeson
+import Test.Syd.Validity.Aeson
 import TestImport
 
 spec :: Spec

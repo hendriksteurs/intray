@@ -27,6 +27,7 @@ pkgsv {
   overlays =
     [
       validity-overlay
+      sydtest-overlay
       pretty-relative-time-overlay
       mergeless-overlay
       yamlparse-applicative-overlay

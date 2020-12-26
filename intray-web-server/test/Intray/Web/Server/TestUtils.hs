@@ -3,8 +3,7 @@
 
 module Intray.Web.Server.TestUtils
   ( intrayWebServerSpec,
-    withWebServer,
-    withConnectionPoolToo,
+    webServerSetupFunc,
     withExampleAccount,
     withExampleAccount_,
     withExampleAccountAndLogin,
@@ -16,9 +15,6 @@ module Intray.Web.Server.TestUtils
   )
 where
 
-import Control.Monad.Logger
-import qualified Data.Text as T
-import Database.Persist.Sqlite hiding (get)
 import Intray.Data
 import Intray.Data.Gen ()
 import qualified Intray.Server.TestUtils as API
@@ -27,42 +23,28 @@ import Intray.Web.Server.Foundation
 import qualified Network.HTTP.Client as Http
 import qualified Network.HTTP.Types as Http
 import Servant.Client (ClientEnv (..))
+import Test.Syd.Persistent.Sqlite
+import Test.Syd.Yesod
 import TestImport
 import Yesod.Auth
-import Yesod.Test
 
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
 
 intrayWebServerSpec :: YesodSpec App -> Spec
-intrayWebServerSpec = API.withIntrayServer . withConnectionPoolToo . withWebServer
+intrayWebServerSpec = API.withIntrayServer . yesodSpecWithSiteSetupFunc' webServerSetupFunc
 
-withWebServer :: YesodSpec App -> SpecWith (ClientEnv, ConnectionPool)
-withWebServer =
-  yesodSpecWithSiteGeneratorAndArgument
-    ( \(ClientEnv _ burl _, pool) -> do
-        man <- liftIO $ Http.newManager Http.defaultManagerSettings
-        pure $
-          App
-            { appHttpManager = man,
-              appStatic = myStatic,
-              appTracking = Nothing,
-              appVerification = Nothing,
-              appAPIBaseUrl = burl,
-              appConnectionPool = pool
-            }
-    )
-
-withConnectionPoolToo :: SpecWith (ClientEnv, ConnectionPool) -> SpecWith ClientEnv
-withConnectionPoolToo =
-  aroundWith $ \func cenv ->
-    runNoLoggingT $
-      withSystemTempDir "intray-web-server" $
-        \tdir -> do
-          cacheFile <- resolveFile tdir "login-cache.db"
-          withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack $ fromAbsFile cacheFile) 1 $ \pool ->
-            liftIO $ do
-              void $ runSqlPool (runMigrationSilent migrateLoginCache) pool
-              func (cenv, pool)
+webServerSetupFunc :: Http.Manager -> SetupFunc ClientEnv App
+webServerSetupFunc man = wrapSetupFunc $ \(ClientEnv _ burl _) -> do
+  pool <- connectionPoolSetupFunc migrateLoginCache
+  pure $
+    App
+      { appHttpManager = man,
+        appStatic = myStatic,
+        appTracking = Nothing,
+        appVerification = Nothing,
+        appAPIBaseUrl = burl,
+        appConnectionPool = pool
+      }
 
 loginTo :: Username -> Text -> YesodExample App ()
 loginTo username passphrase = do

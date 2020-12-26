@@ -12,7 +12,7 @@ import Intray.Data
 import TestImport
 
 spec :: Spec
-spec = do
+spec = sequential $ do
   it "correctly errors when a user tries to register but has no server configured"
     $ withSystemTempDir "intray-cli-test-data"
     $ \dataDir ->

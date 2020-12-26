@@ -29,7 +29,7 @@ spec =
           withValidNewUser cenv $ \token -> do
             uuids <- runClientOrError cenv $ mapM (clientPostAddItem token) items
             items' <- runClientOrError cenv $ clientGetItems token
-            map itemInfoIdentifier items' `shouldContain` uuids
+            map itemInfoIdentifier items' `shouldBe` uuids
       it "does not list others' items" $ \cenv ->
         forAllValid $ \items1 ->
           forAllValid $ \items2 ->
@@ -38,6 +38,6 @@ spec =
                 uuids1 <- runClientOrError cenv $ mapM (clientPostAddItem token1) items1
                 uuids2 <- runClientOrError cenv $ mapM (clientPostAddItem token2) items2
                 items' <- runClientOrError cenv $ clientGetItems token1
-                map itemInfoIdentifier items' `shouldContain` uuids1
+                map itemInfoIdentifier items' `shouldBe` uuids1
                 forM_ (uuids2 :: [ItemUUID]) $ \u ->
                   u `shouldNotSatisfy` (`elem` map itemInfoIdentifier items')

@@ -8,8 +8,9 @@ import Intray.Server.TestUtils
 import TestImport
 
 spec :: Spec
-spec =
-  withIntrayServer $ do
+spec = sequential
+  $ withIntrayServer
+  $ do
     it "Going through the usual manual steps 'just works'" $ \(ClientEnv _ burl _) ->
       withSystemTempDir "intray-cli-test-cache" $ \cacheDir ->
         withSystemTempDir "intray-cli-test-data" $ \dataDir -> do

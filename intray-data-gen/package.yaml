@@ -8,9 +8,6 @@ copyright: ! 'Copyright: (c) 2017-2018 Tom Sydney Kerckhove'
 license: AllRightsReserved
 github: NorfairKing/intray-server
 
-default-extensions:
-- NoImplicitPrelude
-
 library:
   source-dirs: src
   ghc-options: -Wall
@@ -36,6 +33,7 @@ tests:
   intray-data-test:
     main: Spec.hs
     source-dirs: test
+    build-tools: sydtest-discover
     ghc-options:
     - -Wall
     - -threaded
@@ -43,10 +41,10 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - base
-    - genvalidity-hspec
-    - genvalidity-hspec-aeson
+    - genvalidity-sydtest
+    - genvalidity-sydtest-aeson
     - genvalidity-text
-    - hspec
+    - sydtest
     - intray-data
     - intray-data-gen
     - QuickCheck

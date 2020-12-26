@@ -5,10 +5,10 @@ module Intray.Web.Server.Handler.ErrorRSpec where
 import Intray.Data
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.TestUtils
-import qualified Network.HTTP.Client as Http
 import Servant.Client
+import Test.Syd.Wai
+import Test.Syd.Yesod
 import TestImport
-import Yesod.Test
 
 spec :: Spec
 spec = do
@@ -18,14 +18,13 @@ spec = do
     $ do
       get $ ErrorAPIDownR "example"
       statusIs 200
-  before
-    ( do
-        man <- liftIO $ Http.newManager Http.defaultManagerSettings
-        burl <- parseBaseUrl "localhost:8000" -- but this one doesn't exist
-        pure $ mkClientEnv man burl
-    )
-    $ withConnectionPoolToo
-    $ withWebServer
+  managerSpec
+    $ aroundWith'
+      ( \func man () -> do
+          burl <- parseBaseUrl "localhost:8000" -- but this one doesn't exist
+          func man (mkClientEnv man burl)
+      )
+    $ yesodSpecWithSiteSetupFunc' webServerSetupFunc
     $ do
       ydescribe "ErrorAPIDownR"
         $ yit "gets a 200 when the API is down"

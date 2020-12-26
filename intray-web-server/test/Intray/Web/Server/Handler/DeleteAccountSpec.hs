@@ -3,8 +3,8 @@ module Intray.Web.Server.Handler.DeleteAccountSpec where
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.TestUtils
 import Network.HTTP.Types
+import Test.Syd.Yesod
 import TestImport
-import Yesod.Test
 
 spec :: Spec
 spec =

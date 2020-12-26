@@ -12,8 +12,6 @@ github: NorfairKing/intray-server
 library:
   source-dirs: src
   ghc-options: -Wall
-  default-extensions:
-  - NoImplicitPrelude
 
   dependencies:
   - QuickCheck >=2.9
@@ -23,12 +21,11 @@ library:
   - containers
   - genvalidity-bytestring
   - genvalidity-containers
-  - genvalidity-hspec
-  - genvalidity-mergeless
+  - genvalidity-sydtest
   - cache
+  - genvalidity-mergeless
   - genvalidity-text
   - genvalidity-time
-  - hspec
   - http-client
   - http-types
   - intray-api
@@ -48,6 +45,9 @@ library:
   - servant-client
   - servant-server
   - stripe-core
+  - sydtest
+  - sydtest-persistent-sqlite
+  - sydtest-wai
   - text >=1.2
   - time
   - typed-uuid
@@ -58,8 +58,7 @@ tests:
   intray-server-test:
     main: Spec.hs
     source-dirs: test
-    default-extensions:
-    - NoImplicitPrelude
+    build-tools: sydtest-discover
     ghc-options:
     - -Wall
     - -threaded
@@ -71,10 +70,10 @@ tests:
     - bytestring
     - containers
     - genvalidity-bytestring
-    - genvalidity-hspec
+    - genvalidity-sydtest
     - genvalidity-text
     - genvalidity-time
-    - hspec
+    - sydtest
     - http-types
     - intray-api
     - intray-api-gen

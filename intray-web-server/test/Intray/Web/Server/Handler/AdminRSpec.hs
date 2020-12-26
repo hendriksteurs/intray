@@ -4,8 +4,8 @@ module Intray.Web.Server.Handler.AdminRSpec where
 
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.TestUtils
+import Test.Syd.Yesod
 import TestImport
-import Yesod.Test
 
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
 

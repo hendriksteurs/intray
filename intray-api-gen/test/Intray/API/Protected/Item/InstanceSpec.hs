@@ -7,7 +7,7 @@ where
 
 import Intray.API.Protected.Item.Gen ()
 import Intray.API.Protected.Item.Types
-import Test.Validity.Aeson
+import Test.Syd.Validity.Aeson
 import TestImport
 
 spec :: Spec

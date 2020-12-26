@@ -6,8 +6,8 @@ import Intray.Data (parseUsername)
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.TestUtils
 import Network.HTTP.Types
+import Test.Syd.Yesod
 import TestImport
-import Yesod.Test
 
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
 

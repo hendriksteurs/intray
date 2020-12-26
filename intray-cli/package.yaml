@@ -64,19 +64,19 @@ tests:
   intray-cli-test:
     main: Spec.hs
     source-dirs: test/
+    build-tools: sydtest-discover
     ghc-options:
     - -Wall
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - base
     - async
+    - base
     - bytestring
-    - genvalidity-hspec
-    - genvalidity-hspec-aeson >=0.1
     - genvalidity-path
-    - hspec
+    - genvalidity-sydtest
+    - genvalidity-sydtest-aeson
     - intray-api
     - intray-api-gen
     - intray-cli
@@ -89,4 +89,5 @@ tests:
     - path-io
     - servant
     - servant-client
+    - sydtest
     - text >=1.2

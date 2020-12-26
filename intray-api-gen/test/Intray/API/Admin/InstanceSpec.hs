@@ -7,7 +7,7 @@ where
 
 import Intray.API.Admin.Gen ()
 import Intray.API.Admin.Types
-import Test.Validity.Aeson
+import Test.Syd.Validity.Aeson
 import TestImport
 
 spec :: Spec

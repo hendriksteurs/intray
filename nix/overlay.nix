@@ -226,7 +226,7 @@ with final.haskell.lib;
                     yesod-static-remote = dontCheck (self.callCabal2nix "yesod-static-remote" yesodStaticRemoteRepo {});
                     servant-auth-server = doJailbreak (super.servant-auth-server);
                     looper = self.callCabal2nix "looper" looperRepo {};
-
+                    envparse = self.callHackage "envparse" "0.4.1" {};
                   } // final.lib.genAttrs [
                     "stripe-core"
                     "stripe-haskell"
