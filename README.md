@@ -163,7 +163,7 @@ in
     intrayModule
     # [...]
   ];
-  intray = {
+  programs.intray = {
     enable = true;
     sync = {
       enable = true;
