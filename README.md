@@ -156,7 +156,7 @@ let
     url = "https://github.com/NorfairKing/intray";
     ref = "master";
     rev = "0000000000000000000000000000000000000000"; # Add a recent version here.
-  } + "/nix/program.nix");
+  } + "/nix/home-manager-module.nix");
 in
 {
   imports = [
