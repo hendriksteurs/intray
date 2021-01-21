@@ -86,6 +86,7 @@ tests:
     - genvalidity-sydtest
     - http-client
     - http-types
+    - intray-client
     - intray-data
     - intray-data-gen
     - intray-server

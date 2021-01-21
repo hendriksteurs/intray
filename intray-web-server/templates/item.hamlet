@@ -7,7 +7,7 @@
     $of Right i
       $case i 
         $of CaseTextItem t
-          #{t}
+          #{Textarea t}
         $of CaseImageItem _ _ 
           <img .ui .centered .rounded .fluid .bordered .image src=@{ImageItemR itemInfoIdentifier}>
       
