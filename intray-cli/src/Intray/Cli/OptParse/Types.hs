@@ -60,7 +60,8 @@ data Flags
         flagUrl :: Maybe String,
         flagCacheDir :: Maybe FilePath,
         flagDataDir :: Maybe FilePath,
-        flagSyncStrategy :: Maybe SyncStrategy
+        flagSyncStrategy :: Maybe SyncStrategy,
+        flagAutoOpen :: Maybe AutoOpen
       }
   deriving (Show, Eq, Generic)
 
@@ -72,7 +73,8 @@ data Environment
         envPassword :: Maybe String,
         envCacheDir :: Maybe FilePath,
         envDataDir :: Maybe FilePath,
-        envSyncStrategy :: Maybe SyncStrategy
+        envSyncStrategy :: Maybe SyncStrategy,
+        envAutoOpen :: Maybe AutoOpen
       }
   deriving (Show, Eq, Generic)
 
@@ -83,13 +85,12 @@ data Configuration
         configPassword :: Maybe String,
         configCacheDir :: Maybe FilePath,
         configDataDir :: Maybe FilePath,
-        configSyncStrategy :: Maybe SyncStrategy
+        configSyncStrategy :: Maybe SyncStrategy,
+        configAutoOpen :: Maybe AutoOpen
       }
   deriving (Show, Eq, Generic)
 
 instance FromJSON Configuration where
-  --   parseJSON = viaYamlSchema
-
   parseJSON = viaYamlSchema
 
 instance YamlSchema Configuration where
@@ -107,13 +108,15 @@ instance YamlSchema Configuration where
           "data-dir"
           "The directory to store data information. Removing this directory could lead to data loss."
         <*> optionalField "sync" "The sync strategy for non-sync commands."
+        <*> optionalField "auto-open" "Whether and how to auto-open links and pictures."
 
 data Settings
   = Settings
       { setBaseUrl :: Maybe BaseUrl,
         setCacheDir :: Path Abs Dir,
         setDataDir :: Path Abs Dir,
-        setSyncStrategy :: SyncStrategy
+        setSyncStrategy :: SyncStrategy,
+        setAutoOpen :: AutoOpen
       }
   deriving (Show, Eq, Generic)
 
@@ -138,6 +141,21 @@ instance YamlSchema SyncStrategy where
           <??> [ "Sync on every change to the local state.",
                  "Commands will still succeed even if the sync fails because of internet connect problems for example."
                ]
+      ]
+
+data AutoOpen = DontAutoOpen | AutoOpenWith FilePath
+  deriving (Show, Read, Eq, Generic)
+
+instance FromJSON AutoOpen where
+  parseJSON = viaYamlSchema
+
+instance ToJSON AutoOpen
+
+instance YamlSchema AutoOpen where
+  yamlSchema =
+    alternatives
+      [ DontAutoOpen <$ ParseNull <?> "Explicitly _don't_ auto-open links or pictures.",
+        AutoOpenWith <$> yamlSchema <?> "Auto-open with the given command. xdg-open is the default."
       ]
 
 data Dispatch

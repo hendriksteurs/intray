@@ -38,7 +38,8 @@ spec = sequential
                     { setBaseUrl = Just burl,
                       setCacheDir = cacheDir,
                       setDataDir = dataDir,
-                      setSyncStrategy = AlwaysSync
+                      setSyncStrategy = AlwaysSync,
+                      setAutoOpen = DontAutoOpen
                     }
             flip runReaderT sets $
               addItem
@@ -52,7 +53,8 @@ spec = sequential
                 { setBaseUrl = Just burl,
                   setCacheDir = cacheDir,
                   setDataDir = dataDir,
-                  setSyncStrategy = NeverSync
+                  setSyncStrategy = NeverSync,
+                  setAutoOpen = DontAutoOpen
                 }
         s <- runReaderT readClientStoreSize sets
         s `shouldBe` additions

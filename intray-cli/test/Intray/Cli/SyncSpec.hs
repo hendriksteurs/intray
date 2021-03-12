@@ -36,7 +36,8 @@ spec = sequential $ do
                       { setBaseUrl = Just burl,
                         setCacheDir = cacheDir,
                         setDataDir = dataDir,
-                        setSyncStrategy = NeverSync
+                        setSyncStrategy = NeverSync,
+                        setAutoOpen = DontAutoOpen
                       }
               mToken <- runReaderT loadToken sets
               token <-
@@ -72,7 +73,8 @@ spec = sequential $ do
                     { setBaseUrl = Just burl,
                       setCacheDir = cacheDir,
                       setDataDir = dataDir,
-                      setSyncStrategy = AlwaysSync
+                      setSyncStrategy = AlwaysSync,
+                      setAutoOpen = DontAutoOpen
                     }
             let size = runReaderT readClientStoreSize sets
             size `shouldReturn` 0

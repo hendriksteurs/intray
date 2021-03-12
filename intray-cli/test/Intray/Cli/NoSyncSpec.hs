@@ -22,7 +22,8 @@ spec = sequential $ do
                 { setBaseUrl = Nothing,
                   setCacheDir = cacheDir,
                   setDataDir = dataDir,
-                  setSyncStrategy = NeverSync
+                  setSyncStrategy = NeverSync,
+                  setAutoOpen = DontAutoOpen
                 }
         let intray d = runReaderT (dispatch d) sets
         let rs =
@@ -40,7 +41,8 @@ spec = sequential $ do
                 { setBaseUrl = Nothing,
                   setCacheDir = cacheDir,
                   setDataDir = dataDir,
-                  setSyncStrategy = NeverSync
+                  setSyncStrategy = NeverSync,
+                  setAutoOpen = DontAutoOpen
                 }
         let intray d = runReaderT (dispatch d) sets
         let rs =
@@ -58,7 +60,8 @@ spec = sequential $ do
                 { setBaseUrl = Nothing,
                   setCacheDir = cacheDir,
                   setDataDir = dataDir,
-                  setSyncStrategy = NeverSync
+                  setSyncStrategy = NeverSync,
+                  setAutoOpen = DontAutoOpen
                 }
         let intray d = runReaderT (dispatch d) sets
         intray
@@ -80,7 +83,8 @@ spec = sequential $ do
                 { setBaseUrl = Nothing,
                   setCacheDir = cacheDir,
                   setDataDir = dataDir,
-                  setSyncStrategy = NeverSync
+                  setSyncStrategy = NeverSync,
+                  setAutoOpen = DontAutoOpen
                 }
         let intray d = runReaderT (dispatch d) sets
         intray

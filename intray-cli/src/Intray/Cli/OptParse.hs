@@ -11,6 +11,7 @@ module Intray.Cli.OptParse
     getInstructions,
     Settings (..),
     SyncStrategy (..),
+    AutoOpen (..),
     Dispatch (..),
     RegisterSettings (..),
     LoginSettings (..),
@@ -63,6 +64,7 @@ combineToInstructions (Arguments cmd Flags {..}) Environment {..} mConf =
                   Just _ -> AlwaysSync
               )
               $ flagSyncStrategy <|> envSyncStrategy <|> mc configSyncStrategy
+      let setAutoOpen = fromMaybe (AutoOpenWith "xdg-open") (flagAutoOpen <|> envAutoOpen <|> mc configAutoOpen)
       pure Settings {..}
     getDispatch =
       case cmd of
@@ -133,6 +135,7 @@ environmentParser =
       <*> Env.var (fmap Just . Env.str) "CACHE_DIR" (mE <> Env.help "cache directory")
       <*> Env.var (fmap Just . Env.str) "DATA_DIR" (mE <> Env.help "data directory")
       <*> Env.var (fmap Just . Env.auto) "SYNC_STRATEGY" (mE <> Env.help "Sync strategy")
+      <*> Env.var (fmap (Just . AutoOpenWith) . Env.str) "AUTO_OPEN" (mE <> Env.help "The command to auto-open links and pictures")
   where
     mE = Env.def Nothing <> Env.keep
 
@@ -301,8 +304,14 @@ parseFlags =
           [long "data-dir", help "The directory to use for data", value Nothing, metavar "FILEPATH"]
       )
     <*> syncStrategyOpt
+    <*> autoOpenOpt
 
 syncStrategyOpt :: Parser (Maybe SyncStrategy)
 syncStrategyOpt =
   flag Nothing (Just NeverSync) (mconcat [long "no-sync", help "Do not try to sync."])
     <|> flag Nothing (Just AlwaysSync) (mconcat [long "sync", help "Definitely try to sync."])
+
+autoOpenOpt :: Parser (Maybe AutoOpen)
+autoOpenOpt =
+  flag Nothing (Just DontAutoOpen) (mconcat [long "no-auto-open", help "Do not try to open links and pictures."])
+    <|> (Just . AutoOpenWith <$> strOption (mconcat [long "auto-open-with", help "The command to use to auto-open links and pictures. The default is xdg-open."]))
