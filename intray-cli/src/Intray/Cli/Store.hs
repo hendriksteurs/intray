@@ -19,7 +19,7 @@ module Intray.Cli.Store
     writeLastSeen,
     readLastSeen,
     clearLastSeen,
-    prettyReadyItem,
+    prettyShowItemAndWait,
   )
 where
 
@@ -34,7 +34,9 @@ import Intray.API
 import Intray.Cli.JSON
 import Intray.Cli.OptParse
 import Intray.Cli.Path
+import Network.URI
 import System.FileLock
+import System.Process.Typed
 import Text.Time.Pretty
 import UnliftIO.Exception
 
@@ -148,8 +150,8 @@ doneLastItem li cs =
     LastItemUnsynced ci _ -> deleteUnsyncedFromClientStore ci cs
     LastItemSynced u _ -> deleteSyncedFromClientStore u cs
 
-prettyReadyItem :: UTCTime -> LastItem -> CliM String
-prettyReadyItem now li =
+prettyShowItemAndWait :: UTCTime -> LastItem -> CliM ()
+prettyShowItemAndWait now li =
   let idString =
         case li of
           LastItemUnsynced ci _ -> show (unClientId ci)
@@ -165,11 +167,19 @@ prettyReadyItem now li =
       timeStr = prettyTimestamp now lastItemTimestamp
       timeAgoString = prettyTimeAuto now lastItemTimestamp
    in case typedItemCase lastItemData of
-        Left err -> pure $ unlines ["Invalid item:", err]
+        Left err -> liftIO $ putStrLn $ unlines ["Invalid item:", err]
         Right i -> do
-          contents <-
+          (contents, mp) <-
             case i of
-              CaseTextItem t -> pure $ T.unpack t
+              CaseTextItem t -> do
+                mp <-
+                  if doAutoOpen
+                    then fmap join
+                      $ forM (parseURI (T.unpack t))
+                      $ \uri ->
+                        getAutoOpenConfig (show uri)
+                    else pure Nothing
+                pure (T.unpack t, mp)
               CaseImageItem it bs -> do
                 let ext =
                       case it of
@@ -179,8 +189,21 @@ prettyReadyItem now li =
                 let fileName = idString ++ ext
                 file <- resolveFile cacheDir fileName
                 liftIO $ SB.writeFile (fromAbsFile file) bs
-                pure $ "Image: " <> fromAbsFile file
-          pure $ unlines [concat [timeStr, " (", timeAgoString, ")"], contents]
+                mp <- getAutoOpenConfig (fromAbsFile file)
+                pure ("Image: " <> fromAbsFile file, mp)
+          let waitFunc = case mp of
+                Nothing -> id
+                Just pc -> withProcessWait pc . const
+          waitFunc $ liftIO $ putStrLn $ unlines [concat [timeStr, " (", timeAgoString, ")"], contents]
+
+doAutoOpen :: Bool
+doAutoOpen = True
+
+getAutoOpenConfig :: String -> CliM (Maybe (ProcessConfig () () ()))
+getAutoOpenConfig arg = pure $ if doAutoOpen then Just (autoOpenConfig arg) else Nothing
+
+autoOpenConfig :: String -> ProcessConfig () () ()
+autoOpenConfig arg = shell $ unwords ["xdg-open", arg]
 
 prettyTimestamp :: UTCTime -> UTCTime -> String
 prettyTimestamp now d =

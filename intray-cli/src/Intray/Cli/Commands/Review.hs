@@ -29,7 +29,7 @@ review = do
             s <- syncAndReturn storeSize
             liftIO $ putStrLn $ unwords [show s, "items remaining"]
       showSize
-      prettyReadyItem now li >>= (liftIO . putStrLn)
+      prettyShowItemAndWait now li
       res <- liftIO $ prompt "done [y/N]"
       let cont = do
             doneItem
