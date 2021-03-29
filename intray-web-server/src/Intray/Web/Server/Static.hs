@@ -18,6 +18,10 @@ mkEmbeddedStatic
   "myStatic"
   [ embedFile "static/intray.apk",
     embedFile "static/gtd_flowchart.jpg",
+    embedFile "static/tom-sydney-kerckhove_ideas.svg",
+    embedFile "static/tom-sydney-kerckhove_thinking.svg",
+    embedFile "static/tom-sydney-kerckhove_flowchart-gtd.svg",
+    embedFile "static/tom-sydney-kerckhove_faq.svg",
     embedFile "static/favicon.ico",
     embedRemoteFileAt
       "static/semantic/themes/default/assets/fonts/icons.ttf"

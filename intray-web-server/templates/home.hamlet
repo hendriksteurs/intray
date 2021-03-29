@@ -1,377 +1,285 @@
-<div .ui .very .padded .segment>
-  <div .hidden .divider>
-  <h1 .ui .center .aligned .icon .header>
-    <i .inbox .icon>
-  <h1 class="ui center aligned header">
-    <div class="content">
-      Intray
-      <div .sub .header>
-        Get it off your mind
 
-<div .ui .huge .padded .segment>
-  <h2 .ui .header> Just write it down
-  <p>
-    Have you heard that all you need to do to get things of your mind,
-    is to systematically write them down? Try it out with intray!
-  <p>
-    Intray offers a no-nonsense web interface to write down your
-    thoughts and ideas anywhere you go, and easily process them.
-    It is faster, cleaner and leaner than any of its alternatives,
-    while exposing an elegant API and including a CLI and an android app.
 
-  <h2 .ui .header> Anywhere, anytime
-  <p>
-    Has one of the following scenarios ever happened to you?
-    <div .ui .list>
-      <div .item>
-        <div .header>
-          <i .minus .icon>
-          A friend tells you about a movie you just have to watch
-      <div .item>
-        <div .header>
-          <i .minus .icon>
-          In the middle of a party, you suddenly get a great idea
-      <div .item>
-        <div .header>
-          <i .minus .icon>
-          During dinner with your parents, you remember you really need to send someone an email.
-    <p>
+
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+
+
+
+<h1 class="ui center aligned icon header">
+  <i class="inbox icon">
+
+<h1 class="ui center aligned header">
+    Intray
+
+<h2 class="ui center aligned header">
+    The tool to get things out of your head to be dealt with appropriately later
+
+<div class="ui center aligned one column grid">
+  <div class="column">
+    <a class="ui primary huge button" href=@{AuthR registerR}>
+      Get Intray
+
+
+
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+
+
+
+<div class="ui middle aligned two column grid">
+  <div class="column">
+    <h2 .ui .header .centered>
+      Have these scenarios ever happened to you?
+
+    <ul>
+      <li> A friend tells you about a film you just have to watch.
+      <li> You get a brilliant idea in the middle of a party or meeting.
+      <li> You suddenly remember you really need to send someone an email.
+
+    <p .ui>
+      Or undoubtedly something similar.
       Never again will you have to drop everything and send the email.
       Never again will you have to put your thought in your calendar, where it does not belong.
-      Never again will you forget which movies to watch.
-      Because now, there is intray.
+      Never again will you forget which films to watch.
+      Because now, there is Intray.
 
-  <h2 .ui .header> Extremely minimal
-  <p>
-    <div .ui .list>
-      <div .item>
-        <i .idea .icon>
-        <div .content>
-          Add an intray item
-      <div .item>
-        <i .search .icon>
-        <div .content>
-          Show one intray item
-      <div .item>
-        <i .check .icon>
-        <div .content>
-          Delete the shown intray item
-
-  <h2 .ui .header> Extremely low friction
-  <p> Intray is specifically built to have the lowest friction of all similar tools.
-  <table .ui .table>
-    <thead>
-      <tr>
-        <th>
-          Method
-        <th>
-          Steps
-        <th>
-          Clicks
-        <th>
-    <tbody>
-      <tr>
-        <td> Google Chrome on Android
-        <td>
-          <div .ui .ordered .list>
-            <div .item>
-              Click the Intray icon on the launcher
-            <div .item>
-              Start typing
-        <td> 1
-        <td> <i class="green checkmark icon"></i>
-      <tr>
-        <td> Safari on IOS
-        <td>
-          <div .ui .ordered .list>
-            <div .item>
-              Click the Intray icon on the launcher
-            <div .item>
-              Start typing
-        <td> 1
-        <td> <i class="green checkmark icon"></i>
-      <tr>
-        <td .positive>
-          <a href=@{StaticR static_intray_apk}>
-            Intray Android App
-        <td .positive>
-          <div .ui .ordered .list>
-            <div .item> Click the intray icon on the launcher
-            <div .item> Start typing
-        <td .positive> 1
-        <td .positive> <i class="red heart icon"></i>
-      <tr>
-        <td .positive>
-          <a href="https://github.com/NorfairKing/intray/tree/master/intray-cli">
-            Intray Cli
-        <td .positive>
-          <div .ui .ordered .list>
-            <div .item> Open a terminal. (One keyboard shortcut.)
-            <div .item>
-              Start typing:
-              <code>
-                intray add YOUR ITEM HERE
-        <td .positive> 0
-        <td .positive> <i class="yellow star icon"></i>
-  <p .small>
-    If you would like to add more rows to this table, feel free to
-    <a href="mailto:intray@cs-syd.eu">
-      contact us
-    .
-
-  <h2 .ui .header> Open-source
-  <p>
-    Intray is entirely open-source.
-    <a href="https://github.com/NorfairKing/intray">
-      The source can be found on Github.
-
-  <h2 .ui .header> API-First
-  <p>
-    Every interaction with Intray is available via
-    <a href=@{APIDocsR}>the intray API.
-    The API allows to integrate intray seamlessly with complex systems to optimise your workflow.
-    From a "Getting things done"-style tickler system
-    which drops items into your intray whenever you want
-    to automated item generation upon receiving emails
-    from certain people, everything is possible.
-
-
-  <h2 .ui .header> CLI-Second
-  <p>
-    Intray is available via
-    <a href="https://github.com/NorfairKing/intray">the official Intray command-line client
-    .
-    In addition to the features on the web interface, the command-line client works offline with easy synchronisation.
-
-  <h2 .ui .header> Mobile-Third
-  <p>
-    There is an
-    <a href=https://gitlab.com/Norfair/intray-android>
-      open source Intray Android application
-    available at
-    <a href=@{StaticR static_intray_apk}>
-      Intray Android Apk
-    .
-
-  <h2 .ui .header> Roadmap
-  <p>
-    You can vote on the feature roadmap
-    <a href="https://forms.gle/yWyDjRsiup6ETCn18">
-      Roadmap vote
-    .
-
-$maybe p <- mPricing
-  <div .ui .huge .padded .segment>
-    <h2 .ui .header> Pricing
-    <div .ui .cards .centered>
-      <div .ui .card>
-        <div .ui .content>
-          <div .ui .centered .header>
-            Trial
-          <div class="ui segments">
-              <div class="ui center aligned secondary segment">
-                 <div class="ui statistic">
-                    <div class="value">
-                      Free
-                    <div class="label">
-                      Forever
-              <div class="ui center aligned segment">
-                 <p> Maximum #{pricingMaxItemsFree p} items
-              <div class="ui center aligned segment">
-                 <p> Full API access
-              <div class="ui center aligned segment">
-                 <p> A Free command-line application
-           <a class="ui primary fluid button" href=@{AuthR registerR}>
-            Get Started
-      <div .ui .card>
-        <div .ui .content>
-          <div .ui .centered .header>
-            Subscription
-          <div class="ui segments">
-              <div class="ui center aligned secondary segment">
-                 <div class="ui statistic">
-                    <div class="value">
-                      #{pricingShowAmountPerMonth p}
-                    <div class="label">
-                       per month
-              <div class="ui center aligned segment">
-                 <p> Unlimited items
-              <div class="ui center aligned segment">
-                 <p> Full API access
-              <div class="ui center aligned segment">
-                 <p> A Free command-line application
-              <div class="ui center aligned segment">
-                 <p> Unlimited synchronisation accross devices
-              $maybe tp <- pricingTrialPeriod p
-                <div class="ui center aligned segment">
-                   <p> #{show tp} day Trial period
-              <div class="ui center aligned segment">
-                 <p> Billed anually
-           <a class="ui primary fluid button" href=@{AuthR registerR}>
-            Get Started
+  <div class="column">
+    <img .ui .large .centered .image
+      alt="Getting Things Done Flowchart"
+      src=@{StaticR static_tom_sydney_kerckhove_ideas_svg}>
 
 
 
-<div .ui .huge .padded .segment>
-  <h2 .ui .header> FAQ
-  <div .ui .list>
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            Why can I not modify items?
-        <div .description>
-          <p>
-            Items represent thoughts you have and want to get out of your head.
-            The purpose is to not think about the ideas anymore between when you write them down and when you process them.
-            During processing, you take the items out of the intray and think about what you want to do with each idea.
-            After that, you delete the item from the intray.
-            Allowing to modify items would only allow you to make yourself less efficient.
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
 
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            Why can I not list all my items?
-        <div .description>
-          <p>
-            Only being able to view one item at a time forces you to process items one by one without skipping any.
-            This is a proven improvement to your processing speed.
 
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            So it's a todo list?
-        <div .description>
-          <p>
-            No. It is like a box which contains arbitrary thoughts you want to get out of your head.
-            These thoughts still require processing, as opposed to todo items.
 
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            What happens to my data?
-        <div .description>
-          <p>
-            All data submitted via Intray is secured while it is being submitted and while it is being stored.
-            Users will never be tracked and their data will never be exposed to third parties.
+<div class="ui middle aligned three column grid">
+  <div class="column">
+    <ul>
+      <li> Faster, cleaner and leaner than its alternatives
+      <li> No-nonsense web interface
+      <li> Minimal design, maximum efficient
+      <li> In browser or terminal
 
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            Will there ever be ads?
-        <div .description>
-          <p>
-            There will never be ads on Intray.
+  <div class="column">
+    <ul>
+      <li> Mobile Android app
+      <li> Application programming interface
+      <li> Command line interface options included
+      <li> Open source
+      <li> Auto syncing
 
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            I don't trust you with my data, can I still use Intray?
-        <div .description>
-          <p>
-            Yes, intray is free software, so anyone can host an Intray server themselves.
-            The code is available 
-            <a href="https://github.com/NorfairKing/intray">
-              on Github.
+  <div class="column">
+    <ul>
+      <li> Ad-free forever
+      <li> Anywhere, anytime
+      <li> Constantly improved
+      <li> Reliable
+      <li> Optimized for power users
 
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            Is there an Iphone application?
-        <div .description>
-          <p>
-            Intray is currently not available on Iphone.
-            If you are interested in writing an Iphone application, please 
+
+
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+
+
+<div .ui .cards .centered>
+  <div .ui .card>
+    <div .ui .content>
+      <div .ui .centered .header>
+        Trial
+      <div class="ui segments">
+          <div class="ui center aligned secondary segment">
+            <div class="ui statistic">
+                <div class="value">
+                  Free
+                <div class="label">
+                  Forever
+          <div class="ui center aligned segment">
+            <p>
+              Maximum 5 items
+
+      <a class="ui primary fluid button" href=@{AuthR registerR}>
+        Get Started
+
+  <div .ui .card>
+    <div .ui .content>
+      <div .ui .centered .header>
+        Subscription
+      <div class="ui segments">
+          <div class="ui center aligned secondary segment">
+            <div class="ui statistic">
+                <div class="value">
+                  12CHF
+                <div class="label">
+                  per year
+          <div class="ui center aligned segment">
+            <p>
+              Unlimited items
+
+      <a class="ui primary fluid button" href=@{AuthR registerR}>
+        Get Started
+
+
+
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+
+
+
+<div class="ui middle aligned two column grid">
+  <div class="column">
+    <div class="ui accordion">
+      <div class="title">
+        <i class="dropdown icon">
+        Why can I not modify items?
+      <div class="content">
+        <p class="transition hidden">
+          Items represent thoughts you have and want to get out of your head.
+          The purpose is to not think about the ideas anymore between when you write them down and when you process them.
+          During processing, you take the items from Intray and think about what you want to do with each idea.
+          After that, you delete the item from the intray.
+          Allowing to modify items would open a door for extra stress and it would only allow you to make yourself less efficient.
+
+      <div class="title">
+        <i class="dropdown icon">
+        Why can I not list all my items?
+      <div class="content">
+        <p class="transition hidden">
+          Only being able to view one item at a time forces you to process items one by one without skipping any.
+          This is a proven improvement to your processing speed.
+
+      <div class="title">
+        <i class="dropdown icon">
+        How do I use Intray with the Self-management coaching?
+      <div class="content">
+        <p>
+          Intray was built specifically to act as the first part in a "Getting Things Done" (GTD) process.
+          It is used as the "In basket" in the following flowchart.
+          Feel free to check out the 
+          <a href="https://cs-syd.eu/self-management">
+            Self-management coaching.
+        <p>
+          <img .ui .large .centered .image
+            alt="Getting Things Done Flowchart"
+            src=@{StaticR static_tom_sydney_kerckhove_flowchart_gtd_svg}>
+
+      <div class="title">
+        <i class="dropdown icon">
+        But you said to do lists are bad?
+      <div class="content">
+        <p>
+          Correct.
+          Intray is not a to do list.
+          It is like a box which contains arbitrary thoughts you want to get out of your head.
+          These thoughts still require processing, as opposed to to do items.
+
+      <div class="title">
+        <i class="dropdown icon">
+        How is Intray better than any other notes application?
+      <div class="content">
+        <p>
+          Notes or apps such as Remember the Milk, Todoist or Google Keep serve a fundamentally different purpose than Intray.
+          Intray items are meant to be short term, ephemeral and for prosessing.
+          Notes, on the other hand, have an indeterminate life-time and do not lend themselves well to processing.
+          Intray incorporates the best-practices for processing and is not cluttered by unnecessary features.
+          Intray has been designed explicitly for your ease of mind and efficiency.
+
+      <div class="title">
+        <i class="dropdown icon">
+        How is Intray better than org-mode?
+      <div class="content">
+        <p>
+          Intray allows for more efficient processing.
+        <p>
+          Intray allows you to use a web interface, e.g. through your phone, as well as a command line interface.
+          This combination makes intray more efficient to use.
+
+      <div class="title">
+        <i class="dropdown icon">
+        I don't trust you with my data, can I still use Intray?
+      <div class="content">
+        <p>
+          Yes.
+          All data submitted via Intray is secured while it is being submitted and while it is being stored.
+          Users will never be tracked and their data will never be exposed to third parties.
+          Moreover, Intray is free software, so anyone can host an Intray server themselves.
+          The code is available 
+          <a href="https://github.com/NorfairKing/intray">
+            on Github.
+
+      <div class="title">
+        <i class="dropdown icon">
+        Will there ever be ads?
+      <div class="content">
+        <p>
+          There will never be ads on Intray.
+          Intray is designed for power users anjd maximum effiency.
+          Any distraction will decrease productivity.
+
+      <div class="title">
+        <i class="dropdown icon">
+        Is there an Iphone application?
+      <div class="content">
+        <p>
+          Intray is currently not available on Iphone.
+          you can, however, use intray via the browser on your phone.
+          If you are interested in writing an Iphone application, please 
             <a href="mailto:intray@cs-syd.eu">
-              contact us
-            .
-
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            How is Intray better than the notes application on my phone?
-        <div .description>
-          <p>
-            Notes and intray Items serve a fundamentally different purpose.
-            Intray items are meant to be short term, ephemeral and for prosessing.
-            Notes have an indeterminate life-time and do not lend themselves well to processing.
-            Intray incorporates the best-practices for processing and is not cluttered by unnecessary features.
-
-            Moreover, Intray items will persist beyond eventual damage to your phone.
-            This is not the case for all notes apps.
-
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            How is Intray better than google keep, remember the milk, todoist..?
-        <div .description>
-          <p>
-            Intray has been designed with your ease of mind and efficiency in mind.
-            For example, the processing does not allow you to see more than one item at a time,
-            which is a proven strategy to improve your processing efficiency.
-
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          How is Intray better than org-mode?
-        <div .description>
-          <div .item>
-            <p>
-              Intray allows for more efficient processing.
-          <div .item>
-            <p>
-              Intray allows you to use a web interface, e.g. through your phone,
-              as well as a command line interface. This combination makes intray
-              more efficient to use.
+              contact us.
 
 
-    <div .item>
-      <i .question .icon>
-      <div .content>
-        <div .header>
-          <p>
-            How do I use Intray for "Getting Things Done" (GTD)?
-        <div .description>
-          <p>
-            Intray was built specifically to act as the first part in a GTD process.
-            Use it as the "In basket" in the following flowchart.
-          <p>
-            <img .ui .large .centered .image
-              alt="Getting Things Done Flowchart"
-              src=@{StaticR static_gtd_flowchart_jpg}>
+
+  <div class="column">
+    <img .ui .large .centered .image
+      alt="Getting Things Done Flowchart"
+      src=@{StaticR static_tom_sydney_kerckhove_faq_svg}>
 
 
-<div .ui .huge .padded .segment>
-  <p>
-    Intray is a
-    <a href="https://cs-syd.eu">
-      CS SYD
-    Product.
-  <p>
-    Self-management training which includes Intray is available
-    <a href="https://cs-syd.eu/self-management">
-      via CS SYD
-    .
-  <p>
-    For questions and feedback, feel free to
-    <a href="mailto:intray@cs-syd.eu">
-      contact us
-    .
+
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+
+
+
+<h2 .ui .header .centered>
+  Start using Intray
+
+<div class="ui center aligned one column grid">
+  <div class="column">
+    <p>
+      We suggest getting Intray together with our self-management coaching sessions.
+
+<div class="ui center aligned two column grid">
+  <div class="column">
+    <a class="ui primary huge button" href=@{AuthR registerR}>
+      Get Intray
+    <a class="ui primary huge basic button" href="https://cs-syd.eu/self-management">
+      Self-management
+
+
+
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
+<div class="ui hidden divider">
