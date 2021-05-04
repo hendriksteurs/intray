@@ -39,9 +39,6 @@ mkEmbeddedStatic
       "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/themes/default/assets/fonts/icons.woff2",
     embedRemoteFileAt "static/jquery.min.js" "https://code.jquery.com/jquery-3.1.1.min.js",
     embedRemoteFileAt
-      "static/semantic/semantic.min.css"
-      "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css",
-    embedRemoteFileAt
-      "static/semantic/semantic.min.js"
-      "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+      "static/bulma/bulma.min.css"
+      "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css"
   ]
