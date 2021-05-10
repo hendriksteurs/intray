@@ -1,145 +1,154 @@
+<div .container>
+  <div .box>
 
 
 
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
+    <section .hero>
+      <div .column .has-text-centered>
+        <img src=@{StaticR static_tom_sydney_kerckhove_logo_intray_svg} alt="Logo Intray" width="100px">
+
+      <p .title .is-size-3 .has-text-weight-semibold .has-text-centered>
+        Intray
+
+      <div .columns .is-centered>
+        <div .column .is-two-thirds>
+          <p .content .is-size-5 .has-text-centered>
+            The tool to get things out of your head to be dealt with appropriately later
+
+      <div .columns .is-centered>
+        <a .button .is-size-4 .is-primary href=https://calendly.com/cs-syd/introduction-call>
+          Book Syd
 
 
 
-<h1 class="ui center aligned icon header">
-  <i class="inbox icon">
-
-<h1 class="ui center aligned header">
-  Intray
-
-<h2 class="ui center aligned header">
-  The tool to get things out of your head to be dealt with appropriately later
-
-<div class="ui center aligned one column grid">
-  <div class="column">
-    <a class="ui primary huge button" href=@{AuthR registerR}>
-      Get Intray
 
 
+    <section .section>    
+      <div .columns .is-variable .is-half .is-vcentered>
 
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
+        <div .column>
+          <p .title .is-size-4 .has-text-centered>
+            Have these scenarios ever happened to you?
 
+          <div .content .is-normal .has-text-justified>
+            <ul>
+              <li> A friend tells you about a film you just have to watch.
+              <li> You get a brilliant idea in the middle of a party or meeting.
+              <li> You suddenly remember you really need to send someone an email.
 
-
-<div class="ui middle aligned two column grid">
-  <div class="column">
-    <h2 .ui .header .centered>
-      Have these scenarios ever happened to you?
-
-    <ul>
-      <li> A friend tells you about a film you just have to watch.
-      <li> You get a brilliant idea in the middle of a party or meeting.
-      <li> You suddenly remember you really need to send someone an email.
-
-    <p .ui>
-      Or undoubtedly something similar.
-      Never again will you have to drop everything and send the email.
-      Never again will you have to put your thought in your calendar, where it does not belong.
-      Never again will you forget which films to watch.
-      Because now, there is Intray.
-
-  <div class="column">
-    <img .ui .large .centered .image
-      alt="Getting Things Done Flowchart"
-      src=@{StaticR static_tom_sydney_kerckhove_ideas_svg}>
+          <p .content .is-normal .has-text-justified>
+            Or undoubtedly something similar.
+            Never again will you have to drop everything and send the email.
+            Never again will you have to put your thought in your calendar, where it does not belong.
+            Never again will you forget which films to watch.
+            Because now, there is Intray.
 
 
 
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
+        <div .column>
+          <p .has-text-centered>
+            <img src=@{StaticR static_tom_sydney_kerckhove_ideas_svg} alt="privacy protection" width="450px">
 
 
 
-<div class="ui middle aligned three column grid">
-  <div class="column">
-    <ul>
-      <li> Faster, cleaner and leaner than its alternatives
-      <li> No-nonsense web interface
-      <li> Minimal design, maximum efficient
-      <li> In browser or terminal
-
-  <div class="column">
-    <ul>
-      <li> Mobile Android app
-      <li> Application programming interface
-      <li> Command line interface options included
-      <li> Open source
-      <li> Auto syncing
-
-  <div class="column">
-    <ul>
-      <li> Ad-free forever
-      <li> Anywhere, anytime
-      <li> Constantly improved
-      <li> Reliable
-      <li> Optimized for power users
 
 
 
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-
-$maybe p <- mPricing
-  <div .ui .cards .centered>
-    <div .ui .card>
-      <div .ui .content>
-        <div .ui .centered .header>
-          Trial
-        <div class="ui segments">
-            <div class="ui center aligned secondary segment">
-              <div class="ui statistic">
-                  <div class="value">
-                    Free
-                  <div class="label">
-                    Forever
-            <div class="ui center aligned segment">
-              <p>
-                Maximum #{pricingMaxItemsFree p} items
-
-        <a class="ui primary fluid button" href=@{AuthR registerR}>
-          Get Started
-
-    <div .ui .card>
-      <div .ui .content>
-        <div .ui .centered .header>
-          Subscription
-        <div class="ui segments">
-            <div class="ui center aligned secondary segment">
-              <div class="ui statistic">
-                  <div class="value">
-                    #{pricingShowAmountPerMonth p}
-                  <div class="label">
-                    per month
-            <div class="ui center aligned segment">
-              <p>
-                Unlimited items
-
-        <a class="ui primary fluid button" href=@{AuthR registerR}>
-          Get Started
 
 
 
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
-<div class="ui hidden divider">
+
+
+
+    <section .section>
+      <div .columns .is-centered>
+        <div .column>
+          <div .content>
+            <ul>
+              <li> Faster, cleaner and leaner than its alternatives
+              <li> No-nonsense web interface
+              <li> Minimal design, maximum efficient
+              <li> In browser or terminal
+
+        <div .column>
+          <div .content>
+            <ul>
+              <li> Mobile Android app
+              <li> Application programming interface
+              <li> Command line interface options included
+              <li> Open source
+              <li> Auto syncing
+
+
+        <div .column>
+          <div .content>
+            <ul>
+              <li> Ad-free forever
+              <li> Anywhere, anytime
+              <li> Constantly improved
+              <li> Reliable
+              <li> Optimized for power users
+
+
+
+
+
+
+    <section .section>
+      <div .columns .is-centered>
+        <p .title .is-3 .has-text-centered .p-3>
+          Get Syd to speak at your event 
+
+      <div .columns .is-centered>
+        <a .button .is-size-4 .is-primary href=https://calendly.com/cs-syd/introduction-call>
+          Check availability
+
+
+
+
+    <section .section>
+ 
+      $maybe p <- mPricing
+        <div .ui .cards .centered>
+          <div .ui .card>
+            <div .ui .content>
+              <div .ui .centered .header>
+                Trial
+              <div class="ui segments">
+                  <div class="ui center aligned secondary segment">
+                    <div class="ui statistic">
+                        <div class="value">
+                          Free
+                        <div class="label">
+                          Forever
+                  <div class="ui center aligned segment">
+                    <p>
+                      Maximum #{pricingMaxItemsFree p} items
+
+              <a class="ui primary fluid button" href=@{AuthR registerR}>
+                Get Started
+
+          <div .ui .card>
+            <div .ui .content>
+              <div .ui .centered .header>
+                Subscription
+              <div class="ui segments">
+                  <div class="ui center aligned secondary segment">
+                    <div class="ui statistic">
+                        <div class="value">
+                          #{pricingShowAmountPerMonth p}
+                        <div class="label">
+                          per month
+                  <div class="ui center aligned segment">
+                    <p>
+                      Unlimited items
+
+              <a class="ui primary fluid button" href=@{AuthR registerR}>
+                Get Started
+
+
+
+
 
 
 

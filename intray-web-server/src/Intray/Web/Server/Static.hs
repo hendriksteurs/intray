@@ -28,6 +28,7 @@ mkEmbeddedStatic
     embedFile "static/tom-sydney-kerckhove_tiktok-icon.svg",
     embedFile "static/tom-sydney-kerckhove_twitter-icon.svg",
     embedFile "static/tom-sydney-kerckhove_youtube-icon.svg",
+    embedFile "static/tom-sydney-kerckhove_logo-intray.svg",
     embedRemoteFileAt
       "static/semantic/themes/default/assets/fonts/icons.ttf"
       "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/themes/default/assets/fonts/icons.ttf",
