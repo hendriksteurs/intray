@@ -1,5 +1,9 @@
-<h1> Access Keys
+<section .section>
+  <div .columns .is-centered>
+    <div .column .is-half>
+      <p .title .is-size-2 .has-text-centered>
+        Access Keys
 
-^{aksw}
+        ^{aksw}
 
-^{nakf}
+        ^{nakf}

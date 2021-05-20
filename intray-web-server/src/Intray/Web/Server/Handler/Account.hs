@@ -47,7 +47,7 @@ accountInfoSegment (Just ai@AccountInfo {..}) mp = do
     mconcat
       [ [whamlet|
         <div .ui .segment>
-          <h3>
+          <h3 .has-text-weight-bold>
             Info
           <p> Username: #{usernameText accountInfoUsername}
           <p> Created: ^{createdWidget}

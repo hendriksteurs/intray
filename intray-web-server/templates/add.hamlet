@@ -1,44 +1,48 @@
-<h1> Add Item
+<section .section>
+  <p .title .is-size-2 .has-text-weight-semibold .has-text-centered>
+    Add item
 
-<div .ui .segment>
-  <form
-    .ui .form
-    id="inputForm"
-    method=post
-    enctype=multipart/form-data
-    action=@{AddR}>
+<div .columns .is-centered>
+  <div .column .is-half>
+
+    <form .form
+      id="inputForm"
+      method=post
+      enctype=multipart/form-data
+      action=@{AddR}>
+
+      <div .field .text-input .changable
+        data-tooltip="Press Shift-Enter to submit"
+        data-position="top left">
+        <textarea .textarea
+          name="contents" 
+          id="textArea"
+          autofocus>
+
+      <div .field .has-text-centered .image-input .changable style="display: none;">
+        <img src="" id="image">
+        <button .button .is-primary .is-medium type="button" id="imageButton" onclick="document.getElementById('imageInput').click();">
+          Upload Picture
+        <input type="file" id="imageInput" name="image" accept="image/*" capture="environment" onChange="handleFile()" style="display: none;">
+        <label id="uploading" style="display: none;">
+          Uploading...
+
+      <div .inline .fields>
+        <div .field>
+          <input id="text" .type .radio .checkbox type="radio" name="type" value="text" checked>
+          <label>
+            Text
+
+        <div .field>
+          <input id="image" .type .slider .checkbox type="radio" name="type" value="image">
+          <label>
+            Image
 
 
-    <div .field .text-input .changable
-      data-tooltip="Press Shift-Enter to submit"
-      data-position="top left">
-      <textarea 
-        name="contents" 
-        id="textArea"
-        autofocus>
 
-    <div .field .image-input .changable style="display: none;">
-      <img src="" id="image">
-      <button .ui .primary .button type="button" id="imageButton" onclick="document.getElementById('imageInput').click();">
-        Upload Picture
-      <input type="file" id="imageInput" name="image" accept="image/*" capture="environment" onChange="handleFile()" style="display: none;">
-      <label id="uploading" style="display: none;">
-        Uploading...
-    
-    <div .ui .inline .fields>
-      <div .ui .field>
-        <input id="text" .type .ui .radio .checkbox type="radio" name="type" value="text" checked>
-        <label>
-          Text
+      ^{token}
+      <div .control .has-text-centered>
+        <button type="submit".button .is-info>
+          Submit
 
-      <div .ui .field>
-        <input id="image" .type .ui .slider .checkbox type="radio" name="type" value="image">
-        <label>
-          Image
-
-
-
-
-    ^{token}
-    <button .text-input .changable .ui .primary .button type="submit">
-      Submit
+<section .section>

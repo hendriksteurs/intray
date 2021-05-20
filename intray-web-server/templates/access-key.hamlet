@@ -15,6 +15,6 @@
   action=@{AccessKeyRevokeR accessKeyInfoUUID}>
   ^{token}
   <button 
-    .ui .negative .button
+    .button .is-info
     type=submit>
     Revoke

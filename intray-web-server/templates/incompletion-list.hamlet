@@ -1,483 +1,483 @@
-<h1> Incompletion Trigger List
-
-<div .ui .segment .content>
-  <h2> What has your attention?
-
-  <p>
+<section .section>
+  <p .title .is-size-2 .has-text-centered>
+    Incompletion Trigger List
+  <p .content .has-text-centered>
     You can use this list to trigger yourself to think of all the things that you may want to brain-dump into Intray.
 
+<div .columns .is-centered>
+  <div .column .is-half .content>
 
-  <h2>
-    Personal
+    <p .title .is-size-3 .has-text-right>
+      Personal
+
+    <p .title .is-size-4>
+      Projects
+    <ul>
+      <li> Started but not done
+      <li> Not started yet
+
+    <p .title .is-size-4>
+      Organisations
+    <ul>
+      <li> service
+      <li> community
+      <li> volunteer
+      <li> spiritual organisation
+
+    <p .title .is-size-4>
+      Commitments/promises to others
+    <ul>
+      <li> spouse
+      <li> partner
+      <li> children
+      <li> parents
+      <li> family
+      <li> friends
+      <li> professionals
+      <li> returnable items
+
+    <p .title .is-size-4>
+      Communications to make/get
+    <ul>
+      <li> calls
+      <li> emails
+      <li> messages
+      <li> cards
+      <li> letters
+      <li> thank-you’s
+
+    <p .title .is-size-4>
+      Upcoming events
+    <ul>
+      <li> birthdays
+      <li> anniversaries
+      <li> weddings
+      <li> graduations
+      <li> outings
+      <li> holidays
+      <li> vacation
+      <li> travel
+      <li> dinners
+      <li> parties
+      <li> receptions
+      <li> cultural events
+      <li> sporting events
+
+    <p .title .is-size-4>
+      Family
+    <ul>
+      <li> projects/activities
+      <li> partner
+      <li> children
+      <li> parents
+      <li> relatives
+
+    <p .title .is-size-4>
+      Administration
+    <ul>
+      <li> home office supplies
+      <li> equipment
+      <li> filing
+      <li> storage
+      <li> entertainment
+      <li> tools
+
+    <p .title .is-size-4>
+      Technology
+    <ul>
+      <li> phones
+      <li> voicemail
+      <li> instant messaging
+      <li> social media
+      <li> internet
+      <li> television
+      <li> computers
+      <li> password manager
+      <li> multi-factor authentication devices
+      <li> email provider
+      <li> data backup
+      <li> filing
+      <li> storage
+      <li> appliances
+      <li> entertainment
+      <li> tools
+
+    <p .title .is-size-4>
+      Leisure
+    <ul>
+      <li> books
+      <li> music
+      <li> videos
+      <li> films
+      <li> travel
+      <li> places to visit
+      <li> people to visit
+      <li> web browsing
+      <li> photography
+      <li> sports
+      <li> hobbies
+      <li> cooking
+      <li> recreation
+      <li> subscriptions
+      <li> entertainment
+
+    <p .title .is-size-4>
+      Finances
+    <ul>
+      <li> bills
+      <li> banks
+      <li> investment
+      <li> loans
+      <li> taxes
+      <li> budget
+      <li> insurance
+      <li> mortgage
+      <li> accountants
+      <li> subscriptions
+
+    <p .title .is-size-4>
+      Legal
+    <ul>
+      <li> wills
+      <li> trusts
+      <li> estate
+      <li> legal affairs
+
+    <p .title .is-size-4>
+      Waiting for
+    <ul>
+      <li> emails
+      <li> text messages
+      <li> repairs
+      <li> reimbursements
+      <li> loaned items
+      <li> information
+      <li> replies
+
+    <p .title .is-size-4>
+      Home/household
+    <ul>
+      <li> real estate
+      <li> repairs
+      <li> construction
+      <li> remodeling
+      <li> landlords
+      <li> heating and A/C
+      <li> plumbing
+      <li> electricity
+      <li> roofs
+      <li> landscaping
+      <li> driveways
+      <li> garages
+      <li> walls
+      <li> floors
+      <li> ceilings
+      <li> decor
+      <li> furniture
+      <li> utilities
+      <li> appliances
+      <li> lights and wiring
+      <li> kitchen equipment
+      <li> laundry
+      <li> places to clear
+      <li> cleaning
+      <li> organising
+      <li> storage areas
+
+    <p .title .is-size-4>
+      Health
+    <ul>
+      <li> doctors
+      <li> dentist
+      <li> optometrist
+      <li> specialists
+      <li> checkups
+      <li> diet
+      <li> food
+      <li> exercise
+
+    <p .title .is-size-4>
+      Personal development
+    <ul>
+      <li> classes
+      <li> seminars
+      <li> education
+      <li> coaching
+      <li> career
+      <li> creative expressions
+
+    <p .title .is-size-4>
+      Transportation
+    <ul>
+      <li> cars
+      <li> bikes
+      <li> motorcycles
+      <li> maintenance
+      <li> repair
+      <li> commuting
+      <li> tickets
+      <li> reservations
+      <li> lothes
+      <li> professional
+      <li> casual
+      <li> formal
+      <li> sports
+      <li> accessories
+      <li> luggage
+      <li> repairs
+      <li> tailoring
+      <li> shopping
+
+    <p .title .is-size-4>
+      Pets
+    <ul>
+      <li> health
+      <li> training
+      <li> supplies
+      <li> vet checkup
+
+    <p .title .is-size-4>
+      Errands
+    <ul>
+      <li> hardware store
+      <li> pharmacy
+      <li> department stores
+      <li> bank
+      <li> cleaners
+      <li> stationers
+      <li> gifts
+      <li> office supply
+      <li> groceries
+
+    <p .title .is-size-4>
+      Community
+    <ul>
+      <li> neighborhood
+      <li> neighbors
+      <li> service work
+      <li> schools
+      <li> civic involvements
 
 
-  <h3>
-    Projects
-  <ul>
-    <li> Started but not done
-    <li> Not started yet
 
-  <h3>
-    Organisations
-  <ul>
-    <li> service
-    <li> community
-    <li> volunteer
-    <li> spiritual organisation
+    <p .title .is-size-3 .has-text-right>
+      Professional
 
-  <h3>
-    Commitments/promises to others
-  <ul>
-    <li> spouse
-    <li> partner
-    <li> children
-    <li> parents
-    <li> family
-    <li> friends
-    <li> professionals
-    <li> returnable items
+    <p .title .is-size-4>
+      Projects
+    <ul>
+      <li> Started but not done
+      <li> Not started yet
+      <li> Ideas
 
-  <h3>
-    Communications to make/get
-  <ul>
-    <li> calls
-    <li> emails
-    <li> messages
-    <li> cards
-    <li> letters
-    <li> thank-you’s
+    <p .title .is-size-4>
+      Commitments/promises to others
+    <ul>
+      <li> boss
+      <li> partners
+      <li> colleagues
+      <li> subordinates
+      <li> others in organization
+      <li> other professionals
+      <li> customers
+      <li> other organizations
 
-  <h3>
-    Upcoming events
-  <ul>
-    <li> birthdays
-    <li> anniversaries
-    <li> weddings
-    <li> graduations
-    <li> outings
-    <li> holidays
-    <li> vacation
-    <li> travel
-    <li> dinners
-    <li> parties
-    <li> receptions
-    <li> cultural events
-    <li> sporting events
+    <p .title .is-size-4>
+      Communications to make/get
+    <ul>
+      <li> calls
+      <li> emails
+      <li> voicemails
+      <li> letters
+      <li> memos
 
-  <h3>
-    Family
-  <ul>
-    <li> projects/activities
-    <li> partner
-    <li> children
-    <li> parents
-    <li> relatives
+    <p .title .is-size-4>
+      Writing to finish/submit
+    <ul>
+      <li> reports
+      <li> evaluations
+      <li> reviews
+      <li> proposals
+      <li> articles
+      <li> marketing material
+      <li> instructions
+      <li> summaries
+      <li> minutes
+      <li> rewrites and edits
+      <li> status reporting
+      <li> conversation and communication tracking
 
-  <h3>
-    Administration
-  <ul>
-    <li> home office supplies
-    <li> equipment
-    <li> filing
-    <li> storage
-    <li> entertainment
-    <li> tools
+    <p .title .is-size-4>
+      Meetings
+    <ul>
+      <li> upcoming
+      <li> need to be set or requested
+      <li> need to be de-briefed
 
-  <h3>
-    Technology
-  <ul>
-    <li> phones
-    <li> voicemail
-    <li> instant messaging
-    <li> social media
-    <li> internet
-    <li> television
-    <li> computers
-    <li> password manager
-    <li> multi-factor authentication devices
-    <li> email provider
-    <li> data backup
-    <li> filing
-    <li> storage
-    <li> appliances
-    <li> entertainment
-    <li> tools
+    <p .title .is-size-4>
+      Read/review
+    <ul>
+      <li> books
+      <li> periodicals
+      <li> articles
+      <li> printouts
+      <li> websites
+      <li> blogs
+      <li> RSS feeds
 
-  <h3>
-    Leisure
-  <ul>
-    <li> books
-    <li> music
-    <li> videos
-    <li> films
-    <li> travel
-    <li> places to visit
-    <li> people to visit
-    <li> web browsing
-    <li> photography
-    <li> sports
-    <li> hobbies
-    <li> cooking
-    <li> recreation
-    <li> subscriptions
-    <li> entertainment
+    <p .title .is-size-4>
+      Financial
+    <ul>
+      <li> cash
+      <li> budget
+      <li> balance sheet
+      <li> profit and loss
+      <li> forecasting
+      <li> credit line
+      <li> payables
+      <li> receivables
+      <li> petty cash
+      <li> banks
+      <li> investors
+      <li> asset management
 
-  <h3>
-    Finances
-  <ul>
-    <li> bills
-    <li> banks
-    <li> investment
-    <li> loans
-    <li> taxes
-    <li> budget
-    <li> insurance
-    <li> mortgage
-    <li> accountants
-    <li> subscriptions
+    <p .title .is-size-4>
+      Planning/organizing
+    <ul>
+      <li> goals
+      <li> targets
+      <li> objectives
+      <li> business plans
+      <li> marketing plans
+      <li> financial plans
+      <li> upcoming events
+      <li> presentations
+      <li> meetings
+      <li> conferences
+      <li> travel
+      <li> vacation
 
-  <h3>
-    Legal
-  <ul>
-    <li> wills
-    <li> trusts
-    <li> estate
-    <li> legal affairs
+    <p .title .is-size-4>
+      Organization development
+    <ul>
+      <li> organizational chart
+      <li> restructuring
+      <li> lines of authority
+      <li> job descriptions
+      <li> facilities
+      <li> new systems
+      <li> change initiatives
+      <li> leadership
+      <li> succession planning
+      <li> culture
 
-  <h3>
-    Waiting for
-  <ul>
-    <li> emails
-    <li> text messages
-    <li> repairs
-    <li> reimbursements
-    <li> loaned items
-    <li> information
-    <li> replies
+    <p .title .is-size-4>
+      Administration
+    <ul>
+      <li> legal issues
+      <li> insurance
+      <li> personnel
+      <li> staffing
+      <li> policies/procedures
+      <li> training
 
-  <h3>
-    Home/household
-  <ul>
-    <li> real estate
-    <li> repairs
-    <li> construction
-    <li> remodeling
-    <li> landlords
-    <li> heating and A/C
-    <li> plumbing
-    <li> electricity
-    <li> roofs
-    <li> landscaping
-    <li> driveways
-    <li> garages
-    <li> walls
-    <li> floors
-    <li> ceilings
-    <li> decor
-    <li> furniture
-    <li> utilities
-    <li> appliances
-    <li> lights and wiring
-    <li> kitchen equipment
-    <li> laundry
-    <li> places to clear
-    <li> cleaning
-    <li> organising
-    <li> storage areas
+    <p .title .is-size-4>
+      Staff
+    <ul>
+      <li> hiring
+      <li> firing
+      <li> reviews
+      <li> staff development
+      <li> communication
+      <li> morale
+      <li> feedback
+      <li> compensation
 
-  <h3>
-    Health
-  <ul>
-    <li> doctors
-    <li> dentist
-    <li> optometrist
-    <li> specialists
-    <li> checkups
-    <li> diet
-    <li> food
-    <li> exercise
+    <p .title .is-size-4>
+      Systems
+    <ul>
+      <li> phones
+      <li> computers
+      <li> software
+      <li> hardware
+      <li> databases
+      <li> office equipment
+      <li> printers
+      <li> faxes
+      <li> filing
+      <li> storage
+      <li> furniture
+      <li> fixtures
+      <li> decorations
+      <li> supplies
+      <li> business cards
+      <li> social media
+      <li> stationery
+      <li> personal/electronic organizers
 
-  <h3>
-    Personal development
-  <ul>
-    <li> classes
-    <li> seminars
-    <li> education
-    <li> coaching
-    <li> career
-    <li> creative expressions
+    <p .title .is-size-4>
+      Sales
+    <ul>
+      <li> customers
+      <li> prospects
+      <li> leads
+      <li> sales process
+      <li> training
+      <li> relationship building
+      <li> reporting
+      <li> relationship tracking
+      <li> customer service
 
+    <p .title .is-size-4>
+      Marketing/promotion
+    <ul>
+      <li> campaigns
+      <li> materials
+      <li> public relations
 
-  <h3>
-    Transportation
-  <ul>
-    <li> cars
-    <li> bikes
-    <li> motorcycles
-    <li> maintenance
-    <li> repair
-    <li> commuting
-    <li> tickets
-    <li> reservations
-    <li> lothes
-    <li> professional
-    <li> casual
-    <li> formal
-    <li> sports
-    <li> accessories
-    <li> luggage
-    <li> repairs
-    <li> tailoring
-    <li> shopping
+    <p .title .is-size-4>
+      Meetings
+    <ul>
+      <li> upcoming
+      <li> rescheduling
+      <li> need to be set or requested
+      <li> need to be de-briefed
 
-  <h3>
-    Pets
-  <ul>
-    <li> health
-    <li> training
-    <li> supplies
-    <li> vet checkup
+    <p .title .is-size-4>
+      Waiting for
+    <ul>
+      <li> information
+      <li> delegated projects/tasks
+      <li> pieces of projects
+      <li> replies to communications
+      <li> responses to proposals
+      <li> answers to questions
+      <li> submitted items for response/reimbursement
+      <li> tickets
+      <li> external actions
+      <li> decisions
+      <li> changes
+      <li> implementations
+      <li> things ordered
 
-  <h3>
-    Errands
-  <ul>
-    <li> hardware store
-    <li> pharmacy
-    <li> department stores
-    <li> bank
-    <li> cleaners
-    <li> stationers
-    <li> gifts
-    <li> office supply
-    <li> groceries
+    <p .title .is-size-4>
+      Professional development
+    <ul>
+      <li> training
+      <li> seminars
+      <li> things to learn
+      <li> things to find out
+      <li> skills to develop or practice
+      <li> books to read
+      <li> research
+      <li> formal education
+      <li> licensing degrees
+      <li> career research
+      <li> resume
 
-  <h3>
-    Community
-  <ul>
-    <li> neighborhood
-    <li> neighbors
-    <li> service work
-    <li> schools
-    <li> civic involvements
-
-  <h2>
-    Professional
-
-  <h3>
-    Projects
-  <ul>
-    <li> Started but not done
-    <li> Not started yet
-    <li> Ideas
-
-  <h3>
-    Commitments/promises to others
-  <ul>
-    <li> boss
-    <li> partners
-    <li> colleagues
-    <li> subordinates
-    <li> others in organization
-    <li> other professionals
-    <li> customers
-    <li> other organizations
-
-  <h3>
-    Communications to make/get
-  <ul>
-    <li> calls
-    <li> emails
-    <li> voicemails
-    <li> letters
-    <li> memos
-
-  <h3>
-    Writing to finish/submit
-  <ul>
-    <li> reports
-    <li> evaluations
-    <li> reviews
-    <li> proposals
-    <li> articles
-    <li> marketing material
-    <li> instructions
-    <li> summaries
-    <li> minutes
-    <li> rewrites and edits
-    <li> status reporting
-    <li> conversation and communication tracking
-
-  <h3>
-    Meetings
-  <ul>
-    <li> upcoming
-    <li> need to be set or requested
-    <li> need to be de-briefed
-
-  <h3>
-    Read/review
-  <ul>
-    <li> books
-    <li> periodicals
-    <li> articles
-    <li> printouts
-    <li> websites
-    <li> blogs
-    <li> RSS feeds
-
-  <h3>
-    Financial
-  <ul>
-    <li> cash
-    <li> budget
-    <li> balance sheet
-    <li> profit and loss
-    <li> forecasting
-    <li> credit line
-    <li> payables
-    <li> receivables
-    <li> petty cash
-    <li> banks
-    <li> investors
-    <li> asset management
-
-  <h3>
-    Planning/organizing
-  <ul>
-    <li> goals
-    <li> targets
-    <li> objectives
-    <li> business plans
-    <li> marketing plans
-    <li> financial plans
-    <li> upcoming events
-    <li> presentations
-    <li> meetings
-    <li> conferences
-    <li> travel
-    <li> vacation
-
-  <h3>
-    Organization development
-  <ul>
-    <li> organizational chart
-    <li> restructuring
-    <li> lines of authority
-    <li> job descriptions
-    <li> facilities
-    <li> new systems
-    <li> change initiatives
-    <li> leadership
-    <li> succession planning
-    <li> culture
-
-  <h3>
-    Administration
-  <ul>
-    <li> legal issues
-    <li> insurance
-    <li> personnel
-    <li> staffing
-    <li> policies/procedures
-    <li> training
-
-  <h3>
-    Staff
-  <ul>
-    <li> hiring
-    <li> firing
-    <li> reviews
-    <li> staff development
-    <li> communication
-    <li> morale
-    <li> feedback
-    <li> compensation
-
-  <h3>
-    Systems
-  <ul>
-    <li> phones
-    <li> computers
-    <li> software
-    <li> hardware
-    <li> databases
-    <li> office equipment
-    <li> printers
-    <li> faxes
-    <li> filing
-    <li> storage
-    <li> furniture
-    <li> fixtures
-    <li> decorations
-    <li> supplies
-    <li> business cards
-    <li> social media
-    <li> stationery
-    <li> personal/electronic organizers
-
-  <h3>
-    Sales
-  <ul>
-    <li> customers
-    <li> prospects
-    <li> leads
-    <li> sales process
-    <li> training
-    <li> relationship building
-    <li> reporting
-    <li> relationship tracking
-    <li> customer service
-
-  <h3>
-    Marketing/promotion
-  <ul>
-    <li> campaigns
-    <li> materials
-    <li> public relations
-
-  <h3>
-    Meetings
-  <ul>
-    <li> upcoming
-    <li> rescheduling
-    <li> need to be set or requested
-    <li> need to be de-briefed
-
-  <h3>
-    Waiting for
-  <ul>
-    <li> information
-    <li> delegated projects/tasks
-    <li> pieces of projects
-    <li> replies to communications
-    <li> responses to proposals
-    <li> answers to questions
-    <li> submitted items for response/reimbursement
-    <li> tickets
-    <li> external actions
-    <li> decisions
-    <li> changes
-    <li> implementations
-    <li> things ordered
-
-  <h3>
-    Professional development
-  <ul>
-    <li> training
-    <li> seminars
-    <li> things to learn
-    <li> things to find out
-    <li> skills to develop or practice
-    <li> books to read
-    <li> research
-    <li> formal education
-    <li> licensing degrees
-    <li> career research
-    <li> resume
-
-  <h3>
-    Wardrobe
-  <ul>
-    <li> professional
-    <li> personal
-    <li> wedding
+    <p .title .is-size-4>
+      Wardrobe
+    <ul>
+      <li> professional
+      <li> personal
+      <li> wedding

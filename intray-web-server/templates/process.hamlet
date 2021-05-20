@@ -1,14 +1,21 @@
-<h1> Process
+<section .section>
+  <p .title .is-size-2 .has-text-centered>
+    Process
 
-$maybe itemWidget <- mItemWidget
-  <div .ui .segment>
-    <h2> #{nrItems} items left.
-    ^{itemWidget}
-$nothing
-  <div .ui .segment>
-    <h2> You are done processing.
+<div .columns .is-centered>
+  <div .column .is-half>
 
-<img .ui .large .centered .image
-  alt="Getting Things Done Flowchart"
-  src=@{StaticR static_gtd_flowchart_jpg}>
+    $maybe itemWidget <- mItemWidget
+      <p .content .is-normal>
+        #{nrItems} items left.
+        ^{itemWidget}
 
+    $nothing
+      <p .content .is-normal .has-text-centered>
+        You are done processing.
+
+<section .section>
+  <div .column>
+    <p .has-text-centered>
+      <img src=@{StaticR static_tom_sydney_kerckhove_flowchart_gtd_svg} alt="Getting Things Done Flowchart">
+        
