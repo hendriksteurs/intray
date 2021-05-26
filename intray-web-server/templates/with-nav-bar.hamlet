@@ -12,21 +12,21 @@
   <div id="myNavbar" .navbar-menu>
     <div .navbar-start>
 
-      <a .navbar-item href=@{HomeR}>
-        Home
+      $if currentRoute /= Just HomeR
+        <a .navbar-item href=@{HomeR}>
+          Home
       $maybe _ <- mauth
+        <a .navbar-item href=@{AddR}>
+          Add item
 
-      <a .navbar-item href=@{AddR}>
-        Add item
+        <a .navbar-item href=@{ProcessR}>
+          Process
 
-      <a .navbar-item href=@{ProcessR}>
-        Process
+        <a .navbar-item href=@{IncompletionListR}>
+          Incompletion List
 
-      <a .navbar-item href=@{IncompletionListR}>
-        Incompletion List
-
-      <a .navbar-item href=@{AccountR}>
-        Account
+        <a .navbar-item href=@{AccountR}>
+          Account
 
     <div .navbar-end>
       $maybe _ <- mauth

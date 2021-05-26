@@ -282,6 +282,7 @@ instance PathPiece (UUID a) where
 
 withNavBar :: WidgetFor App () -> HandlerFor App Html
 withNavBar widget = do
+  currentRoute <- getCurrentRoute
   mauth <- maybeAuthId
   msgs <- getMessages
   defaultLayout $(widgetFile "with-nav-bar")
