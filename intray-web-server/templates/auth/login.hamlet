@@ -11,7 +11,7 @@
                 Username
               <div .control>
                 <input .input
-                  name="user"
+                  name="userkey"
                   placeholder="Username"
                   required=""
                   value=""

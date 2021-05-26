@@ -11,38 +11,39 @@
       enctype=multipart/form-data
       action=@{AddR}>
 
-      <div .field .text-input .changable
+      <div .field .changeable .text-input
         data-tooltip="Press Shift-Enter to submit"
         data-position="top left">
-        <textarea .textarea
-          name="contents" 
-          id="textArea"
-          autofocus>
+          <textarea .textarea
+            name="contents" 
+            id="textArea"
+            autofocus>
 
-      <div .field .has-text-centered .image-input .changable style="display: none;">
+      <div .has-text-centered .field .changeable .image-input style="display: none;">
         <img src="" id="image">
-        <button .button .is-primary .is-medium type="button" id="imageButton" onclick="document.getElementById('imageInput').click();">
+        <button .button .is-primary id="imageButton" onclick="document.getElementById('imageInput').click();">
           Upload Picture
         <input type="file" id="imageInput" name="image" accept="image/*" capture="environment" onChange="handleFile()" style="display: none;">
         <label id="uploading" style="display: none;">
           Uploading...
 
-      <div .inline .fields>
-        <div .field>
-          <input id="text" .type .radio .checkbox type="radio" name="type" value="text" checked>
-          <label>
+      <div .field>
+        <div .control>
+          <label .radio>
+            <input id="text" .type .checkbox type="radio" name="type" value="text" checked>
             Text
 
-        <div .field>
-          <input id="image" .type .slider .checkbox type="radio" name="type" value="image">
-          <label>
+      <div .field>
+        <div .control>
+          <label .radio>
+            <input id="image" .type .checkbox type="radio" name="type" value="image">
             Image
 
 
 
       ^{token}
       <div .control .has-text-centered>
-        <button type="submit".button .is-info>
+        <button type="submit".button .is-primary>
           Submit
 
 <section .section>

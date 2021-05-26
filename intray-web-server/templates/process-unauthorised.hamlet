@@ -1,4 +1,4 @@
-<h1> Process
+<h1 .title .is-1> Process
 
-<div .ui .negative .message>
+<div .is-danger .message>
   You are not allowed to process items.

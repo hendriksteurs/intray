@@ -1,7 +1,8 @@
-<h1> The Intray API is down.
+<div .content>
+  <h1> The Intray API is down.
 
-<pre>
-  $maybe s <- ms
-    #{s}
-  $nothing
-    #{e}
+  <pre>
+    $maybe s <- ms
+      #{s}
+    $nothing
+      #{e}

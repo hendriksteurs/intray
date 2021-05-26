@@ -1,20 +1,22 @@
-<p>
-  Name: #{accessKeyInfoName}
+<div .content>
 
-<p>
-  Created: ^{timestampWidget}
+  <p>
+    Name: #{accessKeyInfoName}
 
-<p>
-  Permissions:
-  <ul>
-    $forall perm <- S.toList accessKeyInfoPermissions
-      <li>
-        #{show perm}
-<form
-  method=post
-  action=@{AccessKeyRevokeR accessKeyInfoUUID}>
-  ^{token}
-  <button 
-    .button .is-info
-    type=submit>
-    Revoke
+  <p>
+    Created: ^{timestampWidget}
+
+  <p>
+    Permissions:
+    <ul>
+      $forall perm <- S.toList accessKeyInfoPermissions
+        <li>
+          #{show perm}
+  <form
+    method=post
+    action=@{AccessKeyRevokeR accessKeyInfoUUID}>
+    ^{token}
+    <button 
+      .button .is-danger
+      type=submit>
+      Revoke

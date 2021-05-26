@@ -3,17 +3,23 @@
     Process
 
 <div .columns .is-centered>
-  <div .column .is-half>
+  <div .column .is-half .content>
 
     $maybe itemWidget <- mItemWidget
-      <p .content .is-normal>
-        #{nrItems} items left.
+      <p .is-normal>
         ^{itemWidget}
+      <p .has-text-centered .has-text-weight-bold>
+        $case nrItems
+          $of 1
+            #{nrItems} item left.
+          $of _
+            #{nrItems} items left.
 
     $nothing
-      <p .content .is-normal .has-text-centered>
+      <p .is-normal .has-text-centered>
         You are done processing.
 
+<section .section>
 <section .section>
   <div .column>
     <p .has-text-centered>

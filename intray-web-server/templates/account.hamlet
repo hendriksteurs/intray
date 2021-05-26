@@ -19,10 +19,10 @@
       <p .has-text-weight-bold>
         Danger zone
       <p>
-        <a .button .my-1 .is-info href=@{AuthR changePasswordTargetR}>
+        <a .button .my-1 href=@{AuthR changePasswordTargetR}>
           Change password
       <p>
-        <a .button .my-1 .is-info href=@{AccessKeysR}>
+        <a .button .my-1 href=@{AccessKeysR}>
           Manage Access Keys
       <p>
         <form

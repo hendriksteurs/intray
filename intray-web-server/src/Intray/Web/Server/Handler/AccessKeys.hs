@@ -39,41 +39,45 @@ accessKeysWidget (Just accessKeys) = do
   pure
     [whamlet|
           $forall akw <- accessKeysWidgets
-            <div .ui .segment>
+            <div .box>
               ^{akw}|]
 
 makeNewAccessKeyForm :: Maybe (Set Permission) -> Handler Widget
 makeNewAccessKeyForm Nothing =
   pure
     [whamlet|
-          <div .ui .negative .message>
+          <div .is-danger .message>
             You are not authorised to view this account's permissions.|]
 makeNewAccessKeyForm (Just permissions) = do
   token <- genToken
   pure
     [whamlet|
-          <div .ui .segment>
-            <form .ui .form
+          <div .box>
+            <form .form
               method=post
               action=@{AccessKeysR}>
-              <div .ui .field>
-                <label>
+              <div .field>
+                <label .label>
                   Name
-                <input
-                  type="text"
-                  name="name">
+                <div .control>
+                  <input .input
+                    type="text"
+                    name="name">
 
               $forall perm <- permissions
-                <div .ui .field>
-                  <div .ui .toggle .checkbox>
-                    <input name=#{show perm} type=checkbox>
-                    <label>#{show perm}
+                <div .field>
+                  <div .control>
+                    <label .checkbox>
+                      <input name=#{show perm} type=checkbox>
+                      #{show perm}
 
               ^{token}
-              <button
-                .ui .button
-                type=submit>
-                Add AccessKey|]
+              <div .field>
+                <div .control>
+                  <button
+                    .button
+                    type=submit>
+                    Add AccessKey|]
 
 newAccessKeyForm :: Set Permission -> FormInput Handler AddAccessKey
 newAccessKeyForm ps =

@@ -1,24 +1,26 @@
-<p>
-  ^{timestampWidget}
-<p>
-  $case typedItemCase itemInfoContents
-    $of Left err
-      Invalid item: #{err}
-    $of Right i
-      $case i 
-        $of CaseTextItem t
-          #{Textarea t}
-        $of CaseImageItem _ _ 
-          <img .ui .centered .rounded .fluid .bordered .image src=@{ImageItemR itemInfoIdentifier}>
-      
-<form
-  method="post"
-  action=@{DoneR}>
-  <input
-    name="item"
-    type="hidden"
-    value=#{uuidText itemInfoIdentifier}>
-  ^{token}
-  <button .ui .button type="submit">
-    Done
+<div .box>
+  <p .has-text-grey-light>
+    ^{timestampWidget}
+  <p>
+    $case typedItemCase itemInfoContents
+      $of Left err
+        Invalid item: #{err}
+      $of Right i
+        $case i 
+          $of CaseTextItem t
+            #{Textarea t}
+          $of CaseImageItem _ _ 
+            <figure .has-text-centered .image>
+              <img src=@{ImageItemR itemInfoIdentifier}>
+        
+  <form .has-text-right
+    method="post"
+    action=@{DoneR}>
+    <input
+      name="item"
+      type="hidden"
+      value=#{uuidText itemInfoIdentifier}>
+    ^{token}
+    <button .button.is-primary type="submit">
+      Done
 

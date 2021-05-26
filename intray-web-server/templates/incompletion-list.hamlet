@@ -7,7 +7,7 @@
 <div .columns .is-centered>
   <div .column .is-half .content>
 
-    <p .title .is-size-3 .has-text-right>
+    <p .title .is-size-3 .has-text-centered>
       Personal
 
     <p .title .is-size-4>
@@ -260,7 +260,7 @@
 
 
 
-    <p .title .is-size-3 .has-text-right>
+    <p .title .is-size-3 .has-text-centered>
       Professional
 
     <p .title .is-size-4>

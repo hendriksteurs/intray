@@ -7,7 +7,7 @@ document.querySelectorAll('.type').forEach(function (element) {
     });
 
 function updateDisplay () {
-  document.querySelectorAll('.changable').forEach(function (e) {
+  document.querySelectorAll('.changeable').forEach(function (e) {
       e.setAttribute("style", "display: none;");
       e.childNodes.forEach(function (c) {
         c.required = false;

@@ -17,7 +17,7 @@
 
       <div .columns .is-centered>
         <a .button .is-size-4 .is-primary href=https://intray.eu/auth/page/intray-auth-plugin/register>
-          Get Intray (TODO_deze-link-veranderen)
+          Get Intray
 
 
 
@@ -91,60 +91,46 @@
 
 
 
-
-
-
     <section .section>
-      <div .columns .is-centered>
-        <p .title .is-3 .has-text-centered .p-3>
-          Sign up 
-
-      <div .columns .is-centered>
-        <a .button .is-size-4 .is-primary href=https://intray.eu/auth/page/intray-auth-plugin/register>
-          Register (TODO_deze-link-veranderen)
-
-
-    <section .section>
- 
       $maybe p <- mPricing
-        <div .ui .cards .centered>
-          <div .ui .card>
-            <div .ui .content>
-              <div .ui .centered .header>
-                Trial
-              <div class="ui segments">
-                  <div class="ui center aligned secondary segment">
-                    <div class="ui statistic">
-                        <div class="value">
-                          Free
-                        <div class="label">
-                          Forever
-                  <div class="ui center aligned segment">
-                    <p>
-                      Maximum #{pricingMaxItemsFree p} items
+        <div .columns .is-centered>
+          <div .column .is-half>
 
-              <a class="ui primary fluid button" href=@{AuthR registerR}>
-                Get Started
+            <div .columns .is-centered>
+              <div .column>
 
-          <div .ui .card>
-            <div .ui .content>
-              <div .ui .centered .header>
-                Subscription
-              <div class="ui segments">
-                  <div class="ui center aligned secondary segment">
-                    <div class="ui statistic">
-                        <div class="value">
-                          #{pricingShowAmountPerMonth p}
-                        <div class="label">
-                          per month
-                  <div class="ui center aligned segment">
-                    <p>
-                      Unlimited items
+                <div .box>
+                  <p .has-text-centered .is-size-4 .font-medium .mb-3>
+                    Trial
 
-              <a class="ui primary fluid button" href=@{AuthR registerR}>
-                Get Started
+                  <p .has-text-centered .has-text-weight-bold .is-size-2>
+                    FREE
+                  <p .has-text-centered .has-text-weight-bold .is-size-6>
+                    FOREVER
+
+                  <p .has-text-centered .is-size-6 .mt-5 .mb-6>
+                    Maximum #{pricingMaxItemsFree p} items
+
+                  <div .has-text-centered .mt-3>
+                    <a .button .is-primary href=@{AuthR registerR}>
+                      Get Started
 
 
 
+              <div .column>
+                <div .box>
+                  <p .has-text-centered .is-size-4 .font-medium .mb-3>
+                    Subscription
 
+                  <p .has-text-centered .has-text-weight-bold .is-size-2>
+                    #{pricingShowAmountPerMonth p}
+                  <p .has-text-centered .has-text-weight-bold .is-size-6>
+                    PER MONTH
+
+                  <p .has-text-centered .is-size-6 .mt-5 .mb-6>
+                    Unlimited items
+
+                  <div .has-text-centered .mt-3>
+                    <a .button .is-primary href=@{AuthR registerR}>
+                      Choose Plan
 

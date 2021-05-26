@@ -12,6 +12,7 @@ $doctype 5
 
 
     <link rel="stylesheet" href=@{StaticR static_bulma_bulma_min_css}>
+    <link rel="stylesheet" href=@{StaticR static_bulma_bulma_tooltip_min_css}>
     <script src=@{StaticR static_jquery_min_js}>
 
     ^{pageHead pc}

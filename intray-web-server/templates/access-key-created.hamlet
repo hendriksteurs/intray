@@ -1,17 +1,21 @@
-<div .ui .segment>
-  <h1> Access Key Created
+<section .section>
+  <div .columns .is-centered>
+    <div .column .is-half>
+      <p .title .is-size-2 .has-text-centered>
+        Access Key Created
 
-  <p>
-    Name: #{addAccessKeyName aac}
+      <div .content .box>
+        <p>
+          Name: #{addAccessKeyName aac}
 
-  <p>
-    Created: ^{timestampWidget}
+        <p>
+          Created: ^{timestampWidget}
 
-  <p>
-    Secret:
-    <pre>
-      #{accessKeySecretText accessKeyCreatedKey}
+        <p>
+          Secret:
+          <pre>
+            #{accessKeySecretText accessKeyCreatedKey}
 
-  <p>
-    This message will dissappear.
-    Please make sure that you have saved the access key secret.
+        <p>
+          This message will dissappear.
+          Please make sure that you have saved the access key secret.
