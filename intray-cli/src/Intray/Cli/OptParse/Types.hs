@@ -11,6 +11,7 @@ import Import
 import Intray.Data
 import Servant.Client
 import YamlParse.Applicative
+import YamlParse.Applicative.Parser
 
 data Arguments
   = Arguments Command Flags
@@ -108,7 +109,7 @@ instance YamlSchema Configuration where
           "data-dir"
           "The directory to store data information. Removing this directory could lead to data loss."
         <*> optionalField "sync" "The sync strategy for non-sync commands."
-        <*> optionalField "auto-open" "Whether and how to auto-open links and pictures."
+        <*> ParseField "auto-open" (FieldParserOptional yamlSchema)
 
 data Settings
   = Settings

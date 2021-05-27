@@ -173,12 +173,10 @@ prettyShowItemAndWait now li =
             case i of
               CaseTextItem t -> do
                 mp <-
-                  if doAutoOpen
-                    then fmap join
-                      $ forM (parseURI (T.unpack t))
-                      $ \uri ->
-                        getAutoOpenConfig (show uri)
-                    else pure Nothing
+                  fmap join
+                    $ forM (parseURI (T.unpack t))
+                    $ \uri ->
+                      getAutoOpenConfig (show uri)
                 pure (T.unpack t, mp)
               CaseImageItem it bs -> do
                 let ext =
@@ -196,14 +194,15 @@ prettyShowItemAndWait now li =
                 Just pc -> withProcessWait pc . const
           waitFunc $ liftIO $ putStrLn $ unlines [concat [timeStr, " (", timeAgoString, ")"], contents]
 
-doAutoOpen :: Bool
-doAutoOpen = True
-
 getAutoOpenConfig :: String -> CliM (Maybe (ProcessConfig () () ()))
-getAutoOpenConfig arg = pure $ if doAutoOpen then Just (autoOpenConfig arg) else Nothing
+getAutoOpenConfig arg = do
+  aa <- asks setAutoOpen
+  pure $ case aa of
+    DontAutoOpen -> Nothing
+    AutoOpenWith cmd -> Just (autoOpenConfig cmd arg)
 
-autoOpenConfig :: String -> ProcessConfig () () ()
-autoOpenConfig arg = shell $ unwords ["xdg-open", arg]
+autoOpenConfig :: FilePath -> String -> ProcessConfig () () ()
+autoOpenConfig cmd arg = shell $ unwords [cmd, arg]
 
 prettyTimestamp :: UTCTime -> UTCTime -> String
 prettyTimestamp now d =

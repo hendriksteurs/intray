@@ -105,8 +105,12 @@ extra-deps:
   commit: fc62907b36f6f7348d6ae0e97aceb4d41039d57b
 - github: NorfairKing/looper
   commit: fd6d31b0ccc1a850aa1435b2fc21dcb9807eacb3
+- github: NorfairKing/safe-coloured-text
+  commit: d840dd7b0f13f4d0fd693c1dd93be33f9ee94605
+  subdirs:
+    - safe-coloured-text
 - github: NorfairKing/yamlparse-applicative
-  commit: 1d381a4cbc9736a2defc916a93cfcf8000ee7e37
+  commit: 229e8402bc90f79812d2261f83c0ef01dcba494a
   subdirs:
     - yamlparse-applicative
 
