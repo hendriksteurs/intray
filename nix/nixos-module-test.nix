@@ -39,7 +39,6 @@ pkgs.nixosTest (
           imports = [
             ./home-manager-module.nix
           ];
-          xdg.enable = true;
           home.stateVersion = "20.09";
           programs.intray = {
             enable = true;

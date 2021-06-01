@@ -5,6 +5,9 @@ with lib;
 let
   cfg = config.programs.intray;
 
+  mergeListRecursively = pkgs.callPackage ./merge-lists-recursively.nix { };
+
+  toYamlFile = pkgs.callPackage ./to-yaml.nix { };
 
 in
 {
@@ -13,49 +16,46 @@ in
       programs.intray =
         {
           enable = mkEnableOption "Intray cli";
-          cache-dir =
-            mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = "The cache dir";
-            };
-          data-dir =
-            mkOption {
-              type = types.nullOr types.str;
-              default = null;
-              description = "The data dir";
-            };
-          sync =
-            mkOption {
-              default = null;
-              type =
-                types.nullOr (
-                  types.submodule {
-                    options =
-                      {
-                        enable = mkEnableOption "Intray synchronisation";
-                        username =
-                          mkOption {
-                            type = types.str;
-                            example = "syd";
-                            description = "The username to use for syncing";
-                          };
-                        password =
-                          mkOption {
-                            type = types.str;
-                            description = "The password to use for syncing";
-                          };
-                        url =
-                          mkOption {
-                            type = types.str;
-                            default = "https://api.intray.eu";
-                            description =
-                              "The sync server to use for syncing";
-                          };
-                      };
-                  }
-                );
-            };
+          config = mkOption {
+            default = { };
+            description = "The contents of the intray cli config file";
+          };
+          cache-dir = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "The cache dir";
+          };
+          data-dir = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            description = "The data dir";
+          };
+          sync = mkOption {
+            default = null;
+            type =
+              types.nullOr (
+                types.submodule {
+                  options = {
+                    enable = mkEnableOption "Intray synchronisation";
+                    username = mkOption {
+                      type = types.str;
+                      example = "syd";
+                      description = "The username to use for syncing";
+                    };
+                    password = mkOption {
+                      type = types.str;
+                      description = "The password to use for syncing";
+                    };
+                    url = mkOption {
+                      type = types.str;
+                      default = "https://api.intray.eu";
+                      description =
+                        "The sync server to use for syncing";
+                    };
+                  };
+                }
+              );
+          };
         };
     };
   config =
@@ -63,21 +63,24 @@ in
       intrayPkgs = (import ./pkgs.nix { }).intrayPackages;
 
       nullOrOption =
-        name: opt: optionalString (opt != null) "${name}: ${opt}";
-      syncConfig =
-        optionalString (cfg.sync != null) ''
-          url: '${cfg.sync.url}'
-          username: '${cfg.sync.username}'
-          password: '${cfg.sync.password}'
-          sync: NeverSync
-        '';
-      configFileContents =
-        ''
-          ${nullOrOption "cache-dir" cfg.cache-dir}
-          ${nullOrOption "data-dir" cfg.data-dir}
-          ${syncConfig}
-        '';
+        name: opt: optionalAttrs (!builtins.isNull opt) { "${name}" = opt; };
+      syncConfig = optionalAttrs (cfg.sync.enable or false) {
+        url = cfg.sync.url;
+        username = cfg.sync.username;
+        password = cfg.sync.password;
+        sync = "NeverSync";
+      };
 
+      commonConfig = mergeListRecursively [
+        (nullOrOption "cache-dir" cfg.cache-dir)
+        (nullOrOption "data-dir" cfg.data-dir)
+      ];
+      intrayConfig = mergeListRecursively [
+        syncConfig
+        commonConfig
+        cfg.config
+      ];
+      intrayConfigFile = toYamlFile "intray-config" intrayConfig;
       cli = intrayPkgs.intray-cli;
 
       syncIntrayName = "sync-intray";
@@ -126,7 +129,7 @@ in
         };
     in
     mkIf cfg.enable {
-      xdg.configFile."intray/config.yaml".text = configFileContents;
+      xdg.configFile."intray/config.yaml".source = "${intrayConfigFile}";
       systemd.user =
         {
           services = services;
