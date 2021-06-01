@@ -35,18 +35,22 @@ pkgs.nixosTest (
           home-manager
         ];
         users.users.testuser.isNormalUser = true;
-        home-manager.users.testuser = { pkgs, ... }: {
-          imports = [
-            ./home-manager-module.nix
-          ];
-          home.stateVersion = "20.09";
-          programs.intray = {
-            enable = true;
-            sync = {
+        home-manager = {
+          useGlobalPkgs = true;
+          users.testuser = { pkgs, ... }: {
+            imports = [
+              ./home-manager-module.nix
+            ];
+            home.stateVersion = "20.09";
+            programs.intray = {
               enable = true;
-              url = "server:${builtins.toString api-port}";
-              username = "testuser";
-              password = "testpassword";
+              inherit intrayPackages;
+              sync = {
+                enable = true;
+                url = "server:${builtins.toString api-port}";
+                username = "testuser";
+                password = "testpassword";
+              };
             };
           };
         };

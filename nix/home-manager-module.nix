@@ -16,6 +16,10 @@ in
       programs.intray =
         {
           enable = mkEnableOption "Intray cli";
+          intrayPackages = mkOption {
+            description = "The intrayPackages attribute defined in the nix/overlay.nix file in the intray repository.";
+            default = (import ./pkgs.nix { }).intrayPackages;
+          };
           config = mkOption {
             default = { };
             description = "The contents of the intray cli config file";
@@ -60,8 +64,6 @@ in
     };
   config =
     let
-      intrayPkgs = (import ./pkgs.nix { }).intrayPackages;
-
       nullOrOption =
         name: opt: optionalAttrs (!builtins.isNull opt) { "${name}" = opt; };
       syncConfig = optionalAttrs (cfg.sync.enable or false) {
@@ -81,7 +83,7 @@ in
         cfg.config
       ];
       intrayConfigFile = toYamlFile "intray-config" intrayConfig;
-      cli = intrayPkgs.intray-cli;
+      cli = cfg.intrayPackages.intray-cli;
 
       syncIntrayName = "sync-intray";
       syncIntrayService =
