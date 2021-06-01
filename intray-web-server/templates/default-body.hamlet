@@ -15,7 +15,7 @@
           Tom Sydney Kerckhove | Technical Leader | Speaker | Coach.
 
 
-    <div .columns .is-centered>
+    <div .columns .is-centered .is-mobile>
       <a href="https://twitter.com/kerckhove_ts">
         <img src=@{StaticR static_tom_sydney_kerckhove_twitter_icon_svg} alt="Tom Sydney Kerckhove Twitter" style="height: 25px" .m-1>
 
@@ -33,7 +33,7 @@
 
 
 
-    <div .columns .is-centered>
+    <div .columns .is-centered .is-mobile>
       <p>
         syd
         <span style="display:none">

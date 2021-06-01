@@ -15,7 +15,7 @@
           <p .content .is-size-5 .has-text-centered>
             The tool to get things out of your head to be dealt with appropriately later
 
-      <div .columns .is-centered>
+      <div .columns .is-centered .is-mobile>
         <a .button .is-size-4 .is-primary href=https://intray.eu/auth/page/intray-auth-plugin/register>
           Get Intray
 
