@@ -1,6 +1,9 @@
-{ pkgs ? import ./pkgs.nix }:
+{ sources ? import ./sources.nix
+, pkgs ? import ./pkgs.nix { inherit sources; }
+, intrayPackages ? pkgs.intrayPackages
+}:
 let
-  intray-production = import (./nixos-module.nix) { envname = "production"; };
+  intray-production = import (./nixos-module.nix) { inherit sources; inherit pkgs; envname = "production"; };
   home-manager = import (
     builtins.fetchTarball
       {

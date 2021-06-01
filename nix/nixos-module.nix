@@ -1,4 +1,5 @@
 { sources ? import ./sources.nix
+, pkgs ? import ./pkgs.nix { inherit sources; }
 , envname
 }:
 { lib, pkgs, config, ... }:
@@ -113,8 +114,7 @@ in
       intray-service =
         let
           workingDir = "/www/intray/${envname}/data/";
-          intray-pkgs =
-            (import ./pkgs.nix { inherit sources; }).intrayPackages;
+          intray-pkgs = pkgs.intrayPackages;
           configFile =
             let
               config =
