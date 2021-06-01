@@ -33,62 +33,56 @@ data Command
   | CommandSync
   deriving (Show, Eq, Generic)
 
-data RegisterArgs
-  = RegisterArgs
-      { registerArgUsername :: Maybe String,
-        registerArgPassword :: Maybe String
-      }
+data RegisterArgs = RegisterArgs
+  { registerArgUsername :: Maybe String,
+    registerArgPassword :: Maybe String
+  }
   deriving (Show, Eq, Generic)
 
-data LoginArgs
-  = LoginArgs
-      { loginArgUsername :: Maybe String,
-        loginArgPassword :: Maybe String
-      }
+data LoginArgs = LoginArgs
+  { loginArgUsername :: Maybe String,
+    loginArgPassword :: Maybe String
+  }
   deriving (Show, Eq, Generic)
 
-data AddArgs
-  = AddArgs
-      { addArgContents :: [String],
-        addArgReadStdin :: Bool,
-        addArgRemote :: Bool
-      }
+data AddArgs = AddArgs
+  { addArgContents :: [String],
+    addArgReadStdin :: Bool,
+    addArgRemote :: Bool
+  }
   deriving (Show, Eq, Generic)
 
-data Flags
-  = Flags
-      { flagConfigFile :: Maybe FilePath,
-        flagUrl :: Maybe String,
-        flagCacheDir :: Maybe FilePath,
-        flagDataDir :: Maybe FilePath,
-        flagSyncStrategy :: Maybe SyncStrategy,
-        flagAutoOpen :: Maybe AutoOpen
-      }
+data Flags = Flags
+  { flagConfigFile :: Maybe FilePath,
+    flagUrl :: Maybe String,
+    flagCacheDir :: Maybe FilePath,
+    flagDataDir :: Maybe FilePath,
+    flagSyncStrategy :: Maybe SyncStrategy,
+    flagAutoOpen :: Maybe AutoOpen
+  }
   deriving (Show, Eq, Generic)
 
-data Environment
-  = Environment
-      { envConfigFile :: Maybe FilePath,
-        envUrl :: Maybe String,
-        envUsername :: Maybe String,
-        envPassword :: Maybe String,
-        envCacheDir :: Maybe FilePath,
-        envDataDir :: Maybe FilePath,
-        envSyncStrategy :: Maybe SyncStrategy,
-        envAutoOpen :: Maybe AutoOpen
-      }
+data Environment = Environment
+  { envConfigFile :: Maybe FilePath,
+    envUrl :: Maybe String,
+    envUsername :: Maybe String,
+    envPassword :: Maybe String,
+    envCacheDir :: Maybe FilePath,
+    envDataDir :: Maybe FilePath,
+    envSyncStrategy :: Maybe SyncStrategy,
+    envAutoOpen :: Maybe AutoOpen
+  }
   deriving (Show, Eq, Generic)
 
-data Configuration
-  = Configuration
-      { configUrl :: Maybe String,
-        configUsername :: Maybe String,
-        configPassword :: Maybe String,
-        configCacheDir :: Maybe FilePath,
-        configDataDir :: Maybe FilePath,
-        configSyncStrategy :: Maybe SyncStrategy,
-        configAutoOpen :: Maybe AutoOpen
-      }
+data Configuration = Configuration
+  { configUrl :: Maybe String,
+    configUsername :: Maybe String,
+    configPassword :: Maybe String,
+    configCacheDir :: Maybe FilePath,
+    configDataDir :: Maybe FilePath,
+    configSyncStrategy :: Maybe SyncStrategy,
+    configAutoOpen :: Maybe AutoOpen
+  }
   deriving (Show, Eq, Generic)
 
 instance FromJSON Configuration where
@@ -111,14 +105,13 @@ instance YamlSchema Configuration where
         <*> optionalField "sync" "The sync strategy for non-sync commands."
         <*> ParseField "auto-open" (FieldParserOptional yamlSchema)
 
-data Settings
-  = Settings
-      { setBaseUrl :: Maybe BaseUrl,
-        setCacheDir :: Path Abs Dir,
-        setDataDir :: Path Abs Dir,
-        setSyncStrategy :: SyncStrategy,
-        setAutoOpen :: AutoOpen
-      }
+data Settings = Settings
+  { setBaseUrl :: Maybe BaseUrl,
+    setCacheDir :: Path Abs Dir,
+    setDataDir :: Path Abs Dir,
+    setSyncStrategy :: SyncStrategy,
+    setAutoOpen :: AutoOpen
+  }
   deriving (Show, Eq, Generic)
 
 data SyncStrategy
@@ -171,26 +164,23 @@ data Dispatch
   | DispatchSync
   deriving (Show, Eq, Generic)
 
-data RegisterSettings
-  = RegisterSettings
-      { registerSetUsername :: Maybe Username,
-        registerSetPassword :: Maybe Text
-      }
+data RegisterSettings = RegisterSettings
+  { registerSetUsername :: Maybe Username,
+    registerSetPassword :: Maybe Text
+  }
   deriving (Show, Eq, Generic)
 
-data LoginSettings
-  = LoginSettings
-      { loginSetUsername :: Maybe Username,
-        loginSetPassword :: Maybe Text
-      }
+data LoginSettings = LoginSettings
+  { loginSetUsername :: Maybe Username,
+    loginSetPassword :: Maybe Text
+  }
   deriving (Show, Eq, Generic)
 
-data AddSettings
-  = AddSettings
-      { addSetContents :: [Text],
-        addSetReadStdin :: Bool,
-        addSetRemote :: Bool
-      }
+data AddSettings = AddSettings
+  { addSetContents :: [Text],
+    addSetReadStdin :: Bool,
+    addSetRemote :: Bool
+  }
   deriving (Show, Eq, Generic)
 
 type CliM = ReaderT Settings IO

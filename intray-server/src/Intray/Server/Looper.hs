@@ -16,14 +16,13 @@ import Intray.Server.Looper.Import
 import Intray.Server.Looper.StripeEventsFetcher
 import Intray.Server.OptParse.Types
 
-data LoopersSettings
-  = LoopersSettings
-      { loopersSetLogLevel :: !LogLevel,
-        loopersSetConnectionPool :: !ConnectionPool,
-        loopersSetStripeSettings :: !StripeSettings,
-        loopersSetStripeEventsFetcher :: !LooperSettings,
-        loopersSetStripeEventsRetrier :: !LooperSettings
-      }
+data LoopersSettings = LoopersSettings
+  { loopersSetLogLevel :: !LogLevel,
+    loopersSetConnectionPool :: !ConnectionPool,
+    loopersSetStripeSettings :: !StripeSettings,
+    loopersSetStripeEventsFetcher :: !LooperSettings,
+    loopersSetStripeEventsRetrier :: !LooperSettings
+  }
   deriving (Show)
 
 runIntrayServerLoopers :: LoopersSettings -> IO ()
@@ -33,10 +32,10 @@ runIntrayServerLoopers LoopersSettings {..} =
           { looperEnvStripeSettings = loopersSetStripeSettings,
             looperEnvConnectionPool = loopersSetConnectionPool
           }
-   in flip runReaderT env
-        $ runStderrLoggingT
-        $ filterLogger (\_ ll -> ll >= loopersSetLogLevel)
-        $ runLoopersIgnoreOverrun customRunner looperDefs
+   in flip runReaderT env $
+        runStderrLoggingT $
+          filterLogger (\_ ll -> ll >= loopersSetLogLevel) $
+            runLoopersIgnoreOverrun customRunner looperDefs
   where
     customRunner ld = do
       logDebugNS (looperDefName ld) "Starting"

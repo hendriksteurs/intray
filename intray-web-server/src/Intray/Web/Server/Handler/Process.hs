@@ -36,10 +36,9 @@ makeItemInfoWidget ItemInfo {..} = do
   timestampWidget <- makeTimestampWidgetNow itemInfoCreated
   pure $(widgetFile "item")
 
-newtype DoneItem
-  = DoneItem
-      { doneItemUUID :: ItemUUID
-      }
+newtype DoneItem = DoneItem
+  { doneItemUUID :: ItemUUID
+  }
 
 doneItemForm :: FormInput Handler DoneItem
 doneItemForm = DoneItem <$> ireq hiddenField "item"

@@ -12,9 +12,8 @@ import Looper as X
 
 type Looper = LoggingT (ReaderT LooperEnv IO)
 
-data LooperEnv
-  = LooperEnv
-      { looperEnvStripeSettings :: !StripeSettings,
-        looperEnvConnectionPool :: !ConnectionPool
-      }
+data LooperEnv = LooperEnv
+  { looperEnvStripeSettings :: !StripeSettings,
+    looperEnvConnectionPool :: !ConnectionPool
+  }
   deriving (Show)

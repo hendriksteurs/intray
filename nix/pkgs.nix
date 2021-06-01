@@ -1,37 +1,15 @@
-let
-  pkgsv = import (import ./nixpkgs.nix);
-  validity-overlay =
-    import (
-      builtins.fetchGit (import ./validity-version.nix) + "/nix/overlay.nix"
-    );
-  sydtest-overlay =
-    import (
-      builtins.fetchGit (import ./sydtest-version.nix) + "/nix/overlay.nix"
-    );
-
-  pretty-relative-time-overlay =
-    import (
-      builtins.fetchGit (import ./pretty-relative-time-version.nix) + "/nix/overlay.nix"
-    );
-  mergeless-overlay =
-    import (
-      builtins.fetchGit (import ./mergeless-version.nix) + "/nix/overlay.nix"
-    );
-  yamlparse-applicative-overlay =
-    import (
-      builtins.fetchGit (import ./yamlparse-applicative-version.nix) + "/nix/overlay.nix"
-    );
-
-in
-pkgsv {
+{ sources ? import ./sources.nix
+}:
+import sources.nixpkgs {
   overlays =
     [
-      validity-overlay
-      sydtest-overlay
-      pretty-relative-time-overlay
-      mergeless-overlay
-      yamlparse-applicative-overlay
-      (import ./gitignore-src.nix)
+      (import (sources.validity + "/nix/overlay.nix"))
+      (import (sources.sydtest + "/nix/overlay.nix"))
+      (import (sources.pretty-relative-time + "/nix/overlay.nix"))
+      (import (sources.mergeless + "/nix/overlay.nix"))
+      (import (sources.yamlparse-applicative + "/nix/overlay.nix"))
+      (import (sources.safe-coloured-text + "/nix/overlay.nix"))
+      (final: previous: { inherit (import sources.gitignore { inherit (final) lib; }) gitignoreSource; })
       (import ./overlay.nix)
     ];
   config.allowUnfree = true;

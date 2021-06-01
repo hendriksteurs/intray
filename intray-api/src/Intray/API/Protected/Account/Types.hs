@@ -5,7 +5,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators #-}
 
 module Intray.API.Protected.Account.Types
   ( module Intray.API.Protected.Account.Types,
@@ -21,16 +20,15 @@ import Intray.API.Types ()
 import Intray.Data
 import Servant.Docs
 
-data AccountInfo
-  = AccountInfo
-      { accountInfoUUID :: AccountUUID,
-        accountInfoUsername :: Username,
-        accountInfoCreatedTimestamp :: UTCTime,
-        accountInfoLastLogin :: Maybe UTCTime,
-        accountInfoAdmin :: Bool,
-        accountInfoCount :: Int,
-        accountInfoStatus :: PaidStatus
-      }
+data AccountInfo = AccountInfo
+  { accountInfoUUID :: AccountUUID,
+    accountInfoUsername :: Username,
+    accountInfoCreatedTimestamp :: UTCTime,
+    accountInfoLastLogin :: Maybe UTCTime,
+    accountInfoAdmin :: Bool,
+    accountInfoCount :: Int,
+    accountInfoStatus :: PaidStatus
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity AccountInfo
@@ -85,11 +83,10 @@ instance ToJSON PaidStatus where
 
 instance ToSample PaidStatus
 
-data ChangePassphrase
-  = ChangePassphrase
-      { changePassphraseOld :: Text,
-        changePassphraseNew :: Text
-      }
+data ChangePassphrase = ChangePassphrase
+  { changePassphraseOld :: Text,
+    changePassphraseNew :: Text
+  }
   deriving (Show, Eq, Generic)
 
 instance Validity ChangePassphrase

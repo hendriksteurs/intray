@@ -4,7 +4,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators #-}
 
 module Intray.API.Admin.Types where
 
@@ -13,13 +12,12 @@ import Import
 import Intray.API.Types ()
 import Servant.Docs
 
-data AdminStats
-  = AdminStats
-      { adminStatsNbAccounts :: !Word,
-        adminStatsSubscribedUsers :: !Word,
-        adminStatsNbItems :: !Word,
-        adminStatsActiveUsers :: !ActiveUsers
-      }
+data AdminStats = AdminStats
+  { adminStatsNbAccounts :: !Word,
+    adminStatsSubscribedUsers :: !Word,
+    adminStatsNbItems :: !Word,
+    adminStatsActiveUsers :: !ActiveUsers
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity AdminStats
@@ -42,13 +40,12 @@ instance ToJSON AdminStats where
 
 instance ToSample AdminStats
 
-data ActiveUsers
-  = ActiveUsers
-      { activeUsersDaily :: !Word,
-        activeUsersWeekly :: !Word,
-        activeUsersMonthly :: !Word,
-        activeUsersYearly :: !Word
-      }
+data ActiveUsers = ActiveUsers
+  { activeUsersDaily :: !Word,
+    activeUsersWeekly :: !Word,
+    activeUsersMonthly :: !Word,
+    activeUsersYearly :: !Word
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity ActiveUsers

@@ -59,15 +59,15 @@ withIntrayServer specFunc = do
 
 withPaidIntrayServer :: Int -> TestDef '[HTTP.Manager] ClientEnv -> Spec
 withPaidIntrayServer maxFree specFunc =
-  managerSpec
-    $ setupAroundWith' (paidIntrayTestClientEnvSetupFunc maxFree)
-    $ modifyMaxSuccess (`div` 20) specFunc
+  managerSpec $
+    setupAroundWith' (paidIntrayTestClientEnvSetupFunc maxFree) $
+      modifyMaxSuccess (`div` 20) specFunc
 
 withFreeIntrayServer :: TestDef '[HTTP.Manager] ClientEnv -> Spec
 withFreeIntrayServer specFunc =
-  managerSpec
-    $ setupAroundWith' (intrayTestClientEnvSetupFunc Nothing)
-    $ modifyMaxSuccess (`div` 20) specFunc
+  managerSpec $
+    setupAroundWith' (intrayTestClientEnvSetupFunc Nothing) $
+      modifyMaxSuccess (`div` 20) specFunc
 
 intrayTestConnectionSetupFunc :: SetupFunc () ConnectionPool
 intrayTestConnectionSetupFunc = connectionPoolSetupFunc migrateAll
@@ -122,7 +122,7 @@ intrayTestClientEnvSetupFunc' menv man = wrapSetupFunc $ \pool -> do
           }
   let application = serveWithContext intrayAPI (intrayAppContext intrayEnv) (makeIntrayServer intrayEnv)
   p <- unwrapSetupFunc applicationSetupFunc application
-  pure $ mkClientEnv man (BaseUrl Http "127.0.0.1" p "")
+  pure $ mkClientEnv man (BaseUrl Http "127.0.0.1" (fromIntegral p) "")
 
 runClient :: ClientEnv -> ClientM a -> IO (Either ClientError a)
 runClient = flip runClientM

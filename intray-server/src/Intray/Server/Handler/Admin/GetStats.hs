@@ -2,7 +2,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.Admin.GetStats
   ( serveAdminGetStats,
@@ -34,7 +33,7 @@ serveAdminGetStats AuthCookie {..} = do
   adminStatsSubscribedUsers <-
     do
       us <- runDb $ selectList [] []
-      fmap (fromIntegral . length . catMaybes)
-        $ forM us
-        $ \(Entity _ u) -> getAccountSubscribed (userIdentifier u)
+      fmap (fromIntegral . length . catMaybes) $
+        forM us $
+          \(Entity _ u) -> getAccountSubscribed (userIdentifier u)
   pure AdminStats {..}

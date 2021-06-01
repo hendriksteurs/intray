@@ -22,12 +22,11 @@ import Servant.Auth.Docs ()
 
 type IntrayAdminAPI = ToServantApi IntrayAdminSite
 
-data IntrayAdminSite route
-  = IntrayAdminSite
-      { adminGetStats :: !(route :- AdminGetStats),
-        adminDeleteAccount :: !(route :- AdminDeleteAccount),
-        adminGetAccounts :: !(route :- AdminGetAccounts)
-      }
+data IntrayAdminSite route = IntrayAdminSite
+  { adminGetStats :: !(route :- AdminGetStats),
+    adminDeleteAccount :: !(route :- AdminDeleteAccount),
+    adminGetAccounts :: !(route :- AdminGetAccounts)
+  }
   deriving (Generic)
 
 type AdminGetStats = ProtectAPI :> "stats" :> Get '[JSON] AdminStats

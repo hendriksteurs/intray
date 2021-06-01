@@ -30,13 +30,12 @@ import Servant.Auth.Docs ()
 
 type IntrayProtectedAccessKeyAPI = ToServantApi IntrayProtectedAccessKeySite
 
-data IntrayProtectedAccessKeySite route
-  = IntrayProtectedAccessKeySite
-      { postAddAccessKey :: !(route :- PostAddAccessKey),
-        getAccessKey :: !(route :- GetAccessKey),
-        getAccessKeys :: !(route :- GetAccessKeys),
-        deleteAccessKey :: !(route :- DeleteAccessKey)
-      }
+data IntrayProtectedAccessKeySite route = IntrayProtectedAccessKeySite
+  { postAddAccessKey :: !(route :- PostAddAccessKey),
+    getAccessKey :: !(route :- GetAccessKey),
+    getAccessKeys :: !(route :- GetAccessKeys),
+    deleteAccessKey :: !(route :- DeleteAccessKey)
+  }
   deriving (Generic)
 
 type PostAddAccessKey =

@@ -24,12 +24,11 @@ import Servant.Auth.Docs ()
 
 type IntrayProtectedAccountAPI = ToServantApi IntrayProtectedAccountSite
 
-data IntrayProtectedAccountSite route
-  = IntrayProtectedAccountSite
-      { getAccountInfo :: !(route :- GetAccountInfo),
-        postChangePassphrase :: !(route :- PostChangePassphrase),
-        deleteAccount :: !(route :- DeleteAccount)
-      }
+data IntrayProtectedAccountSite route = IntrayProtectedAccountSite
+  { getAccountInfo :: !(route :- GetAccountInfo),
+    postChangePassphrase :: !(route :- PostChangePassphrase),
+    deleteAccount :: !(route :- DeleteAccount)
+  }
   deriving (Generic)
 
 type GetAccountInfo = ProtectAPI :> Get '[JSON] AccountInfo

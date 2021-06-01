@@ -173,10 +173,10 @@ prettyShowItemAndWait now li =
             case i of
               CaseTextItem t -> do
                 mp <-
-                  fmap join
-                    $ forM (parseURI (T.unpack t))
-                    $ \uri ->
-                      getAutoOpenConfig (show uri)
+                  fmap join $
+                    forM (parseURI (T.unpack t)) $
+                      \uri ->
+                        getAutoOpenConfig (show uri)
                 pure (T.unpack t, mp)
               CaseImageItem it bs -> do
                 let ext =

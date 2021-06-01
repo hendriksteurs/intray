@@ -15,30 +15,27 @@ newtype Command
   = CommandServe ServeFlags
   deriving (Show, Eq)
 
-data ServeFlags
-  = ServeFlags
-      { serveFlagAPIFlags :: !API.ServeFlags,
-        serveFlagPort :: !(Maybe Int),
-        serveFlagTracking :: !(Maybe Text),
-        serveFlagVerification :: !(Maybe Text),
-        serveFlagLoginCacheFile :: !(Maybe FilePath)
-      }
+data ServeFlags = ServeFlags
+  { serveFlagAPIFlags :: !API.ServeFlags,
+    serveFlagPort :: !(Maybe Int),
+    serveFlagTracking :: !(Maybe Text),
+    serveFlagVerification :: !(Maybe Text),
+    serveFlagLoginCacheFile :: !(Maybe FilePath)
+  }
   deriving (Show, Eq)
 
-data Flags
-  = Flags
-      { flagAPIFlags :: !API.Flags
-      }
+data Flags = Flags
+  { flagAPIFlags :: !API.Flags
+  }
   deriving (Show, Eq)
 
-data Configuration
-  = Configuration
-      { confAPIConfiguration :: !API.Configuration,
-        confPort :: !(Maybe Int),
-        confTracking :: !(Maybe Text),
-        confVerification :: !(Maybe Text),
-        confLoginCacheFile :: !(Maybe FilePath)
-      }
+data Configuration = Configuration
+  { confAPIConfiguration :: !API.Configuration,
+    confPort :: !(Maybe Int),
+    confTracking :: !(Maybe Text),
+    confVerification :: !(Maybe Text),
+    confLoginCacheFile :: !(Maybe FilePath)
+  }
   deriving (Show, Eq)
 
 instance FromJSON Configuration where
@@ -55,28 +52,26 @@ instance YamlSchema Configuration where
             <*> optionalField "login-cache-file" "The file to store the login cache database in"
         )
 
-data Environment
-  = Environment
-      { envAPIEnvironment :: !API.Environment,
-        envPort :: !(Maybe Int),
-        envTracking :: !(Maybe Text),
-        envVerification :: !(Maybe Text),
-        envLoginCacheFile :: !(Maybe FilePath)
-      }
+data Environment = Environment
+  { envAPIEnvironment :: !API.Environment,
+    envPort :: !(Maybe Int),
+    envTracking :: !(Maybe Text),
+    envVerification :: !(Maybe Text),
+    envLoginCacheFile :: !(Maybe FilePath)
+  }
   deriving (Show, Eq)
 
 newtype Dispatch
   = DispatchServe ServeSettings
   deriving (Show)
 
-data ServeSettings
-  = ServeSettings
-      { serveSetAPISettings :: !API.ServeSettings,
-        serveSetPort :: !Int,
-        serveSetTracking :: !(Maybe Text),
-        serveSetVerification :: !(Maybe Text),
-        serveSetLoginCacheFile :: !FilePath
-      }
+data ServeSettings = ServeSettings
+  { serveSetAPISettings :: !API.ServeSettings,
+    serveSetPort :: !Int,
+    serveSetTracking :: !(Maybe Text),
+    serveSetVerification :: !(Maybe Text),
+    serveSetLoginCacheFile :: !FilePath
+  }
   deriving (Show)
 
 data Settings

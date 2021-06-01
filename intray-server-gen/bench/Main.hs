@@ -58,19 +58,19 @@ add cenv tok ti = whnfIO $ runClientOrError cenv $ clientPostAddItem tok ti
 
 addAndGet :: ClientEnv -> Token -> TypedItem -> Benchmarkable
 addAndGet cenv tok ti =
-  whnfIO
-    $ runClientOrError cenv
-    $ do
-      u <- clientPostAddItem tok ti
-      clientGetItem tok u
+  whnfIO $
+    runClientOrError cenv $
+      do
+        u <- clientPostAddItem tok ti
+        clientGetItem tok u
 
 addAndDelete :: ClientEnv -> Token -> TypedItem -> Benchmarkable
 addAndDelete cenv tok ti =
-  whnfIO
-    $ runClientOrError cenv
-    $ do
-      u <- clientPostAddItem tok ti
-      clientDeleteItem tok u
+  whnfIO $
+    runClientOrError cenv $
+      do
+        u <- clientPostAddItem tok ti
+        clientDeleteItem tok u
 
 setupTestUser :: ClientEnv -> IO (Registration, Token)
 setupTestUser cenv = do

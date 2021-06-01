@@ -60,7 +60,7 @@ in
     };
   config =
     let
-      intrayPkgs = (import ./pkgs.nix).intrayPackages;
+      intrayPkgs = (import ./pkgs.nix { }).intrayPackages;
 
       nullOrOption =
         name: opt: optionalString (opt != null) "${name}: ${opt}";
@@ -125,13 +125,13 @@ in
           "${syncIntrayName}" = syncIntrayTimer;
         };
     in
-      mkIf cfg.enable {
-        xdg.configFile."intray/config.yaml".text = configFileContents;
-        systemd.user =
-          {
-            services = services;
-            timers = timers;
-          };
-        home.packages = [ cli ];
-      };
+    mkIf cfg.enable {
+      xdg.configFile."intray/config.yaml".text = configFileContents;
+      systemd.user =
+        {
+          services = services;
+          timers = timers;
+        };
+      home.packages = [ cli ];
+    };
 }

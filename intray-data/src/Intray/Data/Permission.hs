@@ -7,8 +7,8 @@
 module Intray.Data.Permission where
 
 import Data.Aeson
-import qualified Data.Set as S
 import Data.Set (Set)
+import qualified Data.Set as S
 import qualified Data.Text as T
 import Database.Persist
 import Database.Persist.Sql

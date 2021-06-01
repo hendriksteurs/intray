@@ -47,15 +47,14 @@ type IntrayHandler = HandlerFor App
 
 type IntrayAuthHandler a = AuthHandler App a
 
-data App
-  = App
-      { appHttpManager :: Http.Manager,
-        appStatic :: EmbeddedStatic,
-        appTracking :: Maybe Text,
-        appVerification :: Maybe Text,
-        appAPIBaseUrl :: BaseUrl,
-        appConnectionPool :: ConnectionPool
-      }
+data App = App
+  { appHttpManager :: Http.Manager,
+    appStatic :: EmbeddedStatic,
+    appTracking :: Maybe Text,
+    appVerification :: Maybe Text,
+    appAPIBaseUrl :: BaseUrl,
+    appConnectionPool :: ConnectionPool
+  }
 
 mkYesodData "App" $(parseRoutesFile "routes")
 
@@ -75,11 +74,11 @@ instance Yesod App where
   makeSessionBackend _ =
     Just <$> defaultClientSessionBackend (60 * 24 * 365 * 10) "client_session_key.aes"
   errorHandler NotFound =
-    fmap toTypedContent
-      $ withNavBar
-      $ do
-        setTitle "Page not found"
-        [whamlet|
+    fmap toTypedContent $
+      withNavBar $
+        do
+          setTitle "Page not found"
+          [whamlet|
       <h1>
         Page not found
       |]
@@ -127,11 +126,10 @@ intrayAuthPlugin = AuthPlugin intrayAuthPluginName dispatch loginWidget
       setDescription "Intray Registration: This is where you sign into your intray account."
       $(widgetFile "auth/login")
 
-data LoginData
-  = LoginData
-      { loginUserkey :: Text,
-        loginPassword :: Text
-      }
+data LoginData = LoginData
+  { loginUserkey :: Text,
+    loginPassword :: Text
+  }
   deriving (Show)
 
 loginFormPostTargetR :: AuthRoute
@@ -162,19 +160,18 @@ getNewAccountR :: IntrayAuthHandler Html
 getNewAccountR = do
   token <- genToken
   msgs <- getMessages
-  liftHandler
-    $ defaultLayout
-    $ do
-      setTitle "Intray Registration"
-      setDescription "Intray Registration: This is where you sign up for an intray account."
-      $(widgetFile "auth/register")
+  liftHandler $
+    defaultLayout $
+      do
+        setTitle "Intray Registration"
+        setDescription "Intray Registration: This is where you sign up for an intray account."
+        $(widgetFile "auth/register")
 
-data NewAccount
-  = NewAccount
-      { newAccountUsername :: Username,
-        newAccountPassword1 :: Text,
-        newAccountPassword2 :: Text
-      }
+data NewAccount = NewAccount
+  { newAccountUsername :: Username,
+    newAccountPassword1 :: Text,
+    newAccountPassword2 :: Text
+  }
   deriving (Show)
 
 postNewAccountR :: IntrayAuthHandler TypedContent
@@ -239,12 +236,11 @@ postNewAccountR = do
 changePasswordTargetR :: AuthRoute
 changePasswordTargetR = PluginR intrayAuthPluginName ["change-password"]
 
-data ChangePassword
-  = ChangePassword
-      { changePasswordOldPassword :: Text,
-        changePasswordNewPassword1 :: Text,
-        changePasswordNewPassword2 :: Text
-      }
+data ChangePassword = ChangePassword
+  { changePasswordOldPassword :: Text,
+    changePasswordNewPassword1 :: Text,
+    changePasswordNewPassword2 :: Text
+  }
   deriving (Show)
 
 getChangePasswordR :: IntrayAuthHandler Html
@@ -256,22 +252,22 @@ getChangePasswordR = do
 postChangePasswordR :: IntrayAuthHandler Html
 postChangePasswordR = do
   ChangePassword {..} <-
-    liftHandler
-      $ runInputPost
-      $ ChangePassword <$> ireq passwordField "old" <*> ireq passwordField "new1"
-        <*> ireq passwordField "new2"
+    liftHandler $
+      runInputPost $
+        ChangePassword <$> ireq passwordField "old" <*> ireq passwordField "new1"
+          <*> ireq passwordField "new2"
   unless (changePasswordNewPassword1 == changePasswordNewPassword2) $
     invalidArgs ["Passwords do not match."]
-  liftHandler
-    $ withLogin
-    $ \t -> do
-      let cpp =
-            ChangePassphrase
-              { changePassphraseOld = changePasswordOldPassword,
-                changePassphraseNew = changePasswordNewPassword1
-              }
-      NoContent <- runClientOrErr $ clientPostChangePassphrase t cpp
-      redirect AccountR
+  liftHandler $
+    withLogin $
+      \t -> do
+        let cpp =
+              ChangePassphrase
+                { changePassphraseOld = changePasswordOldPassword,
+                  changePassphraseNew = changePasswordNewPassword1
+                }
+        NoContent <- runClientOrErr $ clientPostChangePassphrase t cpp
+        redirect AccountR
 
 instance RenderMessage App FormMessage where
   renderMessage _ _ = defaultFormMessage
@@ -362,9 +358,9 @@ lookupToginToken un = runDb $ fmap (userTokenToken . entityVal) <$> getBy (Uniqu
 recordLoginToken :: Username -> Text -> Handler ()
 recordLoginToken un session = do
   let token = Token $ setCookieValue $ parseSetCookie $ TE.encodeUtf8 session
-  void
-    $ runDb
-    $ upsert UserToken {userTokenName = un, userTokenToken = token} [UserTokenToken =. token]
+  void $
+    runDb $
+      upsert UserToken {userTokenName = un, userTokenToken = token} [UserTokenToken =. token]
 
 runDb :: SqlPersistT IO a -> Handler a
 runDb func = do

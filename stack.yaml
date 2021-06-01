@@ -1,4 +1,4 @@
-snapshot: lts-15.15
+snapshot: lts-16.12
 packages:
 - intray-api
 - intray-api-gen
@@ -21,12 +21,6 @@ extra-deps:
     - servant-auth-docs
     - servant-auth-swagger
     - servant-auth-server
-- github: yesodweb/persistent
-  commit: 333be4996eb6eea2dc37d3a14858b668f0b9e381
-  subdirs:
-    - persistent
-    - persistent-sqlite
-    - persistent-template
 - github: NorfairKing/yesod-static-remote
   commit: 22c0a92c1d62f1b8d432003844ef0636a9131b08
 - github: NorfairKing/stripe
@@ -37,14 +31,14 @@ extra-deps:
     - stripe-http-client
     - stripe-http-streams
 - github: NorfairKing/mergeless
-  commit: 39191fea2885ccd6dc4aa5deeb578be179e9659f
+  commit: 370ceea253e71f47a20c8876f6f347b0c280aafe
   subdirs:
     - mergeless
     - genvalidity-mergeless
     - mergeless-persistent
 
 - github: NorfairKing/sydtest
-  commit: 8069842d1386442dc2321a8dbba7c98cf073e8bb
+  commit: aafd8e0c2e97143af950e2f9742c5e1bd167c77b
   subdirs:
     - sydtest
     - sydtest-discover
@@ -54,7 +48,7 @@ extra-deps:
     - sydtest-yesod
 
 - github: NorfairKing/validity
-  commit: 0f52f3ba57d099f3d3ced38a2eeae39954906306
+  commit: 86a824729519c154c23f0757f2ce4b9ab93b675a
   subdirs:
   - genvalidity
   - genvalidity-aeson
@@ -102,24 +96,18 @@ extra-deps:
     - typed-uuid
     - genvalidity-typed-uuid
 - github: NorfairKing/pretty-relative-time
-  commit: fc62907b36f6f7348d6ae0e97aceb4d41039d57b
+  commit: 1c0ca0e24b2a5973e5ccf4e83d24097a22bb9a4a
 - github: NorfairKing/looper
   commit: fd6d31b0ccc1a850aa1435b2fc21dcb9807eacb3
 - github: NorfairKing/safe-coloured-text
   commit: d840dd7b0f13f4d0fd693c1dd93be33f9ee94605
   subdirs:
     - safe-coloured-text
+    - safe-coloured-text-terminfo
 - github: NorfairKing/yamlparse-applicative
-  commit: 229e8402bc90f79812d2261f83c0ef01dcba494a
+  commit: a250d9ea4b0c10dd6a96174f4942f73ec9652a2a
   subdirs:
     - yamlparse-applicative
 
 nix:
-  path: [ "nixpkgs=https://github.com/NixOS/nixpkgs/archive/e3a2247046d4de66b9b193a6ab3ff040fa3da86d.tar.gz" ]
-  add-gc-roots: true
-  pure: true
-  packages:
-  - zlib
-  - unzip
-  - haskellPackages.autoexporter
-  - procps
+  shell-file: shell.nix

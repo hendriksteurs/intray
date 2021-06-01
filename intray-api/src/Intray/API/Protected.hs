@@ -24,13 +24,12 @@ import Servant.API.Generic
 
 type IntrayProtectedAPI = ToServantApi IntrayProtectedSite
 
-data IntrayProtectedSite route
-  = IntrayProtectedSite
-      { protectedItemSite :: !(route :- "intray" :> ToServantApi IntrayProtectedItemSite),
-        protectedAccountSite :: !(route :- "account" :> ToServantApi IntrayProtectedAccountSite),
-        protectedAccessKeySite :: !(route :- "access-key" :> ToServantApi IntrayProtectedAccessKeySite),
-        getPermissions :: !(route :- GetPermissions)
-      }
+data IntrayProtectedSite route = IntrayProtectedSite
+  { protectedItemSite :: !(route :- "intray" :> ToServantApi IntrayProtectedItemSite),
+    protectedAccountSite :: !(route :- "account" :> ToServantApi IntrayProtectedAccountSite),
+    protectedAccessKeySite :: !(route :- "access-key" :> ToServantApi IntrayProtectedAccessKeySite),
+    getPermissions :: !(route :- GetPermissions)
+  }
   deriving (Generic)
 
 type GetPermissions = ProtectAPI :> "permissions" :> Get '[JSON] (Set Permission)

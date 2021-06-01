@@ -6,7 +6,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.API.Types
@@ -56,11 +55,10 @@ import qualified Web.Stripe.Plan as Stripe
 
 type ProtectAPI = Auth '[JWT] AuthCookie
 
-data AuthCookie
-  = AuthCookie
-      { authCookieUserUUID :: AccountUUID,
-        authCookiePermissions :: Set Permission
-      }
+data AuthCookie = AuthCookie
+  { authCookieUserUUID :: AccountUUID,
+    authCookiePermissions :: Set Permission
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance FromJSON AuthCookie
@@ -99,11 +97,10 @@ instance ToSample Int where
 instance ToSample Word where
   toSamples Proxy = singleSample 42
 
-data Registration
-  = Registration
-      { registrationUsername :: Username,
-        registrationPassword :: Text
-      }
+data Registration = Registration
+  { registrationUsername :: Username,
+    registrationPassword :: Text
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity Registration
@@ -118,11 +115,10 @@ instance FromJSON Registration where
 
 instance ToSample Registration
 
-data LoginForm
-  = LoginForm
-      { loginFormUsername :: Username,
-        loginFormPassword :: Text
-      }
+data LoginForm = LoginForm
+  { loginFormUsername :: Username,
+    loginFormPassword :: Text
+  }
   deriving (Show, Eq, Ord, Generic)
 
 instance Validity LoginForm
@@ -140,10 +136,9 @@ instance ToSample Username
 instance ToSample SetCookie where
   toSamples Proxy = singleSample def
 
-newtype GetDocsResponse
-  = GetDocsResponse
-      { unGetDocsResponse :: HTML.Html
-      }
+newtype GetDocsResponse = GetDocsResponse
+  { unGetDocsResponse :: HTML.Html
+  }
   deriving (Generic)
 
 instance MimeUnrender HTML GetDocsResponse where
@@ -163,15 +158,14 @@ instance (Ord a, ToSample a) => ToSample (Set a) where
 instance ToSample AccessKeySecret where
   toSamples Proxy = singleSample $ unsafePerformIO generateRandomAccessKeySecret
 
-data Pricing
-  = Pricing
-      { pricingPlan :: !Stripe.PlanId,
-        pricingTrialPeriod :: !(Maybe Int),
-        pricingPrice :: !Stripe.Amount,
-        pricingCurrency :: !Stripe.Currency,
-        pricingStripePublishableKey :: !Text,
-        pricingMaxItemsFree :: !Int
-      }
+data Pricing = Pricing
+  { pricingPlan :: !Stripe.PlanId,
+    pricingTrialPeriod :: !(Maybe Int),
+    pricingPrice :: !Stripe.Amount,
+    pricingCurrency :: !Stripe.Currency,
+    pricingStripePublishableKey :: !Text,
+    pricingMaxItemsFree :: !Int
+  }
   deriving (Show, Eq, Generic)
 
 instance Validity Pricing

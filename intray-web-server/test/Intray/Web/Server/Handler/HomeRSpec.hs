@@ -7,14 +7,14 @@ import TestImport
 
 spec :: Spec
 spec =
-  intrayWebServerSpec
-    $ ydescribe "HomeR"
-    $ do
-      yit "gets a 200 for non-logged-in user" $ do
-        get HomeR
-        statusIs 200
-      yit "gets a 200 for an example user"
-        $ withExampleAccount_
-        $ do
+  intrayWebServerSpec $
+    ydescribe "HomeR" $
+      do
+        yit "gets a 200 for non-logged-in user" $ do
           get HomeR
           statusIs 200
+        yit "gets a 200 for an example user" $
+          withExampleAccount_ $
+            do
+              get HomeR
+              statusIs 200

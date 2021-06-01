@@ -20,41 +20,38 @@ newtype Command
   = CommandServe ServeFlags
   deriving (Show, Eq)
 
-data ServeFlags
-  = ServeFlags
-      { serveFlagHost :: !(Maybe String),
-        serveFlagPort :: !(Maybe Int),
-        serveFlagDb :: !(Maybe Text),
-        serveFlagAdmins :: ![String],
-        serveFlagFreeloaders :: ![String],
-        serveFlagLogLevel :: Maybe LogLevel,
-        serveFlagSigningKeyFile :: !(Maybe FilePath),
-        serveFlagStripePlan :: !(Maybe String),
-        serveFlagStripeSecretKey :: !(Maybe String),
-        serveFlagStripePublishableKey :: !(Maybe String),
-        serveFlagLooperStripeEventsFetcher :: LooperFlags,
-        serveFlagLooperStripeEventsRetrier :: LooperFlags,
-        serveFlagMaxItemsFree :: !(Maybe Int)
-      }
+data ServeFlags = ServeFlags
+  { serveFlagHost :: !(Maybe String),
+    serveFlagPort :: !(Maybe Int),
+    serveFlagDb :: !(Maybe Text),
+    serveFlagAdmins :: ![String],
+    serveFlagFreeloaders :: ![String],
+    serveFlagLogLevel :: Maybe LogLevel,
+    serveFlagSigningKeyFile :: !(Maybe FilePath),
+    serveFlagStripePlan :: !(Maybe String),
+    serveFlagStripeSecretKey :: !(Maybe String),
+    serveFlagStripePublishableKey :: !(Maybe String),
+    serveFlagLooperStripeEventsFetcher :: LooperFlags,
+    serveFlagLooperStripeEventsRetrier :: LooperFlags,
+    serveFlagMaxItemsFree :: !(Maybe Int)
+  }
   deriving (Show, Eq)
 
-data Flags
-  = Flags
-      { flagConfigFile :: !(Maybe FilePath)
-      }
+data Flags = Flags
+  { flagConfigFile :: !(Maybe FilePath)
+  }
   deriving (Show, Eq)
 
-data Configuration
-  = Configuration
-      { confHost :: !(Maybe String),
-        confPort :: !(Maybe Int),
-        confDb :: !(Maybe Text),
-        confAdmins :: !(Maybe [String]),
-        confFreeloaders :: !(Maybe [String]),
-        confLogLevel :: !(Maybe LogLevel),
-        confSigningKeyFile :: !(Maybe FilePath),
-        confMonetisationConfig :: !(Maybe MonetisationConfiguration)
-      }
+data Configuration = Configuration
+  { confHost :: !(Maybe String),
+    confPort :: !(Maybe Int),
+    confDb :: !(Maybe Text),
+    confAdmins :: !(Maybe [String]),
+    confFreeloaders :: !(Maybe [String]),
+    confLogLevel :: !(Maybe LogLevel),
+    confSigningKeyFile :: !(Maybe FilePath),
+    confMonetisationConfig :: !(Maybe MonetisationConfiguration)
+  }
   deriving (Show, Eq)
 
 instance FromJSON Configuration where
@@ -74,15 +71,14 @@ instance YamlSchema Configuration where
           "monetisation"
           "Monetisation configuration. If this is not configured then the server is run for free."
 
-data MonetisationConfiguration
-  = MonetisationConfiguration
-      { monetisationConfStripePlan :: !(Maybe String),
-        monetisationConfStripeSecretKey :: !(Maybe String),
-        monetisationConfStripePublishableKey :: !(Maybe String),
-        monetisationConfStripeEventsFetcher :: !(Maybe LooperConfiguration),
-        monetisationConfStripeEventsRetrier :: !(Maybe LooperConfiguration),
-        monetisationConfMaxItemsFree :: !(Maybe Int)
-      }
+data MonetisationConfiguration = MonetisationConfiguration
+  { monetisationConfStripePlan :: !(Maybe String),
+    monetisationConfStripeSecretKey :: !(Maybe String),
+    monetisationConfStripePublishableKey :: !(Maybe String),
+    monetisationConfStripeEventsFetcher :: !(Maybe LooperConfiguration),
+    monetisationConfStripeEventsRetrier :: !(Maybe LooperConfiguration),
+    monetisationConfMaxItemsFree :: !(Maybe Int)
+  }
   deriving (Show, Eq)
 
 instance FromJSON MonetisationConfiguration where
@@ -101,21 +97,20 @@ instance YamlSchema MonetisationConfiguration where
         <*> optionalField "events-retrier" "The configuration for the stripe events fetcher"
         <*> optionalField "max-items-free" "The number of items a free user can have on the server"
 
-data Environment
-  = Environment
-      { envConfigFile :: !(Maybe FilePath),
-        envHost :: !(Maybe String),
-        envPort :: !(Maybe Int),
-        envDb :: !(Maybe Text),
-        envLogLevel :: !(Maybe LogLevel),
-        envSigningKeyFile :: !(Maybe FilePath),
-        envStripePlan :: !(Maybe String),
-        envStripeSecretKey :: !(Maybe String),
-        envStripePublishableKey :: !(Maybe String),
-        envLooperStripeEventsFetcher :: LooperEnvironment,
-        envLooperStripeEventsRetrier :: LooperEnvironment,
-        envMaxItemsFree :: !(Maybe Int)
-      }
+data Environment = Environment
+  { envConfigFile :: !(Maybe FilePath),
+    envHost :: !(Maybe String),
+    envPort :: !(Maybe Int),
+    envDb :: !(Maybe Text),
+    envLogLevel :: !(Maybe LogLevel),
+    envSigningKeyFile :: !(Maybe FilePath),
+    envStripePlan :: !(Maybe String),
+    envStripeSecretKey :: !(Maybe String),
+    envStripePublishableKey :: !(Maybe String),
+    envLooperStripeEventsFetcher :: LooperEnvironment,
+    envLooperStripeEventsRetrier :: LooperEnvironment,
+    envMaxItemsFree :: !(Maybe Int)
+  }
   deriving (Show, Eq)
 
 newtype Dispatch
@@ -126,32 +121,29 @@ data Settings
   = Settings
   deriving (Show, Eq)
 
-data ServeSettings
-  = ServeSettings
-      { serveSetHost :: !Text,
-        serveSetPort :: !Int,
-        serveSetLogLevel :: !LogLevel,
-        serveSetSigningKeyFile :: !(Path Abs File),
-        serveSetConnectionInfo :: !SqliteConnectionInfo,
-        serveSetAdmins :: ![Username],
-        serveSetFreeloaders :: ![Username],
-        serveSetMonetisationSettings :: !(Maybe MonetisationSettings)
-      }
+data ServeSettings = ServeSettings
+  { serveSetHost :: !Text,
+    serveSetPort :: !Int,
+    serveSetLogLevel :: !LogLevel,
+    serveSetSigningKeyFile :: !(Path Abs File),
+    serveSetConnectionInfo :: !SqliteConnectionInfo,
+    serveSetAdmins :: ![Username],
+    serveSetFreeloaders :: ![Username],
+    serveSetMonetisationSettings :: !(Maybe MonetisationSettings)
+  }
   deriving (Show)
 
-data MonetisationSettings
-  = MonetisationSettings
-      { monetisationSetStripeSettings :: !StripeSettings,
-        monetisationSetStripeEventsFetcher :: LooperSettings,
-        monetisationSetStripeEventsRetrier :: LooperSettings,
-        monetisationSetMaxItemsFree :: !Int
-      }
+data MonetisationSettings = MonetisationSettings
+  { monetisationSetStripeSettings :: !StripeSettings,
+    monetisationSetStripeEventsFetcher :: LooperSettings,
+    monetisationSetStripeEventsRetrier :: LooperSettings,
+    monetisationSetMaxItemsFree :: !Int
+  }
   deriving (Show)
 
-data StripeSettings
-  = StripeSettings
-      { stripeSetPlan :: !Stripe.PlanId,
-        stripeSetStripeConfig :: StripeConfig,
-        stripeSetPublishableKey :: Text
-      }
+data StripeSettings = StripeSettings
+  { stripeSetPlan :: !Stripe.PlanId,
+    stripeSetStripeConfig :: StripeConfig,
+    stripeSetPublishableKey :: Text
+  }
   deriving (Show)

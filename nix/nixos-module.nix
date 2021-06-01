@@ -1,10 +1,12 @@
-{ envname }:
+{ sources ? import ./sources.nix
+, envname
+}:
 { lib, pkgs, config, ... }:
 with lib;
 
 let
   cfg = config.services.intray."${envname}";
-  concatAttrs = attrList: fold (x: y: x // y) {} attrList;
+  concatAttrs = attrList: fold (x: y: x // y) { } attrList;
 in
 {
   options.services.intray."${envname}" =
@@ -14,14 +16,14 @@ in
         mkOption {
           type = types.listOf types.str;
           example = [ "intray.cs-syd.eu" ];
-          default = [];
+          default = [ ];
           description = "The host to serve web requests on";
         };
       api-hosts =
         mkOption {
           type = types.listOf types.str;
           example = [ "api.intray.cs-syd.eu" ];
-          default = [];
+          default = [ ];
           description = "The host to serve API requests on";
         };
       web-port =
@@ -112,13 +114,14 @@ in
         let
           workingDir = "/www/intray/${envname}/data/";
           intray-pkgs =
-            (import ./pkgs.nix).intrayPackages;
+            (import ./pkgs.nix { inherit sources; }).intrayPackages;
           configFile =
             let
               config =
-                optionalAttrs (cfg.api-hosts != []) {
-                  api-host = head cfg.api-hosts;
-                } // {
+                optionalAttrs (cfg.api-hosts != [ ])
+                  {
+                    api-host = head cfg.api-hosts;
+                  } // {
                   api-port = cfg.api-port;
                   admins = cfg.admins;
                   freeloaders = cfg.freeloaders;
@@ -135,31 +138,31 @@ in
                   verification = cfg.verification-tag;
                 };
             in
-              pkgs.writeText "intray-config" (builtins.toJSON config);
+            pkgs.writeText "intray-config" (builtins.toJSON config);
         in
-          {
-            description = "Intray ${envname} Service";
-            wantedBy = [ "multi-user.target" ];
-            script =
-              ''
-                mkdir -p "${workingDir}"
-                cd "${workingDir}"
-                ${intray-pkgs.intray-web-server}/bin/intray-web-server serve  --config-file ${configFile}
-              '';
-            serviceConfig =
-              {
-                Restart = "always";
-                RestartSec = 1;
-                Nice = 15;
-              };
-            unitConfig =
-              {
-                StartLimitIntervalSec = 0;
-                # ensure Restart=always is always honoured
-              };
+        {
+          description = "Intray ${envname} Service";
+          wantedBy = [ "multi-user.target" ];
+          script =
+            ''
+              mkdir -p "${workingDir}"
+              cd "${workingDir}"
+              ${intray-pkgs.intray-web-server}/bin/intray-web-server serve  --config-file ${configFile}
+            '';
+          serviceConfig =
+            {
+              Restart = "always";
+              RestartSec = 1;
+              Nice = 15;
+            };
+          unitConfig =
+            {
+              StartLimitIntervalSec = 0;
+              # ensure Restart=always is always honoured
+            };
 
-          };
-      api-host = optionalAttrs (cfg.api-hosts != []) {
+        };
+      api-host = optionalAttrs (cfg.api-hosts != [ ]) {
         "${head (cfg.api-hosts)}" =
           {
             enableACME = true;
@@ -169,7 +172,7 @@ in
             serverAliases = tail cfg.api-hosts;
           };
       };
-      web-host = optionalAttrs (cfg.web-hosts != []) {
+      web-host = optionalAttrs (cfg.web-hosts != [ ]) {
         "${head (cfg.web-hosts)}" =
           {
             enableACME = true;
@@ -180,12 +183,12 @@ in
           };
       };
     in
-      mkIf cfg.enable {
-        systemd.services =
-          {
-            "intray-${envname}" = intray-service;
-          };
-        networking.firewall.allowedTCPPorts = [ cfg.web-port cfg.api-port ];
-        services.nginx.virtualHosts = api-host // web-host;
-      };
+    mkIf cfg.enable {
+      systemd.services =
+        {
+          "intray-${envname}" = intray-service;
+        };
+      networking.firewall.allowedTCPPorts = [ cfg.web-port cfg.api-port ];
+      services.nginx.virtualHosts = api-host // web-host;
+    };
 }

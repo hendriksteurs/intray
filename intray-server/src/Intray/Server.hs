@@ -3,7 +3,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server
   ( runIntrayServer,
@@ -33,51 +32,51 @@ import Servant.Server.Generic
 
 runIntrayServer :: ServeSettings -> IO ()
 runIntrayServer ServeSettings {..} =
-  runStderrLoggingT
-    $ filterLogger (\_ ll -> ll >= serveSetLogLevel)
-    $ withSqlitePoolInfo serveSetConnectionInfo 1
-    $ \pool -> do
-      runResourceT $ flip runSqlPool pool $ runMigration migrateAll
-      signingKey <- liftIO $ loadSigningKey serveSetSigningKeyFile
-      let jwtCfg = defaultJWTSettings signingKey
-      let cookieCfg = defaultCookieSettings
-      mMonetisationEnv <-
-        forM serveSetMonetisationSettings $ \MonetisationSettings {..} -> do
-          planCache <- liftIO $ newCache Nothing
-          pure
-            MonetisationEnv
-              { monetisationEnvStripeSettings = monetisationSetStripeSettings,
-                monetisationEnvMaxItemsFree = monetisationSetMaxItemsFree,
-                monetisationEnvPlanCache = planCache
-              }
-      let intrayEnv =
-            IntrayServerEnv
-              { envHost = serveSetHost,
-                envConnectionPool = pool,
-                envCookieSettings = cookieCfg,
-                envJWTSettings = jwtCfg,
-                envAdmins = serveSetAdmins,
-                envFreeloaders = serveSetFreeloaders,
-                envMonetisation = mMonetisationEnv
-              }
-      let mLoopersSets =
-            case serveSetMonetisationSettings of
-              Nothing -> Nothing
-              Just MonetisationSettings {..} ->
-                Just
-                  LoopersSettings
-                    { loopersSetLogLevel = serveSetLogLevel,
-                      loopersSetConnectionPool = pool,
-                      loopersSetStripeSettings = monetisationSetStripeSettings,
-                      loopersSetStripeEventsFetcher = monetisationSetStripeEventsFetcher,
-                      loopersSetStripeEventsRetrier = monetisationSetStripeEventsRetrier
-                    }
-      let runServer = Warp.run serveSetPort $ intrayApp intrayEnv
-      case mLoopersSets of
-        Nothing -> liftIO runServer
-        Just ls -> do
-          let runLoopers = runIntrayServerLoopers ls
-          liftIO $ race_ runServer runLoopers
+  runStderrLoggingT $
+    filterLogger (\_ ll -> ll >= serveSetLogLevel) $
+      withSqlitePoolInfo serveSetConnectionInfo 1 $
+        \pool -> do
+          runResourceT $ flip runSqlPool pool $ runMigration migrateAll
+          signingKey <- liftIO $ loadSigningKey serveSetSigningKeyFile
+          let jwtCfg = defaultJWTSettings signingKey
+          let cookieCfg = defaultCookieSettings
+          mMonetisationEnv <-
+            forM serveSetMonetisationSettings $ \MonetisationSettings {..} -> do
+              planCache <- liftIO $ newCache Nothing
+              pure
+                MonetisationEnv
+                  { monetisationEnvStripeSettings = monetisationSetStripeSettings,
+                    monetisationEnvMaxItemsFree = monetisationSetMaxItemsFree,
+                    monetisationEnvPlanCache = planCache
+                  }
+          let intrayEnv =
+                IntrayServerEnv
+                  { envHost = serveSetHost,
+                    envConnectionPool = pool,
+                    envCookieSettings = cookieCfg,
+                    envJWTSettings = jwtCfg,
+                    envAdmins = serveSetAdmins,
+                    envFreeloaders = serveSetFreeloaders,
+                    envMonetisation = mMonetisationEnv
+                  }
+          let mLoopersSets =
+                case serveSetMonetisationSettings of
+                  Nothing -> Nothing
+                  Just MonetisationSettings {..} ->
+                    Just
+                      LoopersSettings
+                        { loopersSetLogLevel = serveSetLogLevel,
+                          loopersSetConnectionPool = pool,
+                          loopersSetStripeSettings = monetisationSetStripeSettings,
+                          loopersSetStripeEventsFetcher = monetisationSetStripeEventsFetcher,
+                          loopersSetStripeEventsRetrier = monetisationSetStripeEventsRetrier
+                        }
+          let runServer = Warp.run serveSetPort $ intrayApp intrayEnv
+          case mLoopersSets of
+            Nothing -> liftIO runServer
+            Just ls -> do
+              let runLoopers = runIntrayServerLoopers ls
+              liftIO $ race_ runServer runLoopers
 
 intrayApp :: IntrayServerEnv -> Wai.Application
 intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ makeIntrayServer se

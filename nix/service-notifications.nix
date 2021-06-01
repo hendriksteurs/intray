@@ -47,14 +47,14 @@ in
           notifyScript =
             serviceName:
             # This must be a single line.
-              ''
-                %s -c '[[ "$SERVICE_RESULT" == "success" ]] || ${notificationScript} "${config.networking.hostName}: Systemd user service ${serviceName}.service exited with exit code $EXIT_STATUS"'
-              '';
+            ''
+              %s -c '[[ "$SERVICE_RESULT" == "success" ]] || ${notificationScript} "${config.networking.hostName}: Systemd user service ${serviceName}.service exited with exit code $EXIT_STATUS"'
+            '';
 
         in
-          genAttrs cfg.services (
-            serviceName:
-              { serviceConfig.ExecStopPost = notifyScript serviceName; }
-          );
+        genAttrs cfg.services (
+          serviceName:
+          { serviceConfig.ExecStopPost = notifyScript serviceName; }
+        );
     };
 }

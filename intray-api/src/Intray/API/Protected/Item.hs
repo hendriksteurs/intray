@@ -21,17 +21,16 @@ import Servant.Auth.Docs ()
 
 type IntrayProtectedItemAPI = ToServantApi IntrayProtectedItemSite
 
-data IntrayProtectedItemSite route
-  = IntrayProtectedItemSite
-      { getShowItem :: !(route :- GetShowItem),
-        getIntraySize :: !(route :- GetIntraySize),
-        getItemUUIDs :: !(route :- GetItemUUIDs),
-        getItems :: !(route :- GetItems),
-        postAddItem :: !(route :- PostAddItem),
-        getItem :: !(route :- GetItem),
-        deleteItem :: !(route :- DeleteItem),
-        postSync :: !(route :- PostSync)
-      }
+data IntrayProtectedItemSite route = IntrayProtectedItemSite
+  { getShowItem :: !(route :- GetShowItem),
+    getIntraySize :: !(route :- GetIntraySize),
+    getItemUUIDs :: !(route :- GetItemUUIDs),
+    getItems :: !(route :- GetItems),
+    postAddItem :: !(route :- PostAddItem),
+    getItem :: !(route :- GetItem),
+    deleteItem :: !(route :- DeleteItem),
+    postSync :: !(route :- PostSync)
+  }
   deriving (Generic)
 
 -- | The item is not guaranteed to be the same one for every call if there are multiple items available.

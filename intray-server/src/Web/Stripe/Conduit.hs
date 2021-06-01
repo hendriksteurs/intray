@@ -15,7 +15,7 @@ import Data.Aeson
 import Data.Conduit
 import qualified Data.Conduit.List as CL
 import Safe (lastMay)
-import Web.Stripe ((-&-), stripe)
+import Web.Stripe (stripe, (-&-))
 import qualified Web.Stripe as Stripe
 import qualified Web.Stripe.Customer as Stripe
 import Prelude

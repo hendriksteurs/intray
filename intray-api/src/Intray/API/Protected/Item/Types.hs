@@ -4,7 +4,6 @@
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.API.Protected.Item.Types
@@ -23,8 +22,8 @@ where
 import Data.Aeson as JSON
 import qualified Data.ByteString.Base64 as Base64
 import qualified Data.ByteString.Char8 as SB8
-import qualified Data.Map as M
 import Data.Map (Map)
+import qualified Data.Map as M
 import Data.Mergeless
 import qualified Data.Text.Encoding as TE
 import Data.Time
@@ -34,11 +33,10 @@ import Intray.API.Types ()
 import Intray.Data
 import Servant.Docs
 
-data TypedItem
-  = TypedItem
-      { itemType :: ItemType,
-        itemData :: ByteString
-      }
+data TypedItem = TypedItem
+  { itemType :: ItemType,
+    itemData :: ByteString
+  }
   deriving (Show, Read, Eq, Ord, Generic)
 
 instance Validity TypedItem
@@ -74,11 +72,10 @@ data TypedItemCase
   | CaseImageItem ImageType ByteString
   deriving (Show, Read, Eq, Ord, Generic)
 
-data AddedItem a
-  = AddedItem
-      { addedItemContents :: a,
-        addedItemCreated :: UTCTime
-      }
+data AddedItem a = AddedItem
+  { addedItemContents :: a,
+    addedItemCreated :: UTCTime
+  }
   deriving (Show, Read, Eq, Ord, Generic)
 
 instance Validity a => Validity (AddedItem a)
@@ -91,12 +88,11 @@ instance FromJSON a => FromJSON (AddedItem a) where
 
 instance (ToSample a) => ToSample (AddedItem a)
 
-data ItemInfo a
-  = ItemInfo
-      { itemInfoIdentifier :: ItemUUID,
-        itemInfoContents :: a,
-        itemInfoCreated :: UTCTime
-      }
+data ItemInfo a = ItemInfo
+  { itemInfoIdentifier :: ItemUUID,
+    itemInfoContents :: a,
+    itemInfoCreated :: UTCTime
+  }
   deriving (Show, Read, Eq, Ord, Generic)
 
 instance Validity a => Validity (ItemInfo a)

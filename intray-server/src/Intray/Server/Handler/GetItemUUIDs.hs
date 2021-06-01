@@ -2,7 +2,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators #-}
 
 module Intray.Server.Handler.GetItemUUIDs
   ( serveGetItemUUIDs,
@@ -17,6 +16,6 @@ import Intray.Server.Types
 
 serveGetItemUUIDs :: AuthCookie -> IntrayHandler [ItemUUID]
 serveGetItemUUIDs AuthCookie {..} =
-  fmap (fmap $ intrayItemIdentifier . entityVal)
-    $ runDb
-    $ selectList [IntrayItemUserId ==. authCookieUserUUID] [Asc IntrayItemCreated]
+  fmap (fmap $ intrayItemIdentifier . entityVal) $
+    runDb $
+      selectList [IntrayItemUserId ==. authCookieUserUUID] [Asc IntrayItemCreated]

@@ -27,24 +27,24 @@ intrayWebServer = do
 
 runIntrayWebServer :: ServeSettings -> IO ()
 runIntrayWebServer ServeSettings {..} =
-  runStderrLoggingT
-    $ filterLogger (\_ ll -> ll >= API.serveSetLogLevel serveSetAPISettings)
-    $ withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack serveSetLoginCacheFile) 1
-    $ \pool -> do
-      man <- liftIO $ Http.newManager Http.defaultManagerSettings
-      burl <- parseBaseUrl $ "http://127.0.0.1:" ++ show (API.serveSetPort serveSetAPISettings)
-      let app =
-            App
-              { appHttpManager = man,
-                appStatic = myStatic,
-                appTracking = serveSetTracking,
-                appVerification = serveSetVerification,
-                appAPIBaseUrl = burl,
-                appConnectionPool = pool
-              }
-      liftIO $ do
-        runSqlPool (runMigration migrateLoginCache) pool
-        warp serveSetPort app
+  runStderrLoggingT $
+    filterLogger (\_ ll -> ll >= API.serveSetLogLevel serveSetAPISettings) $
+      withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack serveSetLoginCacheFile) 1 $
+        \pool -> do
+          man <- liftIO $ Http.newManager Http.defaultManagerSettings
+          burl <- parseBaseUrl $ "http://127.0.0.1:" ++ show (API.serveSetPort serveSetAPISettings)
+          let app =
+                App
+                  { appHttpManager = man,
+                    appStatic = myStatic,
+                    appTracking = serveSetTracking,
+                    appVerification = serveSetVerification,
+                    appAPIBaseUrl = burl,
+                    appConnectionPool = pool
+                  }
+          liftIO $ do
+            runSqlPool (runMigration migrateLoginCache) pool
+            warp serveSetPort app
 
 runIntrayAPIServer :: ServeSettings -> IO ()
 runIntrayAPIServer ss = do

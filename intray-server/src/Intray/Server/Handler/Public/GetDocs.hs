@@ -23,10 +23,10 @@ serveGetDocs = do
 
 intrayHtmlResponse :: Text -> GetDocsResponse
 intrayHtmlResponse host =
-  GetDocsResponse
-    $ Markdown.markdown Markdown.defaultMarkdownSettings {Markdown.msXssProtect = False}
-    $ LT.fromStrict
-    $ intrayDocs host
+  GetDocsResponse $
+    Markdown.markdown Markdown.defaultMarkdownSettings {Markdown.msXssProtect = False} $
+      LT.fromStrict $
+        intrayDocs host
 
 intrayDocs :: Text -> Text
 intrayDocs host =
@@ -39,9 +39,9 @@ intrayDocs host =
       )
     . T.lines
     . T.pack
-    $ Docs.markdown
-    $ Docs.docsWithIntros [intr]
-    $ Docs.pretty intrayOpenAPI
+    $ Docs.markdown $
+      Docs.docsWithIntros [intr] $
+        Docs.pretty intrayOpenAPI
   where
     intr =
       Docs.DocIntro

@@ -31,11 +31,10 @@ intrayAPI = Proxy
 
 type IntrayAPI = ToServantApi IntraySite
 
-data IntraySite route
-  = IntraySite
-      { openSite :: !(route :- ToServantApi IntrayOpenSite),
-        adminSite :: !(route :- "admin" :> ToServantApi IntrayAdminSite)
-      }
+data IntraySite route = IntraySite
+  { openSite :: !(route :- ToServantApi IntrayOpenSite),
+    adminSite :: !(route :- "admin" :> ToServantApi IntrayAdminSite)
+  }
   deriving (Generic)
 
 intrayOpenAPI :: Proxy IntrayOpenAPI
@@ -43,22 +42,20 @@ intrayOpenAPI = Proxy
 
 type IntrayOpenAPI = ToServantApi IntrayOpenSite
 
-data IntrayOpenSite route
-  = IntrayOpenSite
-      { protectedSite :: !(route :- ToServantApi IntrayProtectedSite),
-        publicSite :: !(route :- ToServantApi IntrayPublicSite)
-      }
+data IntrayOpenSite route = IntrayOpenSite
+  { protectedSite :: !(route :- ToServantApi IntrayProtectedSite),
+    publicSite :: !(route :- ToServantApi IntrayPublicSite)
+  }
   deriving (Generic)
 
 type IntrayPublicAPI = ToServantApi IntrayPublicSite
 
-data IntrayPublicSite route
-  = IntrayPublicSite
-      { postRegister :: !(route :- PostRegister),
-        postLogin :: !(route :- PostLogin),
-        getDocs :: !(route :- GetDocs),
-        getPricing :: !(route :- GetPricing)
-      }
+data IntrayPublicSite route = IntrayPublicSite
+  { postRegister :: !(route :- PostRegister),
+    postLogin :: !(route :- PostLogin),
+    getDocs :: !(route :- GetDocs),
+    getPricing :: !(route :- GetPricing)
+  }
   deriving (Generic)
 
 -- | The order of the items is not guaranteed to be the same for every call.

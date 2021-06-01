@@ -13,8 +13,8 @@ import Intray.Server.Looper.DB
 import Intray.Server.Looper.Import
 import Intray.Server.Looper.Stripe
 import Intray.Server.OptParse.Types
-import qualified Web.Stripe as Stripe
 import Web.Stripe as Stripe ((-&-))
+import qualified Web.Stripe as Stripe
 import Web.Stripe.Conduit
 import qualified Web.Stripe.Customer as Stripe
 import qualified Web.Stripe.Event as Stripe
@@ -75,12 +75,12 @@ handleEvent Stripe.Event {..} =
 
 completePayment :: Stripe.EventId -> AccountUUID -> Stripe.CustomerId -> Looper StripeEvent
 completePayment eventId account cid = do
-  void
-    $ looperDB
-    $ upsertBy
-      (UniqueCustomerUser account)
-      (Customer {customerUser = account, customerStripeCustomer = cid})
-      [CustomerStripeCustomer =. cid]
+  void $
+    looperDB $
+      upsertBy
+        (UniqueCustomerUser account)
+        (Customer {customerUser = account, customerStripeCustomer = cid})
+        [CustomerStripeCustomer =. cid]
   pure StripeEvent {stripeEventEvent = eventId, stripeEventError = Nothing}
 
 looperStripeOrErr ::
