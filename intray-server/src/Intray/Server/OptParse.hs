@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TypeApplications #-}
 
@@ -128,9 +127,7 @@ getConfiguration Flags {..} Environment {..} = do
   YamlParse.readConfigFile cp
 
 getDefaultConfigFile :: IO (Path Abs File)
-getDefaultConfigFile = do
-  configDir <- getXdgDir XdgConfig (Just [reldir|intray|])
-  resolveFile configDir "config.yaml"
+getDefaultConfigFile = resolveFile' "config.yaml"
 
 getEnvironment :: IO Environment
 getEnvironment = Env.parse id environmentParser

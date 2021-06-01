@@ -5,13 +5,10 @@ module Intray.Web.Server
   )
 where
 
-import Control.Concurrent.Async (concurrently_)
 import Control.Monad.Logger
 import qualified Data.Text as T
 import Database.Persist.Sqlite
 import Import
-import qualified Intray.Server as API
-import qualified Intray.Server.OptParse as API
 import Intray.Web.Server.Application ()
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.OptParse
@@ -23,7 +20,7 @@ intrayWebServer :: IO ()
 intrayWebServer = do
   (DispatchServe ss, Settings) <- getInstructions
   pPrint ss
-  concurrently_ (runIntrayWebServer ss) (runIntrayAPIServer ss)
+  runIntrayWebServer ss
 
 runIntrayWebServer :: ServeSettings -> IO ()
 runIntrayWebServer ServeSettings {..} =
@@ -45,8 +42,3 @@ runIntrayWebServer ServeSettings {..} =
           liftIO $ do
             runSqlPool (runMigration migrateLoginCache) pool
             warp serveSetPort app
-
-runIntrayAPIServer :: ServeSettings -> IO ()
-runIntrayAPIServer ss = do
-  let apiServeSets = serveSetAPISettings ss
-  API.runIntrayServer apiServeSets

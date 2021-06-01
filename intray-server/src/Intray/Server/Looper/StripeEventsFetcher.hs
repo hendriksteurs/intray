@@ -61,7 +61,7 @@ handleEvent Stripe.Event {..} =
                 Stripe.SessionSubscription eCus _ ->
                   case sessionClientReferenceId of
                     Just crid ->
-                      case parseUUID (Stripe.getClientReferenceId crid) of
+                      case parseUUIDText (Stripe.getClientReferenceId crid) of
                         Just au ->
                           completePayment eventId au $
                             case eCus of

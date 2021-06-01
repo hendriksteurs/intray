@@ -6,9 +6,8 @@ set -x
 export PATH="$PATH:$(stack path --local-install-root)/bin"
 export DEVELOPMENT=True
 
-stack build :intray-web-server \
+stack build :intray-server :intray-web-server \
   --file-watch --watch-all \
-  --fast \
   --ghc-options='-freverse-errors -O0' \
   --fast \
   --no-nix-pure \

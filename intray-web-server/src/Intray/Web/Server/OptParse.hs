@@ -14,7 +14,6 @@ where
 import qualified Data.Text as T
 import qualified Env
 import Import
-import qualified Intray.Server.OptParse as API
 import Intray.Web.Server.OptParse.Types
 import Options.Applicative
 import qualified Options.Applicative.Help as OptParse
@@ -32,21 +31,11 @@ combineToInstructions :: Command -> Flags -> Environment -> Maybe Configuration 
 combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..} mConf = do
   let mc :: (Configuration -> Maybe a) -> Maybe a
       mc func = mConf >>= func
-  (API.DispatchServe apiSets, API.Settings) <-
-    API.combineToInstructions
-      (API.CommandServe serveFlagAPIFlags)
-      flagAPIFlags
-      envAPIEnvironment
-      (confAPIConfiguration <$> mConf)
   let port = fromMaybe 8000 $ serveFlagPort <|> envPort <|> mc confPort
-  when (API.serveSetPort apiSets == port) $
-    die $
-      unlines ["Web server port and API port must not be the same.", "They are both: " ++ show port]
   pure
     ( DispatchServe
         ServeSettings
-          { serveSetAPISettings = apiSets,
-            serveSetPort = port,
+          { serveSetPort = port,
             serveSetTracking = serveFlagTracking <|> envTracking <|> mc confTracking,
             serveSetVerification = serveFlagVerification <|> envVerification <|> mc confVerification,
             serveSetLoginCacheFile =
@@ -58,28 +47,29 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
 
 getConfiguration :: Flags -> Environment -> IO (Maybe Configuration)
 getConfiguration Flags {..} Environment {..} = do
-  configFile <-
-    case API.flagConfigFile flagAPIFlags <|> API.envConfigFile envAPIEnvironment of
-      Nothing -> API.getDefaultConfigFile
-      Just cf -> resolveFile' cf
+  configFile <- case flagConfigFile <|> envConfigFile of
+    Nothing -> getDefaultConfigFile
+    Just cf -> resolveFile' cf
   YamlParse.readConfigFile configFile
+
+getDefaultConfigFile :: IO (Path Abs File)
+getDefaultConfigFile = resolveFile' "config.yaml"
 
 getEnvironment :: IO Environment
 getEnvironment = Env.parse id environmentParser
 
 environmentParser :: Env.Parser Env.Error Environment
 environmentParser =
-  (\apiEnv (a, b, c, d) -> Environment apiEnv a b c d) <$> API.environmentParser
-    <*> Env.prefixed
-      "INTRAY_WEB_SERVER_"
-      ( (,,,) <$> Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the web server on")
-          <*> Env.var (fmap Just . Env.str) "ANALYTICS_TRACKING_ID" (mE "google analytics tracking id")
-          <*> Env.var
-            (fmap Just . Env.str)
-            "SEARCH_CONSOLE_VERIFICATION"
-            (mE "google search console verification id")
-          <*> Env.var (fmap Just . Env.str) "LOGIN_CACHE_FILE" (mE "google search console verification id")
-      )
+  Env.prefixed "INTRAY_WEB_SERVER_" $
+    Environment
+      <$> Env.var (fmap Just . Env.str) "CONFIG_FILE" (mE "Config file")
+      <*> Env.var (fmap Just . Env.auto) "PORT" (mE "port to run the web server on")
+      <*> Env.var (fmap Just . Env.str) "ANALYTICS_TRACKING_ID" (mE "google analytics tracking id")
+      <*> Env.var
+        (fmap Just . Env.str)
+        "SEARCH_CONSOLE_VERIFICATION"
+        (mE "google search console verification id")
+      <*> Env.var (fmap Just . Env.str) "LOGIN_CACHE_FILE" (mE "google search console verification id")
   where
     mE h = Env.def Nothing <> Env.keep <> Env.help h
 
@@ -116,8 +106,8 @@ parseCommandServe = info parser modifier
   where
     parser =
       CommandServe
-        <$> ( ServeFlags <$> API.parseServeFlags
-                <*> option
+        <$> ( ServeFlags
+                <$> option
                   (Just <$> auto)
                   (mconcat [long "web-port", metavar "PORT", value Nothing, help "the port to serve on"])
                 <*> option
@@ -151,4 +141,8 @@ parseCommandServe = info parser modifier
     modifier = fullDesc <> progDesc "Serve requests" <> YamlParse.confDesc @Configuration
 
 parseFlags :: Parser Flags
-parseFlags = Flags <$> API.parseFlags
+parseFlags =
+  Flags
+    <$> option
+      (Just <$> str)
+      (mconcat [long "config-file", value Nothing, metavar "FILEPATH", help "The config file"])

@@ -147,14 +147,6 @@ with final.haskell.lib;
           final.lib.composeExtensions (old.overrides or (_: _: { })) (
             self: super:
               let
-                typedUuidRepo =
-                  final.fetchFromGitHub {
-                    owner = "NorfairKing";
-                    repo = "typed-uuid";
-                    rev = "dbc8fd4b56b78b1f9cf00bc2890d43dc19b97c5c";
-                    sha256 =
-                      "sha256:12b8na513xq5smlgwvqaqpplj8blfl452vdq0j2kv40qaw6y9qp7";
-                  };
                 stripeHaskellRepo =
                   final.fetchFromGitHub {
                     owner = "NorfairKing";
@@ -170,13 +162,6 @@ with final.haskell.lib;
                     rev = "22c0a92c1d62f1b8d432003844ef0636a9131b08";
                     sha256 =
                       "sha256:1mz1fb421wccx7mbpn9qaj214w4sl4qali5rclx9fqp685jkfj05";
-                  };
-                looperRepo =
-                  final.fetchFromGitHub {
-                    owner = "NorfairKing";
-                    repo = "looper";
-                    rev = "fd6d31b0ccc1a850aa1435b2fc21dcb9807eacb3";
-                    sha256 = "sha256:0p10jc3ila5yhhzipzklwcqx768qw66yr71xh9qa7dkjn18d6v04";
                   };
                 servantAuthRepo =
                   final.fetchFromGitHub {
@@ -196,7 +181,7 @@ with final.haskell.lib;
                   };
                 typedUuidPkg =
                   name:
-                  self.callCabal2nix name (typedUuidRepo + "/${name}") { };
+                  self.callCabal2nix name (sources.typed-uuid + "/${name}") { };
                 stripeHaskellPkg =
                   name:
                   dontCheck (
@@ -224,7 +209,7 @@ with final.haskell.lib;
               {
                 yesod-static-remote = dontCheck (self.callCabal2nix "yesod-static-remote" yesodStaticRemoteRepo { });
                 servant-auth-server = doJailbreak (super.servant-auth-server);
-                looper = self.callCabal2nix "looper" looperRepo { };
+                looper = self.callCabal2nix "looper" (sources.looper + "/looper") { };
                 envparse = self.callHackage "envparse" "0.4.1" { };
               } // final.lib.genAttrs [
                 "stripe-core"

@@ -23,6 +23,18 @@
         "url": "https://github.com/nix-community/home-manager/archive/49706878e1580d796cc99b63574310405935113f.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "looper": {
+        "branch": "master",
+        "description": "Run actions periodically",
+        "homepage": "http://hackage.haskell.org/package/looper",
+        "owner": "NorfairKing",
+        "repo": "looper",
+        "rev": "8946c243a718bd44089f50d4c0fb624fd1f7db2a",
+        "sha256": "0jgc7hr5r2h3q2lah9fy0j8g1xcggmy6m5s4gj0wv7i3cfrj4v68",
+        "type": "tarball",
+        "url": "https://github.com/NorfairKing/looper/archive/8946c243a718bd44089f50d4c0fb624fd1f7db2a.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "mergeless": {
         "branch": "master",
         "description": "Merge-less syncing of arbitrary immutable items",
@@ -41,10 +53,10 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "94080ae8286024820c570a2a24ed7c36d7ad04a9",
-        "sha256": "0wlk52zwlrq727x3z1vg9d9qq4zw62ab5jzg4068iqb6hyb0cr0w",
+        "rev": "1819632b5823e0527da28ad82fecd6be5136c1e9",
+        "sha256": "08jz17756qchq0zrqmapcm33nr4ms9f630mycc06i6zkfwl5yh5i",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/94080ae8286024820c570a2a24ed7c36d7ad04a9.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/1819632b5823e0527da28ad82fecd6be5136c1e9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
@@ -105,6 +117,18 @@
         "sha256": "0i0il3j32zqj56byngg6jrlnbkmgmq6piw7k4di7j040j5knp2jh",
         "type": "tarball",
         "url": "https://github.com/NorfairKing/sydtest/archive/aafd8e0c2e97143af950e2f9742c5e1bd167c77b.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "typed-uuid": {
+        "branch": "master",
+        "description": "UUID with a phantom type",
+        "homepage": null,
+        "owner": "NorfairKing",
+        "repo": "typed-uuid",
+        "rev": "ec82b82a545d06094ac355bd65a03f25f86c0a48",
+        "sha256": "034g3ciyd7khn98n8ii1gpjynkl15in5i4b7d4i2sy6075hi4987",
+        "type": "tarball",
+        "url": "https://github.com/NorfairKing/typed-uuid/archive/ec82b82a545d06094ac355bd65a03f25f86c0a48.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "validity": {

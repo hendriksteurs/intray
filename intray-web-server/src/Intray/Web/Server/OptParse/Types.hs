@@ -4,7 +4,6 @@ module Intray.Web.Server.OptParse.Types where
 
 import Data.Aeson
 import Import
-import qualified Intray.Server.OptParse.Types as API
 import YamlParse.Applicative
 
 type Arguments = (Command, Flags)
@@ -16,22 +15,18 @@ newtype Command
   deriving (Show, Eq)
 
 data ServeFlags = ServeFlags
-  { serveFlagAPIFlags :: !API.ServeFlags,
-    serveFlagPort :: !(Maybe Int),
+  { serveFlagPort :: !(Maybe Int),
     serveFlagTracking :: !(Maybe Text),
     serveFlagVerification :: !(Maybe Text),
     serveFlagLoginCacheFile :: !(Maybe FilePath)
   }
   deriving (Show, Eq)
 
-data Flags = Flags
-  { flagAPIFlags :: !API.Flags
-  }
+data Flags = Flags {flagConfigFile :: !(Maybe FilePath)}
   deriving (Show, Eq)
 
 data Configuration = Configuration
-  { confAPIConfiguration :: !API.Configuration,
-    confPort :: !(Maybe Int),
+  { confPort :: !(Maybe Int),
     confTracking :: !(Maybe Text),
     confVerification :: !(Maybe Text),
     confLoginCacheFile :: !(Maybe FilePath)
@@ -43,17 +38,15 @@ instance FromJSON Configuration where
 
 instance YamlSchema Configuration where
   yamlSchema =
-    (\apiConf (a, b, c, d) -> Configuration apiConf a b c d) <$> yamlSchema
-      <*> objectParser
-        "Configuration"
-        ( (,,,) <$> optionalField "web-port" "The port to serve web requests on"
-            <*> optionalField "tracking" "The google analytics tracking code"
-            <*> optionalField "verification" "The google search console verification code"
-            <*> optionalField "login-cache-file" "The file to store the login cache database in"
-        )
+    objectParser "Configuration" $
+      Configuration
+        <$> optionalField "web-port" "The port to serve web requests on"
+        <*> optionalField "tracking" "The google analytics tracking code"
+        <*> optionalField "verification" "The google search console verification code"
+        <*> optionalField "login-cache-file" "The file to store the login cache database in"
 
 data Environment = Environment
-  { envAPIEnvironment :: !API.Environment,
+  { envConfigFile :: !(Maybe FilePath),
     envPort :: !(Maybe Int),
     envTracking :: !(Maybe Text),
     envVerification :: !(Maybe Text),
@@ -66,8 +59,7 @@ newtype Dispatch
   deriving (Show)
 
 data ServeSettings = ServeSettings
-  { serveSetAPISettings :: !API.ServeSettings,
-    serveSetPort :: !Int,
+  { serveSetPort :: !Int,
     serveSetTracking :: !(Maybe Text),
     serveSetVerification :: !(Maybe Text),
     serveSetLoginCacheFile :: !FilePath

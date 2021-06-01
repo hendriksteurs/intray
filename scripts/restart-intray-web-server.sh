@@ -10,5 +10,8 @@ set -e
 
 export INTRAY_SERVER_LOG_LEVEL=LevelDebug
 
-intray-web-server serve \
+
+intray-server serve \
   --admin admin &
+
+intray-web-server serve &
