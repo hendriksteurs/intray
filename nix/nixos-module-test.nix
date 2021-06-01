@@ -19,9 +19,15 @@ pkgs.nixosTest (
         ];
         services.intray.production = {
           enable = true;
-          inherit api-port;
-          inherit web-port;
-          log-level = "LevelDebug";
+          api-server = {
+            enable = true;
+            port = api-port;
+            log-level = "LevelDebug";
+          };
+          web-server = {
+            enable = true;
+            port = web-port;
+          };
         };
       };
       client = {
