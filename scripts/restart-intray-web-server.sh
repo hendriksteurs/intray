@@ -3,11 +3,10 @@ set -x
 
 cd $HOME
 
-pkill -f 'intray-web-server serve' || true
+killall intray-server
+killall intray-web-server
 
 set -e
-
-env | sort
 
 export INTRAY_SERVER_LOG_LEVEL=LevelDebug
 
