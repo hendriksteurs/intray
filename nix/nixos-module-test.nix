@@ -3,7 +3,12 @@
 , intrayPackages ? pkgs.intrayPackages
 }:
 let
-  intray-production = import (./nixos-module.nix) { inherit sources; inherit pkgs; envname = "production"; };
+  intray-production = import (./nixos-module.nix) {
+    inherit sources;
+    inherit pkgs;
+    inherit intrayPackages;
+    envname = "production";
+  };
   home-manager = import (sources.home-manager + "/nixos/default.nix");
 
   api-port = 8001;
@@ -13,7 +18,7 @@ pkgs.nixosTest (
   { lib, pkgs, ... }: {
     name = "intray-module-test";
     nodes = {
-      server = {
+      apiserver = {
         imports = [
           intray-production
         ];
@@ -24,9 +29,18 @@ pkgs.nixosTest (
             port = api-port;
             log-level = "LevelDebug";
           };
+        };
+      };
+      webserver = {
+        imports = [
+          intray-production
+        ];
+        services.intray.production = {
+          enable = true;
           web-server = {
             enable = true;
             port = web-port;
+            api-url = "apiserver:${builtins.toString api-port}";
           };
         };
       };
@@ -47,7 +61,7 @@ pkgs.nixosTest (
               inherit intrayPackages;
               sync = {
                 enable = true;
-                url = "server:${builtins.toString api-port}";
+                url = "apiserver:${builtins.toString api-port}";
                 username = "testuser";
                 password = "testpassword";
               };
@@ -59,16 +73,19 @@ pkgs.nixosTest (
     testScript = ''
       from shlex import quote
 
-      server.start()
+      apiserver.start()
+      webserver.start()
       client.start()
-      server.wait_for_unit("multi-user.target")
+      apiserver.wait_for_unit("multi-user.target")
+      webserver.wait_for_unit("multi-user.target")
       client.wait_for_unit("multi-user.target")
 
-      server.wait_for_unit("intray-production.service")
-      server.wait_for_open_port(${builtins.toString api-port})
-      client.succeed("curl server:${builtins.toString api-port}")
-      server.wait_for_open_port(${builtins.toString web-port})
-      client.succeed("curl server:${builtins.toString web-port}")
+      apiserver.wait_for_unit("intray-api-server-production.service")
+      webserver.wait_for_unit("intray-web-server-production.service")
+      apiserver.wait_for_open_port(${builtins.toString api-port})
+      client.succeed("curl apiserver:${builtins.toString api-port}")
+      webserver.wait_for_open_port(${builtins.toString web-port})
+      client.succeed("curl webserver:${builtins.toString web-port}")
 
       client.wait_for_unit("home-manager-testuser.service")
 

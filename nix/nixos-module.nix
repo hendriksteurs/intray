@@ -1,5 +1,6 @@
 { sources ? import ./sources.nix
 , pkgs ? import ./pkgs.nix { inherit sources; }
+, intrayPackages ? pkgs.intrayPackages
 , envname
 }:
 { lib, pkgs, config, ... }:
@@ -7,7 +8,10 @@ with lib;
 
 let
   cfg = config.services.intray."${envname}";
-  concatAttrs = attrList: fold (x: y: x // y) { } attrList;
+
+  mergeListRecursively = pkgs.callPackage ./merge-lists-recursively.nix { };
+
+  toYamlFile = pkgs.callPackage ./to-yaml.nix { };
 in
 {
   options.services.intray."${envname}" =
@@ -18,6 +22,10 @@ in
         type = types.nullOr (types.submodule {
           options = {
             enable = mkEnableOption "Intray API Server";
+            config = mkOption {
+              default = { };
+              description = "The contents of the config file, as an attribute set. This will be translated to Yaml and put in the right place along with the rest of the options defined in this submodule.";
+            };
             hosts = mkOption {
               type = types.listOf types.str;
               example = [ "api.intray.cs-syd.eu" ];
@@ -26,13 +34,12 @@ in
             };
             port = mkOption {
               type = types.int;
-              default = 8001;
               example = 8001;
               description = "The port to serve API requests on";
             };
             log-level = mkOption {
-              type = types.str;
-              default = "LevelWarn";
+              type = types.nullOr types.str;
+              default = null;
               example = "LevelInfo";
               description = "The log level";
             };
@@ -81,6 +88,10 @@ in
         type = types.nullOr (types.submodule {
           options = {
             enable = mkEnableOption "Intray Web Server";
+            config = mkOption {
+              default = { };
+              description = "The contents of the config file, as an attribute set. This will be translated to Yaml and put in the right place along with the rest of the options defined in this submodule.";
+            };
             hosts = mkOption {
               type = types.listOf types.str;
               example = [ "intray.cs-syd.eu" ];
@@ -92,6 +103,17 @@ in
               default = 8000;
               example = 8000;
               description = "The port to serve web requests on";
+            };
+            log-level = mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              example = "LevelInfo";
+              description = "The log level";
+            };
+            api-url = mkOption {
+              type = types.str;
+              example = "http://api.intray.eu";
+              description = "The url to the api server to call";
             };
             tracking-id = mkOption {
               type = types.nullOr types.str;
@@ -111,42 +133,31 @@ in
     };
   config =
     let
-      intray-service =
-        let
-          workingDir = "/www/intray/${envname}/data/";
-          intray-pkgs = pkgs.intrayPackages;
-          configFile =
-            let
-              config =
-                optionalAttrs (cfg.api-server.hosts != [ ])
-                  {
-                    api-host = head cfg.api-server.hosts;
-                  } // {
-                  api-port = cfg.api-server.port;
-                  admins = cfg.api-server.admins;
-                  freeloaders = cfg.api-server.freeloaders;
-                  log-level = cfg.api-server.log-level;
-                  monetisation =
-                    optionalAttrs (!builtins.isNull cfg.api-server.monetisation) {
-                      stripe-plan = cfg.monetisation.api-server.stripe-plan;
-                      stripe-secret-key = cfg.monetisation.api-server.stripe-secret-key;
-                      stripe-publishable-key = cfg.monetisation.api-server.stripe-publishable-key;
-                    };
-                  web-port = cfg.web-server.port;
-                  tracking = cfg.web-server.tracking-id;
-                  verification = cfg.web-server.verification-tag;
-                };
-            in
-            pkgs.writeText "intray-config" (builtins.toJSON config);
-        in
-        {
-          description = "Intray ${envname} Service";
+      workingDir = "/www/intray/${envname}/data/";
+      attrOrNull = name: value: optionalAttrs (!builtins.isNull value) { "${name}" = value; };
+      attrOrNullHead = name: value: optionalAttrs (!builtins.isNull value && value != [ ]) { "${name}" = builtins.head value; };
+      api-server-config = with cfg.api-server; mergeListRecursively [
+        (attrOrNullHead "host" hosts)
+        (attrOrNull "port" port)
+        (attrOrNull "admins" admins)
+        (attrOrNull "freeloaders" freeloaders)
+        (attrOrNull "log-level" log-level)
+        (attrOrNull "monetisation" monetisation)
+        cfg.api-server.config
+      ];
+      api-server-config-file = toYamlFile "intray-api-server-config" api-server-config;
+      api-server-service = optionalAttrs (cfg.api-server.enable or false) {
+        "intray-api-server-${envname}" = {
+          description = "Intray ${envname} api server service";
           wantedBy = [ "multi-user.target" ];
+          environment = {
+            "INTRAY_API_SERVER_CONFIG_FILE" = "${api-server-config-file}";
+          };
           script =
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${intray-pkgs.intray-web-server}/bin/intray-web-server serve  --config-file ${configFile}
+              ${intrayPackages.intray-server}/bin/intray-server serve
             '';
           serviceConfig =
             {
@@ -159,35 +170,75 @@ in
               # ensure Restart=always is always honoured
               StartLimitIntervalSec = 0;
             };
-
         };
-      api-host = optionalAttrs (cfg.api-server.hosts != [ ]) {
-        "${head (cfg.api-server.api-hosts)}" =
+      };
+      api-host = optionalAttrs (cfg.api-server.enable or false && cfg.api-server.hosts != [ ]) {
+        "${builtins.head (cfg.api-server.hosts)}" =
           {
             enableACME = true;
             forceSSL = true;
-            locations."/".proxyPass =
-              "http://localhost:${builtins.toString (cfg.api-server.port)}";
+            locations."/".proxyPass = "http://localhost:${builtins.toString (cfg.api-server.port)}";
             serverAliases = tail cfg.api-server.hosts;
           };
       };
-      web-host = optionalAttrs (cfg.web-server.hosts != [ ]) {
-        "${head (cfg.web-server.web-hosts)}" =
+      web-server-config = with cfg.web-server; mergeListRecursively [
+        (attrOrNullHead "host" hosts)
+        (attrOrNull "port" port)
+        (attrOrNull "log-level" log-level)
+        (attrOrNull "api-url" api-url)
+        (attrOrNull "tracking" tracking-id)
+        (attrOrNull "verification" verification-tag)
+        cfg.web-server.config
+      ];
+      web-server-config-file = toYamlFile "intray-web-server-config" web-server-config;
+      web-server-service = optionalAttrs (cfg.web-server.enable or false) {
+        "intray-web-server-${envname}" = {
+          description = "Intray ${envname} web server service";
+          wantedBy = [ "multi-user.target" ];
+          environment = {
+            "INTRAY_WEB_SERVER_CONFIG_FILE" = "${web-server-config-file}";
+          };
+          script =
+            ''
+              mkdir -p "${workingDir}"
+              cd "${workingDir}"
+              ${intrayPackages.intray-web-server}/bin/intray-web-server serve
+            '';
+          serviceConfig =
+            {
+              Restart = "always";
+              RestartSec = 1;
+              Nice = 15;
+            };
+          unitConfig =
+            {
+              # ensure Restart=always is always honoured
+              StartLimitIntervalSec = 0;
+            };
+        };
+      };
+      web-host = optionalAttrs (cfg.web-server.enable or false && cfg.web-server.hosts != [ ]) {
+        "${builtins.head (cfg.web-server.hosts)}" =
           {
             enableACME = true;
             forceSSL = true;
-            locations."/".proxyPass =
-              "http://localhost:${builtins.toString (cfg.api-server.port)}";
+            locations."/".proxyPass = "http://localhost:${builtins.toString (cfg.web-server.port)}";
             serverAliases = tail cfg.web-server.hosts;
           };
       };
     in
     mkIf cfg.enable {
-      systemd.services =
-        {
-          "intray-${envname}" = intray-service;
-        };
-      networking.firewall.allowedTCPPorts = [ cfg.web-server.port cfg.api-server.port ];
-      services.nginx.virtualHosts = api-host // web-host;
+      systemd.services = mergeListRecursively [
+        api-server-service
+        web-server-service
+      ];
+      networking.firewall.allowedTCPPorts = builtins.concatLists [
+        (optional (cfg.api-server.enable or false) cfg.api-server.port)
+        (optional (cfg.web-server.enable or false) cfg.web-server.port)
+      ];
+      services.nginx.virtualHosts = mergeListRecursively [
+        api-host
+        web-host
+      ];
     };
 }
