@@ -167,6 +167,9 @@ getNewAccountR = do
         setDescription "Intray Registration: This is where you sign up for an intray account."
         $(widgetFile "auth/register")
 
+changePasswordR :: AuthRoute
+changePasswordR = PluginR intrayAuthPluginName ["change-password"]
+
 data NewAccount = NewAccount
   { newAccountUsername :: Username,
     newAccountPassword1 :: Text,
