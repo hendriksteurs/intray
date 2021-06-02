@@ -38,7 +38,7 @@ in
     {
       systemd.services =
         let
-          intrayPkgs = import ./pkgs.nix;
+          intrayPkgs = import ./pkgs.nix { };
           notificationScript =
             intrayPkgs.intrayNotification {
               inherit (cfg) userName accessKey intrayUrl;
