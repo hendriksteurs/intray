@@ -12,7 +12,7 @@ import Import
 import Intray.Web.Server.Application ()
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.OptParse
-import qualified Network.HTTP.Client as Http
+import qualified Network.HTTP.Client.TLS as Http
 import Yesod
 
 intrayWebServer :: IO ()
@@ -27,7 +27,7 @@ runIntrayWebServer ServeSettings {..} =
     filterLogger (\_ ll -> ll >= serveSetLogLevel) $
       withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack serveSetLoginCacheFile) 1 $
         \pool -> do
-          man <- liftIO $ Http.newManager Http.defaultManagerSettings
+          man <- liftIO Http.newTlsManager
           let app =
                 App
                   { appHttpManager = man,

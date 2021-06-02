@@ -20,6 +20,7 @@ library:
   - data-default
   - envparse
   - http-client
+  - http-client-tls
   - http-media
   - http-types
   - intray-api
