@@ -26,6 +26,3 @@ showAmountForPricing cur (Amount i) =
         USD -> hundred
         CHF -> hundred
         _ -> showAmount cur i
-
-quotPrice :: Amount -> Int -> Amount
-quotPrice (Amount i) d = Amount $ i `quot` d
