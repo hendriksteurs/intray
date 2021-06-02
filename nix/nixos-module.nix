@@ -151,7 +151,7 @@ in
           description = "Intray ${envname} api server service";
           wantedBy = [ "multi-user.target" ];
           environment = {
-            "INTRAY_API_SERVER_CONFIG_FILE" = "${api-server-config-file}";
+            "INTRAY_SERVER_CONFIG_FILE" = "${api-server-config-file}";
           };
           script =
             ''

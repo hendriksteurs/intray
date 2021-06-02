@@ -11,8 +11,8 @@ let
   };
   home-manager = import (sources.home-manager + "/nixos/default.nix");
 
-  api-port = 8001;
-  web-port = 8002;
+  api-port = 8081;
+  web-port = 8080;
 in
 pkgs.nixosTest (
   { lib, pkgs, ... }: {
