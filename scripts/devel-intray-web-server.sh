@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-set -e
-set -x
+set -ex
+
 
 export PATH="$PATH:$(stack path --local-install-root)/bin"
 export DEVELOPMENT=True

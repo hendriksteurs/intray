@@ -72,7 +72,7 @@ pricingStripeForm AccountInfo {..} p =
           <p>
             <ul>
               <li>
-                #{pricingShowAmountPerMonth p} per month, billed anually
+                #{pricingShowAmountPerYear p} per year
               <li>
                 Unlimited items
               <li>
