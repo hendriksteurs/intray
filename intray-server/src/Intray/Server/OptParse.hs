@@ -192,10 +192,10 @@ parseServeFlags =
   ServeFlags
     <$> option
       (Just <$> str)
-      (mconcat [long "api-host", value Nothing, metavar "HOST", help "the host to serve on"])
+      (mconcat [long "host", value Nothing, metavar "HOST", help "the host to serve on"])
     <*> option
       (Just <$> auto)
-      (mconcat [long "api-port", value Nothing, metavar "PORT", help "the port to serve on"])
+      (mconcat [long "port", value Nothing, metavar "PORT", help "the port to serve on"])
     <*> option
       (Just . T.pack <$> str)
       ( mconcat

@@ -60,16 +60,14 @@ instance FromJSON Configuration where
 instance YamlSchema Configuration where
   yamlSchema =
     objectParser "Configuration" $
-      Configuration <$> optionalField "api-host" "The host to serve the api-server on"
-        <*> optionalField "api-port" "The port to serve the api-server on"
+      Configuration <$> optionalField "host" "The host to serve the api-server on"
+        <*> optionalField "port" "The port to serve the api-server on"
         <*> optionalField "database" "The database file"
         <*> optionalField "admins" "The list of usernames that will be considered administrators"
         <*> optionalField "freeloaders" "The list of usernames that won't have to pay"
         <*> optionalFieldWith "log-level" "The minimal log level for log messages" viaRead
-        <*> optionalField "log-level" "The file to store the JWT signing key in"
-        <*> optionalField
-          "monetisation"
-          "Monetisation configuration. If this is not configured then the server is run for free."
+        <*> optionalField "signing-key-file" "The file to store the JWT signing key in"
+        <*> optionalField "monetisation" "Monetisation configuration. If this is not configured then the server is run for free."
 
 data MonetisationConfiguration = MonetisationConfiguration
   { monetisationConfStripePlan :: !(Maybe String),
