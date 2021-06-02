@@ -32,7 +32,7 @@ accountInfoSegment :: Maybe AccountInfo -> Maybe Pricing -> Handler Widget
 accountInfoSegment Nothing _ =
   pure
     [whamlet|
-        <div .ui .negative .message>
+        <div .is-negative .message>
             You are not authorised to view account info.
             |]
 accountInfoSegment (Just ai@AccountInfo {..}) mp = do
@@ -46,7 +46,6 @@ accountInfoSegment (Just ai@AccountInfo {..}) mp = do
   pure $
     mconcat
       [ [whamlet|
-        <div .ui .segment>
           <h3 .has-text-weight-bold>
             Info
           <p> Username: #{usernameText accountInfoUsername}
@@ -66,8 +65,7 @@ pricingStripeForm AccountInfo {..} p =
       clientReferenceId = uuidText accountInfoUUID
       sf = $(widgetFile "stripe-form")
    in [whamlet|
-        <div .ui .segment>
-          <h2> Subscribe
+          <h3> Subscribe
 
           <p>
             <ul>
@@ -89,13 +87,15 @@ adminSegment Nothing = mempty
 adminSegment (Just AccountInfo {..})
   | accountInfoAdmin =
     [whamlet|
-            <div .ui .segment>
+          <div .columns .is-centered>
+            <div .column .is-half>
+              <div .content>
                 <h3>
                   Admin
                 <p>
                   This account is an administrator.
                 <p>
-                  <a .ui .positive .button href=@{AdminR}>
+                  <a .is-success .button href=@{AdminR}>
                     The Admin Panel|]
   | otherwise = mempty
 

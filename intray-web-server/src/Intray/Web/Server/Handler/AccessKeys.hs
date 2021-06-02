@@ -32,7 +32,7 @@ accessKeysWidget :: Maybe [AccessKeyInfo] -> Handler Widget
 accessKeysWidget Nothing =
   pure
     [whamlet|
-          <div .ui .negative .message>
+          <div .is-negative .message>
               You are not authorised to view access keys.|]
 accessKeysWidget (Just accessKeys) = do
   accessKeysWidgets <- mapM accessKeyWidget accessKeys

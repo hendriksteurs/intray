@@ -1,28 +1,28 @@
 <section .section>
   <div .columns .is-centered>
-    <div .column .is-half>
-      <p .title .is-size-2 .has-text-centered>
+    <div .column .is-half .content>
+      <h2>
         Account
-        ^{accountInfoWidget}
+      ^{accountInfoWidget}
 
   <div .columns .is-centered>
-    <div .column .is-half>
-      <p .has-text-weight-bold>
+    <div .column .is-half .content>
+      <h3>
         Roadmap
       <p>
         You can vote on the feature roadmap:
-      <a .button .my-1 .is-primary href="https://forms.gle/yWyDjRsiup6ETCn18">
+      <a .button .is-primary href="https://forms.gle/yWyDjRsiup6ETCn18">
         Vote on the roadmap
 
   <div .columns .is-centered>
-    <div .column .is-half>
-      <p .has-text-weight-bold>
+    <div .column .is-half .content>
+      <h3>
         Danger zone
       <p>
-        <a .button .my-1 href=@{AuthR changePasswordTargetR}>
+        <a .button href=@{AuthR changePasswordTargetR}>
           Change password
       <p>
-        <a .button .my-1 href=@{AccessKeysR}>
+        <a .button href=@{AccessKeysR}>
           Manage Access Keys
       <p>
         <form
@@ -35,4 +35,4 @@
             onclick="return confirm('Are you sure you want to delete your account? This cannot be undone.');">
             Delete account
 
-^{adminSegment mai}
+  ^{adminSegment mai}
