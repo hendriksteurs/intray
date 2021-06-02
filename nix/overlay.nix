@@ -1,6 +1,9 @@
 final: previous:
 with final.haskell.lib;
 
+let
+  sources = import ./sources.nix;
+in
 {
   intrayPackages =
     let
@@ -123,6 +126,8 @@ with final.haskell.lib;
                   ).seocheck;
               in
               ''
+                export INTRAY_WEB_SERVER_API_URL=http://localhost:8001 # dummy
+                ${final.intrayPackages.intray-server}/bin/intray-server serve &
                 $out/bin/intray-web-server serve &
                 sleep 0.5
                 ${linkcheck}/bin/linkcheck http://localhost:8000

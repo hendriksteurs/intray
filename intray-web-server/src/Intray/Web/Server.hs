@@ -13,7 +13,6 @@ import Intray.Web.Server.Application ()
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.OptParse
 import qualified Network.HTTP.Client as Http
-import Servant.Client (parseBaseUrl)
 import Yesod
 
 intrayWebServer :: IO ()
@@ -25,18 +24,17 @@ intrayWebServer = do
 runIntrayWebServer :: ServeSettings -> IO ()
 runIntrayWebServer ServeSettings {..} =
   runStderrLoggingT $
-    filterLogger (\_ ll -> ll >= API.serveSetLogLevel serveSetAPISettings) $
+    filterLogger (\_ ll -> ll >= serveSetLogLevel) $
       withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack serveSetLoginCacheFile) 1 $
         \pool -> do
           man <- liftIO $ Http.newManager Http.defaultManagerSettings
-          burl <- parseBaseUrl $ "http://127.0.0.1:" ++ show (API.serveSetPort serveSetAPISettings)
           let app =
                 App
                   { appHttpManager = man,
                     appStatic = myStatic,
                     appTracking = serveSetTracking,
                     appVerification = serveSetVerification,
-                    appAPIBaseUrl = burl,
+                    appAPIBaseUrl = serveSetAPIBaseUrl,
                     appConnectionPool = pool
                   }
           liftIO $ do
