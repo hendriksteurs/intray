@@ -30,4 +30,4 @@ servePostChangePassphrase AuthCookie {..} ChangePassphrase {..} = do
             Just hp -> do
               runDb $ update uid [UserHashedPassword =. hp]
               pure NoContent
-        else throwError $ err403 {errBody = "Old password does not match."}
+        else throwError $ err401 {errBody = "Old password does not match."}

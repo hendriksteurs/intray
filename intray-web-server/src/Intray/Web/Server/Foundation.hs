@@ -167,9 +167,6 @@ getNewAccountR = do
         setDescription "Intray Registration: This is where you sign up for an intray account."
         $(widgetFile "auth/register")
 
-changePasswordR :: AuthRoute
-changePasswordR = PluginR intrayAuthPluginName ["change-password"]
-
 data NewAccount = NewAccount
   { newAccountUsername :: Username,
     newAccountPassword1 :: Text,
@@ -269,8 +266,10 @@ postChangePasswordR = do
                 { changePassphraseOld = changePasswordOldPassword,
                   changePassphraseNew = changePasswordNewPassword1
                 }
-        NoContent <- runClientOrErr $ clientPostChangePassphrase t cpp
-        redirect AccountR
+        mRes <- runClientOrDisallow $ clientPostChangePassphrase t cpp
+        case mRes of
+          Nothing -> invalidArgs ["Old password is not correct"]
+          Just NoContent -> redirect AccountR
 
 instance RenderMessage App FormMessage where
   renderMessage _ _ = defaultFormMessage
