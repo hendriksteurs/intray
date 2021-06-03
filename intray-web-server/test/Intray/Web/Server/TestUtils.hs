@@ -33,8 +33,8 @@ import Yesod.Auth
 intrayWebServerSpec :: YesodSpec App -> Spec
 intrayWebServerSpec = API.withIntrayServer . yesodSpecWithSiteSetupFunc' webServerSetupFunc
 
-webServerSetupFunc :: Http.Manager -> SetupFunc ClientEnv App
-webServerSetupFunc man = wrapSetupFunc $ \(ClientEnv _ burl _) -> do
+webServerSetupFunc :: Http.Manager -> ClientEnv -> SetupFunc App
+webServerSetupFunc man (ClientEnv _ burl _) = do
   pool <- connectionPoolSetupFunc migrateLoginCache
   pure $
     App

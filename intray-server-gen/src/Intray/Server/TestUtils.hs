@@ -60,19 +60,19 @@ withIntrayServer specFunc = do
 withPaidIntrayServer :: Int -> TestDef '[HTTP.Manager] ClientEnv -> Spec
 withPaidIntrayServer maxFree specFunc =
   managerSpec $
-    setupAroundWith' (paidIntrayTestClientEnvSetupFunc maxFree) $
+    setupAroundWith' (\man () -> paidIntrayTestClientEnvSetupFunc maxFree man) $
       modifyMaxSuccess (`div` 20) specFunc
 
 withFreeIntrayServer :: TestDef '[HTTP.Manager] ClientEnv -> Spec
 withFreeIntrayServer specFunc =
   managerSpec $
-    setupAroundWith' (intrayTestClientEnvSetupFunc Nothing) $
+    setupAroundWith' (\man () -> intrayTestClientEnvSetupFunc Nothing man) $
       modifyMaxSuccess (`div` 20) specFunc
 
-intrayTestConnectionSetupFunc :: SetupFunc () ConnectionPool
+intrayTestConnectionSetupFunc :: SetupFunc ConnectionPool
 intrayTestConnectionSetupFunc = connectionPoolSetupFunc migrateAll
 
-paidIntrayTestClientEnvSetupFunc :: Int -> HTTP.Manager -> SetupFunc () ClientEnv
+paidIntrayTestClientEnvSetupFunc :: Int -> HTTP.Manager -> SetupFunc ClientEnv
 paidIntrayTestClientEnvSetupFunc maxFree man = do
   now <- liftIO getCurrentTime
   let planName = PlanId "dummyPlan"
@@ -102,11 +102,11 @@ paidIntrayTestClientEnvSetupFunc maxFree man = do
   let monetisationEnvMaxItemsFree = maxFree
   intrayTestClientEnvSetupFunc (Just MonetisationEnv {..}) man
 
-intrayTestClientEnvSetupFunc :: Maybe MonetisationEnv -> HTTP.Manager -> SetupFunc () ClientEnv
-intrayTestClientEnvSetupFunc menv man = intrayTestConnectionSetupFunc `connectSetupFunc` intrayTestClientEnvSetupFunc' menv man
+intrayTestClientEnvSetupFunc :: Maybe MonetisationEnv -> HTTP.Manager -> SetupFunc ClientEnv
+intrayTestClientEnvSetupFunc menv man = intrayTestConnectionSetupFunc >>= intrayTestClientEnvSetupFunc' menv man
 
-intrayTestClientEnvSetupFunc' :: Maybe MonetisationEnv -> HTTP.Manager -> SetupFunc ConnectionPool ClientEnv
-intrayTestClientEnvSetupFunc' menv man = wrapSetupFunc $ \pool -> do
+intrayTestClientEnvSetupFunc' :: Maybe MonetisationEnv -> HTTP.Manager -> ConnectionPool -> SetupFunc ClientEnv
+intrayTestClientEnvSetupFunc' menv man pool = do
   signingKey <- liftIO Auth.generateKey
   let jwtCfg = defaultJWTSettings signingKey
   let cookieCfg = defaultCookieSettings
@@ -121,7 +121,7 @@ intrayTestClientEnvSetupFunc' menv man = wrapSetupFunc $ \pool -> do
             envMonetisation = menv
           }
   let application = serveWithContext intrayAPI (intrayAppContext intrayEnv) (makeIntrayServer intrayEnv)
-  p <- unwrapSetupFunc applicationSetupFunc application
+  p <- applicationSetupFunc application
   pure $ mkClientEnv man (BaseUrl Http "127.0.0.1" (fromIntegral p) "")
 
 runClient :: ClientEnv -> ClientM a -> IO (Either ClientError a)
