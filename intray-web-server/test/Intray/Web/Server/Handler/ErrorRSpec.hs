@@ -2,7 +2,6 @@
 
 module Intray.Web.Server.Handler.ErrorRSpec where
 
-import Intray.Data
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.TestUtils
 import Servant.Client
@@ -33,14 +32,3 @@ spec = do
                 statusIs 200
                 bodyContains "The Intray API is down."
                 bodyContains "example"
-          ydescribe "APIDocsR" $
-            yit "redirects to ErrorAPIDownR" $
-              do
-                get APIDocsR
-                statusIs 303
-                loc <- getLocation
-                case loc of
-                  Right (ErrorAPIDownR _) -> do
-                    void followRedirect
-                    statusIs 200
-                  _ -> liftIO $ expectationFailure $ unwords ["Should have redirected:", show loc]

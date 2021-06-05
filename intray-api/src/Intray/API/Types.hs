@@ -6,10 +6,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module Intray.API.Types
   ( ProtectAPI,
+    AccessKeyEnv (..),
     AuthCookie (..),
     Permission (..),
     userPermissions,
@@ -31,20 +33,40 @@ module Intray.API.Types
   )
 where
 
+import Control.Exception
 import Data.Aeson as JSON
 import Data.Hashable
 import Data.Set (Set)
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
 import Data.UUID.Typed
 import Import
 import Intray.Data
+import Network.Wai
 import Servant.Auth
 import Servant.Auth.Server
+import Servant.Auth.Server.Internal.Class
 import qualified Web.Stripe.Plan as Stripe
 
-type ProtectAPI = Auth '[JWT] AuthCookie
+type ProtectAPI = Auth '[JWT, IntrayAccessKey] AuthCookie
 
--- instance OneDoc IntrayAccessKey
+data IntrayAccessKey
+
+newtype AccessKeyEnv = AccessKeyEnv
+  { accessKeyEnvAuthenticate :: Username -> Text -> IO (AuthResult AuthCookie)
+  }
+
+instance IsAuth IntrayAccessKey AuthCookie where
+  type AuthArgs IntrayAccessKey = '[AccessKeyEnv]
+  runAuth _ _ = \AccessKeyEnv {..} -> AuthCheck $ \req ->
+    case (,) <$> lookup "Username" (requestHeaders req) <*> lookup "Access-Key" (requestHeaders req) of
+      Nothing -> pure Indefinite
+      Just (unbs, akbs) ->
+        case (,)
+          <$> (left displayException (TE.decodeUtf8' unbs) >>= parseUsernameWithError)
+          <*> left displayException (TE.decodeUtf8' akbs) of
+          Left _ -> pure Indefinite
+          Right (un, ak) -> accessKeyEnvAuthenticate un ak
 
 data AuthCookie = AuthCookie
   { authCookieUserUUID :: AccountUUID,

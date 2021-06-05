@@ -34,7 +34,7 @@ servePostLogin LoginForm {..} = do
                   else userPermissions
           setLoggedIn uid user perms
         else do
-          aks <- runDb $ selectList [] [Asc AccessKeyCreatedTimestamp]
+          aks <- runDb $ selectList [AccessKeyUser ==. userIdentifier user] [Asc AccessKeyCreatedTimestamp]
           let mli =
                 flip map aks $ \(Entity _ AccessKey {..}) -> do
                   submittedKey <- parseAccessKeySecretText loginFormPassword

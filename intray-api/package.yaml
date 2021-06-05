@@ -44,4 +44,5 @@ library:
   - validity-text >=0.2
   - validity-time >=0.1
   - validity-uuid >=0.0
+  - wai
 

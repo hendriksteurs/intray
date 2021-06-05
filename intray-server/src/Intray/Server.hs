@@ -97,6 +97,26 @@ makeIntrayServer cfg =
     (genericServerT intrayServer)
 
 intrayAppContext :: IntrayServerEnv -> Context IntrayContext
-intrayAppContext IntrayServerEnv {..} = envCookieSettings :. envJWTSettings :. EmptyContext
+intrayAppContext se@IntrayServerEnv {..} = envCookieSettings :. envJWTSettings :. accessKeyEnv se :. EmptyContext
 
-type IntrayContext = '[CookieSettings, JWTSettings]
+accessKeyEnv :: IntrayServerEnv -> AccessKeyEnv
+accessKeyEnv IntrayServerEnv {..} = AccessKeyEnv {accessKeyEnvAuthenticate = go}
+  where
+    go :: Username -> Text -> IO (AuthResult AuthCookie)
+    go un ak = flip runSqlPool envConnectionPool $ do
+      mUser <- getBy $ UniqueUsername un
+      case mUser of
+        Nothing -> pure NoSuchUser
+        Just (Entity _ user) -> do
+          aks <- selectList [AccessKeyUser ==. userIdentifier user] [Asc AccessKeyCreatedTimestamp]
+          let mli =
+                flip map aks $ \(Entity _ AccessKey {..}) -> do
+                  submittedKey <- parseAccessKeySecretText ak
+                  if validatePassword accessKeyHashedKey (accessKeySecretText submittedKey)
+                    then Just accessKeyPermissions
+                    else Nothing
+          pure $ case msum mli of
+            Nothing -> BadPassword
+            Just perms -> Authenticated $ AuthCookie {authCookieUserUUID = userIdentifier user, authCookiePermissions = perms}
+
+type IntrayContext = '[CookieSettings, JWTSettings, AccessKeyEnv]
