@@ -10,7 +10,6 @@ module Intray.API.Admin.Types where
 import Data.Aeson as JSON
 import Import
 import Intray.API.Types ()
-import Servant.Docs
 
 data AdminStats = AdminStats
   { adminStatsNbAccounts :: !Word,
@@ -38,8 +37,6 @@ instance ToJSON AdminStats where
         "subscribed-users" .= adminStatsSubscribedUsers
       ]
 
-instance ToSample AdminStats
-
 data ActiveUsers = ActiveUsers
   { activeUsersDaily :: !Word,
     activeUsersWeekly :: !Word,
@@ -63,5 +60,3 @@ instance ToJSON ActiveUsers where
         "monthly" .= activeUsersMonthly,
         "yearly" .= activeUsersYearly
       ]
-
-instance ToSample ActiveUsers

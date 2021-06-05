@@ -17,7 +17,6 @@ import Intray.API.Protected.Item.Types
 import Intray.API.Types
 import Servant.API
 import Servant.API.Generic
-import Servant.Auth.Docs ()
 
 type IntrayProtectedItemAPI = ToServantApi IntrayProtectedItemSite
 

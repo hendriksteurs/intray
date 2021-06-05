@@ -21,7 +21,6 @@ import Data.UUID.Typed
 import Import
 import Intray.API.Types ()
 import Intray.Data
-import Servant.Docs
 
 data AccessKeyInfo = AccessKeyInfo
   { accessKeyInfoUUID :: AccessKeyUUID,
@@ -47,8 +46,6 @@ instance ToJSON AccessKeyInfo where
         "permissions" .= accessKeyInfoPermissions
       ]
 
-instance ToSample AccessKeyInfo
-
 data AddAccessKey = AddAccessKey
   { addAccessKeyName :: Text,
     addAccessKeyPermissions :: Set Permission
@@ -60,8 +57,6 @@ instance Validity AddAccessKey
 instance FromJSON AddAccessKey
 
 instance ToJSON AddAccessKey
-
-instance ToSample AddAccessKey
 
 data AccessKeyCreated = AccessKeyCreated
   { accessKeyCreatedCreatedTimestamp :: UTCTime,
@@ -75,5 +70,3 @@ instance Validity AccessKeyCreated
 instance FromJSON AccessKeyCreated
 
 instance ToJSON AccessKeyCreated
-
-instance ToSample AccessKeyCreated

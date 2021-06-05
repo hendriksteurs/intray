@@ -16,7 +16,6 @@ module Intray.API.Types
     adminPermissions,
     Registration (..),
     LoginForm (..),
-    GetDocsResponse (..),
     HashedPassword,
     passwordHash,
     validatePassword,
@@ -35,25 +34,17 @@ where
 import Data.Aeson as JSON
 import Data.Hashable
 import Data.Set (Set)
-import qualified Data.Set as S
 import qualified Data.Text as T
-import Data.Time
-import qualified Data.UUID as UUID
 import Data.UUID.Typed
 import Import
 import Intray.Data
-import Servant.API
 import Servant.Auth
-import Servant.Auth.Docs ()
 import Servant.Auth.Server
-import Servant.Docs
-import Servant.HTML.Blaze
-import System.IO.Unsafe
-import Text.Blaze as HTML
-import Text.Blaze.Html as HTML
 import qualified Web.Stripe.Plan as Stripe
 
 type ProtectAPI = Auth '[JWT] AuthCookie
+
+-- instance OneDoc IntrayAccessKey
 
 data AuthCookie = AuthCookie
   { authCookieUserUUID :: AccountUUID,
@@ -73,30 +64,6 @@ instance FromJWT Permission
 
 instance ToJWT Permission
 
-instance ToCapture (Capture "uuid" ItemUUID) where
-  toCapture _ = DocCapture "uuid" "The UUID of the item"
-
-instance ToCapture (Capture "uuid" AccountUUID) where
-  toCapture _ = DocCapture "uuid" "The UUID of the account"
-
-instance ToCapture (Capture "uuid" AccessKeyUUID) where
-  toCapture _ = DocCapture "uuid" "The UUID of the access key"
-
-instance ToSample UTCTime where
-  toSamples Proxy = singleSample $ UTCTime (fromGregorian 2018 2 10) 42
-
-instance ToSample Text where
-  toSamples Proxy = singleSample "Example Text"
-
-instance ToSample (UUID a) where
-  toSamples Proxy = singleSample (UUID $ UUID.fromWords 0 0 0 0)
-
-instance ToSample Int where
-  toSamples Proxy = singleSample 42
-
-instance ToSample Word where
-  toSamples Proxy = singleSample 42
-
 data Registration = Registration
   { registrationUsername :: Username,
     registrationPassword :: Text
@@ -113,8 +80,6 @@ instance FromJSON Registration where
   parseJSON =
     withObject "Registration Text" $ \o -> Registration <$> o .: "name" <*> o .: "password"
 
-instance ToSample Registration
-
 data LoginForm = LoginForm
   { loginFormUsername :: Username,
     loginFormPassword :: Text
@@ -128,35 +93,6 @@ instance FromJSON LoginForm where
 
 instance ToJSON LoginForm where
   toJSON LoginForm {..} = object ["username" .= loginFormUsername, "password" .= loginFormPassword]
-
-instance ToSample LoginForm
-
-instance ToSample Username
-
-instance ToSample SetCookie where
-  toSamples Proxy = singleSample def
-
-newtype GetDocsResponse = GetDocsResponse
-  { unGetDocsResponse :: HTML.Html
-  }
-  deriving (Generic)
-
-instance MimeUnrender HTML GetDocsResponse where
-  mimeUnrender Proxy bs = Right $ GetDocsResponse $ HTML.unsafeLazyByteString bs
-
-instance ToSample GetDocsResponse where
-  toSamples Proxy = singleSample $ GetDocsResponse "Documentation (In HTML)."
-
-instance ToMarkup GetDocsResponse where
-  toMarkup (GetDocsResponse html) = toMarkup html
-
-instance ToSample Permission
-
-instance (Ord a, ToSample a) => ToSample (Set a) where
-  toSamples Proxy = second S.fromList <$> toSamples Proxy
-
-instance ToSample AccessKeySecret where
-  toSamples Proxy = singleSample $ unsafePerformIO generateRandomAccessKeySecret
 
 data Pricing = Pricing
   { pricingPlan :: !Stripe.PlanId,
@@ -189,18 +125,6 @@ instance ToJSON Pricing where
         "publishable-key" .= pricingStripePublishableKey,
         "max-items-free" .= pricingMaxItemsFree
       ]
-
-instance ToSample Pricing where
-  toSamples Proxy =
-    singleSample
-      Pricing
-        { pricingPrice = Stripe.Amount 100,
-          pricingTrialPeriod = Just 30,
-          pricingCurrency = Stripe.CHF,
-          pricingPlan = Stripe.PlanId "plan_FiN2Zsdv0DP0kh",
-          pricingStripePublishableKey = "pk_test_zV5qVP1IQTjE9QYulRZpfD8C00cqGOnQ91",
-          pricingMaxItemsFree = 5
-        }
 
 instance Validity Stripe.Currency where
   validate = trivialValidation

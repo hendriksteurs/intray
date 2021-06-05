@@ -18,7 +18,6 @@ import Intray.API.Protected.Account.Types
 import Intray.API.Types
 import Servant.API
 import Servant.API.Generic
-import Servant.Auth.Docs ()
 
 type IntrayAdminAPI = ToServantApi IntrayAdminSite
 

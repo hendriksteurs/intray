@@ -23,8 +23,6 @@ import Intray.API.Types
 import Intray.Data
 import Servant.API
 import Servant.API.Generic
-import Servant.Auth.Docs ()
-import Servant.HTML.Blaze
 
 intrayAPI :: Proxy IntrayAPI
 intrayAPI = Proxy
@@ -53,7 +51,6 @@ type IntrayPublicAPI = ToServantApi IntrayPublicSite
 data IntrayPublicSite route = IntrayPublicSite
   { postRegister :: !(route :- PostRegister),
     postLogin :: !(route :- PostLogin),
-    getDocs :: !(route :- GetDocs),
     getPricing :: !(route :- GetPricing)
   }
   deriving (Generic)
@@ -63,7 +60,5 @@ type PostRegister = "register" :> ReqBody '[JSON] Registration :> Post '[JSON] N
 
 type PostLogin =
   "login" :> ReqBody '[JSON] LoginForm :> PostNoContent '[JSON] (Headers '[Header "Set-Cookie" Text] NoContent)
-
-type GetDocs = Get '[HTML] GetDocsResponse
 
 type GetPricing = "pricing" :> Get '[JSON] (Maybe Pricing)

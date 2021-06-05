@@ -22,16 +22,12 @@ where
 import Data.Aeson as JSON
 import qualified Data.ByteString.Base64 as Base64
 import qualified Data.ByteString.Char8 as SB8
-import Data.Map (Map)
-import qualified Data.Map as M
-import Data.Mergeless
 import qualified Data.Text.Encoding as TE
 import Data.Time
 import Data.UUID.Typed
 import Import
 import Intray.API.Types ()
 import Intray.Data
-import Servant.Docs
 
 data TypedItem = TypedItem
   { itemType :: ItemType,
@@ -54,9 +50,6 @@ instance FromJSON TypedItem where
 
 instance ToJSON TypedItem where
   toJSON TypedItem {..} = object ["type" .= itemType, "data" .= SB8.unpack (Base64.encode itemData)]
-
-instance ToSample TypedItem where
-  toSamples Proxy = singleSample $ TypedItem TextItem "Hello World!"
 
 textTypedItem :: Text -> TypedItem
 textTypedItem t = TypedItem {itemType = TextItem, itemData = TE.encodeUtf8 t}
@@ -86,8 +79,6 @@ instance ToJSON a => ToJSON (AddedItem a) where
 instance FromJSON a => FromJSON (AddedItem a) where
   parseJSON = withObject "AddedItem" $ \o -> AddedItem <$> o .: "contents" <*> o .: "created"
 
-instance (ToSample a) => ToSample (AddedItem a)
-
 data ItemInfo a = ItemInfo
   { itemInfoIdentifier :: ItemUUID,
     itemInfoContents :: a,
@@ -106,22 +97,3 @@ instance FromJSON a => FromJSON (ItemInfo a) where
   parseJSON =
     withObject "ItemInfo TypedItem" $ \o ->
       ItemInfo <$> o .: "id" <*> o .: "contents" <*> o .: "created"
-
-instance ToSample ClientId where
-  toSamples Proxy = singleSample (ClientId 0)
-
-instance ToSample a => ToSample (ItemInfo a)
-
-instance
-  (Ord ci, ToSample ci, Ord si, ToSample si, ToSample a) =>
-  ToSample (SyncRequest ci si a)
-
-instance
-  (Ord ci, ToSample ci, Ord si, ToSample si, ToSample a) =>
-  ToSample (SyncResponse ci si a)
-
-instance (Ord k, ToSample k, ToSample v) => ToSample (Map k v) where
-  toSamples Proxy = fmapSamples M.fromList $ toSamples Proxy
-
-fmapSamples :: (a -> b) -> [(Text, a)] -> [(Text, b)]
-fmapSamples f = map (second f)

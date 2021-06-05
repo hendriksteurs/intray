@@ -18,7 +18,6 @@ import Data.UUID.Typed
 import Import
 import Intray.API.Types ()
 import Intray.Data
-import Servant.Docs
 
 data AccountInfo = AccountInfo
   { accountInfoUUID :: AccountUUID,
@@ -53,8 +52,6 @@ instance ToJSON AccountInfo where
         "status" .= accountInfoStatus
       ]
 
-instance ToSample AccountInfo
-
 data PaidStatus
   = HasNotPaid Int -- Number of extra items that they're still allowed
   | HasPaid UTCTime
@@ -81,8 +78,6 @@ instance ToJSON PaidStatus where
           HasPaid ut -> o "paid" ["until" .= ut]
           NoPaymentNecessary -> o "no-payment-necessary" []
 
-instance ToSample PaidStatus
-
 data ChangePassphrase = ChangePassphrase
   { changePassphraseOld :: Text,
     changePassphraseNew :: Text
@@ -99,5 +94,3 @@ instance FromJSON ChangePassphrase where
 instance ToJSON ChangePassphrase where
   toJSON ChangePassphrase {..} =
     object ["old-passphrase" .= changePassphraseOld, "new-passphrase" .= changePassphraseNew]
-
-instance ToSample ChangePassphrase
