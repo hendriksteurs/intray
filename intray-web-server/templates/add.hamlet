@@ -16,8 +16,7 @@
         data-position="top left">
           <textarea .textarea rows="2"
             name="contents" 
-            id="textArea"
-            autofocus>
+            id="textArea">
 
       <div .has-text-centered .field .changeable .image-input style="display: none;">
         <img src="" id="image">
@@ -33,15 +32,13 @@
             <input id="text" .type .checkbox type="radio" name="type" value="text" checked>
             Text
 
-      <div .field>
-        <div .control>
           <label .radio>
             <input id="image" .type .checkbox type="radio" name="type" value="image">
             Image
 
       ^{token}
       <div .control .has-text-centered>
-        <button type="submit".button .is-primary>
+        <button .button .is-primary .is-size-4 type="submit">
           Submit
 
       
