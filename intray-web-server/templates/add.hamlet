@@ -5,7 +5,7 @@
 <div .columns .is-centered>
   <div .column .is-half>
 
-    <form .form
+    <form .form .p-5
       id="inputForm"
       method=post
       enctype=multipart/form-data
@@ -14,7 +14,7 @@
       <div .field .changeable .text-input
         data-tooltip="Press Shift-Enter to submit"
         data-position="top left">
-          <textarea .textarea
+          <textarea .textarea rows="2"
             name="contents" 
             id="textArea"
             autofocus>
@@ -39,11 +39,11 @@
             <input id="image" .type .checkbox type="radio" name="type" value="image">
             Image
 
-
-
       ^{token}
       <div .control .has-text-centered>
         <button type="submit".button .is-primary>
           Submit
+
+      
 
 <section .section>
