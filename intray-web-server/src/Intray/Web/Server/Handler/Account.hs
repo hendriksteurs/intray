@@ -65,7 +65,7 @@ pricingStripeForm AccountInfo {..} p =
       clientReferenceId = uuidText accountInfoUUID
       sf = $(widgetFile "stripe-form")
    in [whamlet|
-          <h3> Subscribe
+          <h2 .title .is-4> Subscribe
 
           <p>
             <ul>
@@ -90,7 +90,7 @@ adminSegment (Just AccountInfo {..})
           <div .columns .is-centered>
             <div .column .is-half>
               <div .content>
-                <h3>
+                <h2 .title .is-4>
                   Admin
                 <p>
                   This account is an administrator.

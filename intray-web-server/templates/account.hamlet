@@ -1,23 +1,29 @@
 <section .section>
   <div .columns .is-centered>
     <div .column .is-half .content>
-      <h2>
+      <h1 .title .is-3 .has-text-weight-semibold .has-text-centered>
         Account
-      ^{accountInfoWidget}
+
+        ^{accountInfoWidget}
+
+
 
   <div .columns .is-centered>
     <div .column .is-half .content>
-      <h3>
+      <h2 .title .is-4>
         Roadmap
       <p>
         You can vote on the feature roadmap:
       <a .button .is-primary href="https://forms.gle/yWyDjRsiup6ETCn18">
         Vote on the roadmap
 
+
+
   <div .columns .is-centered>
     <div .column .is-half .content>
-      <h3>
-        Danger zone
+      <h2 .title .is-4>
+        Danger Zone
+
       <p>
         <a .button href=@{AuthR changePasswordTargetR}>
           Change password
