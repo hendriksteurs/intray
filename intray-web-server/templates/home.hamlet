@@ -16,7 +16,7 @@
             The tool to get things out of your head to be dealt with appropriately later
 
       <div .columns .is-centered .is-mobile>
-        <a .button .is-size-4 .is-primary href=https://intray.eu/auth/page/intray-auth-plugin/register>
+        <a .button .is-size-4 .is-primary href=@{AccountR}>
           Get Intray
 
 
@@ -131,6 +131,6 @@
                     Unlimited items
 
                   <div .has-text-centered .mt-3>
-                    <a .button .is-primary href=@{AuthR registerR}>
+                    <a .button .is-primary href=@{AccountR}>
                       Choose Plan
 
