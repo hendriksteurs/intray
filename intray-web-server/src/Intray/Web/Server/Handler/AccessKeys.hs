@@ -62,7 +62,8 @@ makeNewAccessKeyForm (Just permissions) = do
                 <div .control>
                   <input .input
                     type="text"
-                    name="name">
+                    name="name"
+                    required>
 
               $forall perm <- permissions
                 <div .field>
