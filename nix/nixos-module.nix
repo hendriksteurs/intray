@@ -217,15 +217,25 @@ in
             };
         };
       };
-      web-host = optionalAttrs (cfg.web-server.enable or false && cfg.web-server.hosts != [ ]) {
-        "${builtins.head (cfg.web-server.hosts)}" =
-          {
+      web-host =
+        let redirectHost = host: {
+          "www.${host}" = {
             enableACME = true;
             forceSSL = true;
-            locations."/".proxyPass = "http://localhost:${builtins.toString (cfg.web-server.port)}";
-            serverAliases = tail cfg.web-server.hosts;
+            globalRedirect = host;
           };
-      };
+        };
+        in
+        optionalAttrs (cfg.web-server.enable or false && cfg.web-server.hosts != [ ])
+          {
+            "${builtins.head (cfg.web-server.hosts)}" =
+              {
+                enableACME = true;
+                forceSSL = true;
+                locations."/".proxyPass = "http://localhost:${builtins.toString (cfg.web-server.port)}";
+                serverAliases = tail cfg.web-server.hosts;
+              };
+          } // mergeListRecursively (builtins.map redirectHost hosts);
     in
     mkIf cfg.enable {
       systemd.services = mergeListRecursively [
