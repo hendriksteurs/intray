@@ -235,7 +235,7 @@ in
                 locations."/".proxyPass = "http://localhost:${builtins.toString (cfg.web-server.port)}";
                 serverAliases = tail cfg.web-server.hosts;
               };
-          } // mergeListRecursively (builtins.map redirectHost hosts);
+          } // mergeListRecursively (builtins.map redirectHost cfg.web-server.hosts);
     in
     mkIf cfg.enable {
       systemd.services = mergeListRecursively [
