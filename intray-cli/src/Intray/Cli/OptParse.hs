@@ -131,7 +131,7 @@ environmentParser =
     Environment <$> Env.var (fmap Just . Env.str) "CONFIG_FILE" (mE <> Env.help "Config file")
       <*> Env.var (fmap Just . Env.str) "URL" (mE <> Env.help "sync server url")
       <*> Env.var (fmap Just . Env.str) "USERNAME" (mE <> Env.help "Sync username")
-      <*> Env.var (fmap Just . Env.str) "PASSWORD" (mE <> Env.help "Sync username")
+      <*> Env.var (fmap Just . Env.str) "PASSWORD" (mE <> Env.help "Sync password")
       <*> Env.var (fmap Just . Env.str) "CACHE_DIR" (mE <> Env.help "cache directory")
       <*> Env.var (fmap Just . Env.str) "DATA_DIR" (mE <> Env.help "data directory")
       <*> Env.var (fmap Just . Env.auto) "SYNC_STRATEGY" (mE <> Env.help "Sync strategy")
