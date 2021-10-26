@@ -13,13 +13,11 @@
       <div .columns .is-centered>
         <div .column .is-two-thirds>
           <p .content .is-size-5 .has-text-centered>
-            The tool to get things out of your head to be dealt with appropriately later
+            Follow your commitments, all of them and without stress.
 
       <div .columns .is-centered .is-mobile>
         <a .button .is-size-4 .is-primary href=@{AccountR}>
           Get Intray
-
-
 
 
 
@@ -28,35 +26,19 @@
 
         <div .column>
           <p .title .is-size-4 .has-text-centered>
-            Have these scenarios ever happened to you?
-
-          <div .content .is-normal .has-text-justified>
-            <ul>
-              <li> A friend tells you about a film you just have to watch.
-              <li> You get a brilliant idea in the middle of a party or meeting.
-              <li> You suddenly remember you really need to send someone an email.
+            Does your brain work too fast?
 
           <p .content .is-normal .has-text-justified>
-            Or undoubtedly something similar.
-            Never again will you have to drop everything and send the email.
-            Never again will you have to put your thought in your calendar, where it does not belong.
-            Never again will you forget which films to watch.
-            Because now, there is Intray.
+            Jot down what's on your mind. A film suggestion, a new business idea, or buying peanut butter...
+            Intray guarantees you will never forget a commitment.
+            Because you will process every thought and idea accordingly.
+            Ready to become even more productive?
 
 
 
         <div .column>
           <p .has-text-centered>
             <img src=@{StaticR static_tom_sydney_kerckhove_ideas_svg} alt="privacy protection" width="450px">
-
-
-
-
-
-
-
-
-
 
 
 
