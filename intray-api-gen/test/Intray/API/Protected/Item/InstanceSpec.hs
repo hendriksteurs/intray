@@ -1,9 +1,8 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.API.Protected.Item.InstanceSpec
-  ( spec,
-  )
-where
+  ( spec
+  ) where
 
 import Intray.API.Protected.Item.Gen ()
 import Intray.API.Protected.Item.Types
@@ -12,14 +11,14 @@ import TestImport
 
 spec :: Spec
 spec = do
-  eqSpecOnValid @(ItemInfo ByteString)
-  ordSpecOnValid @(ItemInfo ByteString)
+  eqSpec @(ItemInfo ByteString)
+  ordSpec @(ItemInfo ByteString)
   genValidSpec @(ItemInfo ByteString)
-  eqSpecOnValid @TypedItem
-  ordSpecOnValid @TypedItem
+  eqSpec @TypedItem
+  ordSpec @TypedItem
   genValidSpec @TypedItem
-  jsonSpecOnValid @TypedItem
-  eqSpecOnValid @(ItemInfo TypedItem)
-  ordSpecOnValid @(ItemInfo TypedItem)
+  jsonSpec @TypedItem
+  eqSpec @(ItemInfo TypedItem)
+  ordSpec @(ItemInfo TypedItem)
   genValidSpec @(ItemInfo TypedItem)
-  jsonSpecOnValid @(ItemInfo TypedItem)
+  jsonSpec @(ItemInfo TypedItem)

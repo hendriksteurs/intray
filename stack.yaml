@@ -31,7 +31,7 @@ extra-deps:
     - stripe-http-client
     - stripe-http-streams
 - github: NorfairKing/mergeless
-  commit: 370ceea253e71f47a20c8876f6f347b0c280aafe
+  commit: b64eec2767ee4a73d37f3bf1f141439678dfabdc
   subdirs:
     - mergeless
     - genvalidity-mergeless
@@ -48,7 +48,7 @@ extra-deps:
     - sydtest-yesod
 
 - github: NorfairKing/validity
-  commit: 86a824729519c154c23f0757f2ce4b9ab93b675a
+  commit: 2777b766afc4be0adf3106a73b179848f4245646
   subdirs:
   - genvalidity
   - genvalidity-aeson
@@ -91,12 +91,12 @@ extra-deps:
   - validity-vector
 
 - github: NorfairKing/typed-uuid
-  commit: ec82b82a545d06094ac355bd65a03f25f86c0a48
+  commit: 80ce47fb32c574abe8e2b5e8d572d0435184a59a
   subdirs:
     - typed-uuid
     - genvalidity-typed-uuid
 - github: NorfairKing/pretty-relative-time
-  commit: 1c0ca0e24b2a5973e5ccf4e83d24097a22bb9a4a
+  commit: 0b321b1cb4ab5522718722d08a69ba9a92722314
 - github: NorfairKing/looper
   commit: 8946c243a718bd44089f50d4c0fb624fd1f7db2a
   subdirs:

@@ -1,9 +1,8 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.Data.InstanceSpec
-  ( spec,
-  )
-where
+  ( spec
+  ) where
 
 import Intray.Data
 import Intray.Data.Gen ()
@@ -12,19 +11,19 @@ import TestImport
 
 spec :: Spec
 spec = do
-  jsonSpecOnValid @ItemUUID
+  jsonSpec @ItemUUID
   genValidSpec @ItemUUID
-  jsonSpecOnValid @ItemType
+  jsonSpec @ItemType
   genValidSpec @ItemType
   genValidSpec @IntrayItem
   genValidSpec @Username
-  jsonSpecOnValid @Username
-  eqSpecOnValid @HashedPassword
+  jsonSpec @Username
+  eqSpec @HashedPassword
   genValidSpec @HashedPassword
   genValidSpec @AccountUUID
-  jsonSpecOnValid @AccountUUID
+  jsonSpec @AccountUUID
   genValidSpec @User
   genValidSpec @Permission
-  jsonSpecOnValid @Permission
+  jsonSpec @Permission
   genValidSpec @AccessKeySecret
-  jsonSpecOnValid @AccessKeySecret
+  jsonSpec @AccessKeySecret
