@@ -3,6 +3,7 @@ module Intray.Data.Import
   )
 where
 
+import Control.Arrow as X (left, right)
 import Control.Monad as X hiding (fail)
 import Control.Monad.Fail as X
 import Control.Monad.IO.Class as X

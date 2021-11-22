@@ -1,0 +1,134 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           intray-server
+version:        0.0.0.0
+synopsis:       Intray Server
+description:    Please see README.md
+category:       Intray
+homepage:       https://github.com/NorfairKing/intray-server#readme
+bug-reports:    https://github.com/NorfairKing/intray-server/issues
+author:         Tom Sydney Kerckhove
+maintainer:     syd.kerckhove@gmail.com
+copyright:      Copyright: (c) 2016-2018 Tom Sydney Kerckhove
+license:        AllRightsReserved
+license-file:   LICENSE
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/NorfairKing/intray-server
+
+library
+  exposed-modules:
+      Import
+      Intray.Server
+      Intray.Server.Handler
+      Intray.Server.Handler.AccessKey
+      Intray.Server.Handler.AccessKey.DeleteAccessKey
+      Intray.Server.Handler.AccessKey.GetAccessKey
+      Intray.Server.Handler.AccessKey.GetAccessKeys
+      Intray.Server.Handler.AccessKey.PostAddAccessKey
+      Intray.Server.Handler.Admin
+      Intray.Server.Handler.Admin.DeleteAccount
+      Intray.Server.Handler.Admin.GetAccounts
+      Intray.Server.Handler.Admin.GetStats
+      Intray.Server.Handler.DeleteAccount
+      Intray.Server.Handler.DeleteItem
+      Intray.Server.Handler.GetAccountInfo
+      Intray.Server.Handler.GetIntraySize
+      Intray.Server.Handler.GetItem
+      Intray.Server.Handler.GetItems
+      Intray.Server.Handler.GetItemUUIDs
+      Intray.Server.Handler.GetPermissions
+      Intray.Server.Handler.GetShowItem
+      Intray.Server.Handler.PostAddItem
+      Intray.Server.Handler.PostChangePassphrase
+      Intray.Server.Handler.PostSync
+      Intray.Server.Handler.Public
+      Intray.Server.Handler.Public.GetPricing
+      Intray.Server.Handler.Public.PostLogin
+      Intray.Server.Handler.Public.PostRegister
+      Intray.Server.Handler.Stripe
+      Intray.Server.Handler.Utils
+      Intray.Server.Item
+      Intray.Server.Looper
+      Intray.Server.Looper.DB
+      Intray.Server.Looper.Import
+      Intray.Server.Looper.Stripe
+      Intray.Server.Looper.StripeEventsFetcher
+      Intray.Server.OptParse
+      Intray.Server.OptParse.Types
+      Intray.Server.Serve
+      Intray.Server.SigningKey
+      Intray.Server.Stripe
+      Intray.Server.Types
+      IntrayServer
+      Web.Stripe.Conduit
+  other-modules:
+      Paths_intray_server
+  hs-source-dirs:
+      src
+  default-extensions:
+      NoImplicitPrelude
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , aeson-pretty
+    , async
+    , autodocodec
+    , autodocodec-yaml
+    , base >=4.7 && <5
+    , bytestring
+    , cache
+    , conduit
+    , containers
+    , envparse
+    , exceptions
+    , file-embed
+    , intray-api
+    , intray-data
+    , jose
+    , looper
+    , markdown
+    , mergeless
+    , mergeless-persistent
+    , monad-logger
+    , mtl >=2.2
+    , optparse-applicative >=0.13
+    , path
+    , path-io
+    , persistent >=2.7
+    , persistent-sqlite
+    , pretty-show
+    , resourcet
+    , safe
+    , servant
+    , servant-auth-server
+    , servant-docs
+    , servant-server
+    , stripe-core
+    , stripe-haskell
+    , text
+    , time
+    , typed-uuid
+    , wai
+    , wai-cors
+    , warp >=3.2
+    , yaml
+  default-language: Haskell2010
+
+executable intray-server
+  main-is: Main.hs
+  other-modules:
+      Paths_intray_server
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base
+    , intray-server
+  default-language: Haskell2010

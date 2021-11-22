@@ -1,8 +1,10 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE StandaloneDeriving #-}
@@ -33,10 +35,13 @@ module Intray.API.Types
   )
 where
 
+import Autodocodec
 import Control.Exception
-import Data.Aeson as JSON
+import Control.Monad.Logger
+import Data.Aeson (FromJSON (..), ToJSON (..))
 import Data.Hashable
 import Data.Set (Set)
+import qualified Data.Set as S
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import Data.UUID.Typed
@@ -46,6 +51,7 @@ import Network.Wai
 import Servant.Auth
 import Servant.Auth.Server
 import Servant.Auth.Server.Internal.Class
+import Text.Read
 import qualified Web.Stripe.Plan as Stripe
 
 type ProtectAPI = Auth '[JWT, IntrayAccessKey] AuthCookie
@@ -72,11 +78,15 @@ data AuthCookie = AuthCookie
   { authCookieUserUUID :: AccountUUID,
     authCookiePermissions :: Set Permission
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec AuthCookie)
 
-instance FromJSON AuthCookie
-
-instance ToJSON AuthCookie
+instance HasCodec AuthCookie where
+  codec =
+    object "AuthCookie" $
+      AuthCookie
+        <$> requiredField "uuid" "user uuid" .= authCookieUserUUID
+        <*> optionalFieldWithOmittedDefault "permissions" S.empty "permissions" .= authCookiePermissions
 
 instance FromJWT AuthCookie
 
@@ -90,31 +100,33 @@ data Registration = Registration
   { registrationUsername :: Username,
     registrationPassword :: Text
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec Registration)
 
 instance Validity Registration
 
-instance ToJSON Registration where
-  toJSON Registration {..} =
-    object ["name" .= registrationUsername, "password" .= registrationPassword]
-
-instance FromJSON Registration where
-  parseJSON =
-    withObject "Registration Text" $ \o -> Registration <$> o .: "name" <*> o .: "password"
+instance HasCodec Registration where
+  codec =
+    object "Registration" $
+      Registration
+        <$> requiredField "name" "Username" .= registrationUsername
+        <*> requiredField "password" "Password" .= registrationPassword
 
 data LoginForm = LoginForm
   { loginFormUsername :: Username,
     loginFormPassword :: Text
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec LoginForm)
 
 instance Validity LoginForm
 
-instance FromJSON LoginForm where
-  parseJSON = withObject "LoginForm" $ \o -> LoginForm <$> o .: "username" <*> o .: "password"
-
-instance ToJSON LoginForm where
-  toJSON LoginForm {..} = object ["username" .= loginFormUsername, "password" .= loginFormPassword]
+instance HasCodec LoginForm where
+  codec =
+    object "LoginForm" $
+      LoginForm
+        <$> requiredField "username" "Username" .= loginFormUsername
+        <*> requiredField "password" "Password" .= loginFormPassword
 
 data Pricing = Pricing
   { pricingPlan :: !Stripe.PlanId,
@@ -124,49 +136,69 @@ data Pricing = Pricing
     pricingStripePublishableKey :: !Text,
     pricingMaxItemsFree :: !Int
   }
-  deriving (Show, Eq, Generic)
+  deriving stock (Show, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec Pricing)
 
 instance Validity Pricing
 
-instance FromJSON Pricing where
-  parseJSON =
-    withObject "Pricing" $ \o ->
-      Pricing <$> o .: "plan" <*> o .:? "trial-period" <*> o .: "price" <*> o .: "currency"
-        <*> o
-        .: "publishable-key"
-        <*> o
-        .: "max-items-free"
-
-instance ToJSON Pricing where
-  toJSON Pricing {..} =
-    object
-      [ "plan" .= pricingPlan,
-        "trial-period" .= pricingTrialPeriod,
-        "price" .= pricingPrice,
-        "currency" .= pricingCurrency,
-        "publishable-key" .= pricingStripePublishableKey,
-        "max-items-free" .= pricingMaxItemsFree
-      ]
+instance HasCodec Pricing where
+  codec =
+    object "Pricing" $
+      Pricing
+        <$> requiredField "plan" "stripe plan" .= pricingPlan
+        <*> optionalField "trial-period" "length of the trial period, in days" .= pricingTrialPeriod
+        <*> requiredField "price" "price" .= pricingPrice
+        <*> requiredField "currency" "currency" .= pricingCurrency
+        <*> requiredField "publishable-key" "publishable key" .= pricingStripePublishableKey
+        <*> requiredField "max-items-free" "how many items a free account can have" .= pricingMaxItemsFree
 
 instance Validity Stripe.Currency where
   validate = trivialValidation
 
+-- Temporary, until we get rid of our current stripe dependency
+instance HasCodec Stripe.Currency where
+  codec =
+    bimapCodec
+      (maybe (Left "unknown currency") Right . readMaybe . T.unpack . T.toUpper)
+      (T.toLower . T.pack . show)
+      codec
+
 instance ToJSON Stripe.Currency where
-  toJSON c = toJSON $ T.toLower $ T.pack $ show c
+  toJSON = toJSONViaCodec
+  toEncoding = toEncodingViaCodec
 
 deriving instance Validity Stripe.PlanId
 
 deriving instance Hashable Stripe.PlanId
 
-deriving instance ToJSON Stripe.PlanId
+instance HasCodec Stripe.PlanId where
+  codec = dimapCodec Stripe.PlanId (\(Stripe.PlanId s) -> s) codec
 
-deriving instance FromJSON Stripe.PlanId
+instance ToJSON Stripe.PlanId where
+  toJSON = toJSONViaCodec
+  toEncoding = toEncodingViaCodec
+
+instance FromJSON Stripe.PlanId where
+  parseJSON = parseJSONViaCodec
 
 instance Validity Stripe.Amount where
   validate (Stripe.Amount a) = delve "getAmount" a
 
+instance HasCodec Stripe.Amount where
+  codec = dimapCodec Stripe.Amount (\(Stripe.Amount a) -> a) codec
+
 instance ToJSON Stripe.Amount where
-  toJSON (Stripe.Amount a) = toJSON a
+  toJSON = toJSONViaCodec
+  toEncoding = toEncodingViaCodec
 
 instance FromJSON Stripe.Amount where
-  parseJSON v = Stripe.Amount <$> parseJSON v
+  parseJSON = parseJSONViaCodec
+
+instance HasCodec LogLevel where
+  codec =
+    stringConstCodec
+      [ (LevelDebug, "Debug"),
+        (LevelInfo, "Info"),
+        (LevelWarn, "Warn"),
+        (LevelError, "Error")
+      ]

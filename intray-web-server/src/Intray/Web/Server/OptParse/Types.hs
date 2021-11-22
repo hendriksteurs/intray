@@ -1,13 +1,14 @@
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Web.Server.OptParse.Types where
 
+import Autodocodec
 import Control.Arrow
 import Control.Monad.Logger
-import Data.Aeson
+import Data.Aeson (FromJSON, ToJSON)
 import Import
-import Servant.Client
-import YamlParse.Applicative
+import Intray.Client
 
 type Arguments = (Command, Flags)
 
@@ -38,21 +39,19 @@ data Configuration = Configuration
     confVerification :: !(Maybe Text),
     confLoginCacheFile :: !(Maybe FilePath)
   }
-  deriving (Show, Eq)
+  deriving stock (Show, Eq)
+  deriving (FromJSON, ToJSON) via (Autodocodec Configuration)
 
-instance FromJSON Configuration where
-  parseJSON = viaYamlSchema
-
-instance YamlSchema Configuration where
-  yamlSchema =
-    objectParser "Configuration" $
+instance HasCodec Configuration where
+  codec =
+    object "Configuration" $
       Configuration
-        <$> optionalField "port" "The port to serve web requests on"
-        <*> optionalFieldWith "api-url" "The url to contact the api server at" (eitherParser (left show . parseBaseUrl) yamlSchema)
-        <*> optionalFieldWith "log-level" "The minimal severity of log messages" viaRead
-        <*> optionalField "tracking" "The google analytics tracking code"
-        <*> optionalField "verification" "The google search console verification code"
-        <*> optionalField "login-cache-file" "The file to store the login cache database in"
+        <$> optionalFieldOrNull "port" "The port to serve web requests on" .= confPort
+        <*> optionalFieldOrNullWith "api-url" (bimapCodec (left show . parseBaseUrl) show codec) "The url to contact the api server at" .= confAPIBaseUrl
+        <*> optionalFieldOrNull "log-level" "The minimal severity of log messages" .= confLogLevel
+        <*> optionalFieldOrNull "tracking" "The google analytics tracking code" .= confTracking
+        <*> optionalFieldOrNull "verification" "The google search console verification code" .= confVerification
+        <*> optionalFieldOrNull "login-cache-file" "The file to store the login cache database in" .= confLoginCacheFile
 
 data Environment = Environment
   { envConfigFile :: !(Maybe FilePath),

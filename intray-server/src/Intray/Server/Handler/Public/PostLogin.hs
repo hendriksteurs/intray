@@ -39,11 +39,11 @@ servePostLogin LoginForm {..} = do
                 flip map aks $ \(Entity _ AccessKey {..}) -> do
                   submittedKey <- parseAccessKeySecretText loginFormPassword
                   if validatePassword accessKeyHashedKey (accessKeySecretText submittedKey)
-                    then Just accessKeyPermissions
-                    else Nothing
+                    then Right accessKeyPermissions
+                    else Left "invalid password"
           case msum mli of
-            Nothing -> throwError err401
-            Just perms -> setLoggedIn uid user perms
+            Left _ -> throwError err401 -- Excplicitly not using the error here
+            Right perms -> setLoggedIn uid user perms
   where
     setLoggedIn uid user perms = do
       let cookie =

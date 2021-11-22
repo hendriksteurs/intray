@@ -1,8 +1,9 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.API.Protected.Account.InstanceSpec
-  ( spec
-  ) where
+  ( spec,
+  )
+where
 
 import Intray.API.Protected.Account.Gen ()
 import Intray.API.Protected.Account.Types

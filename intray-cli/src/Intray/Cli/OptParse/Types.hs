@@ -1,17 +1,18 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Intray.Cli.OptParse.Types where
 
+import Autodocodec
 import Control.Applicative
-import Data.Yaml as Yaml hiding (object)
+import Data.Yaml (FromJSON, ToJSON)
 import Import
 import Intray.Data
 import Servant.Client
-import YamlParse.Applicative
-import YamlParse.Applicative.Parser
 
 data Arguments
   = Arguments Command Flags
@@ -84,26 +85,28 @@ data Configuration = Configuration
     configAutoOpen :: Maybe AutoOpen
   }
   deriving (Show, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec Configuration)
 
-instance FromJSON Configuration where
-  parseJSON = viaYamlSchema
-
-instance YamlSchema Configuration where
-  yamlSchema =
-    objectParser "Configuration" $
-      Configuration <$> optionalField "url" "The api url of the intray server. Example: api.intray.eu"
-        <*> optionalField "username" "The username to log in with"
-        <*> optionalField
+instance HasCodec Configuration where
+  codec =
+    object "Configuration" $
+      Configuration
+        <$> optionalFieldOrNull "url" "The api url of the intray server. Example: api.intray.eu" .= configUrl
+        <*> optionalFieldOrNull "username" "The username to log in with" .= configUsername
+        <*> optionalFieldOrNull
           "password"
           "The password to log in with. Note that leaving your password in plaintext in a config file is not safe. Only use this for automation."
-        <*> optionalField
+          .= configPassword
+        <*> optionalFieldOrNull
           "cache-dir"
           "The directory to store cache information. You can remove this directory as necessary."
-        <*> optionalField
+          .= configCacheDir
+        <*> optionalFieldOrNull
           "data-dir"
           "The directory to store data information. Removing this directory could lead to data loss."
-        <*> optionalField "sync" "The sync strategy for non-sync commands."
-        <*> ParseField "auto-open" (FieldParserOptional yamlSchema)
+          .= configDataDir
+        <*> optionalFieldOrNull "sync" "The sync strategy for non-sync commands." .= configSyncStrategy
+        <*> optionalFieldOrNull "auto-open" "how to auto-open" .= configAutoOpen
 
 data Settings = Settings
   { setBaseUrl :: Maybe BaseUrl,
@@ -117,40 +120,47 @@ data Settings = Settings
 data SyncStrategy
   = NeverSync
   | AlwaysSync
-  deriving (Show, Read, Eq, Generic)
+  deriving stock (Show, Read, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec SyncStrategy)
 
-instance FromJSON SyncStrategy where
-  parseJSON = viaYamlSchema
-
-instance ToJSON SyncStrategy
-
-instance YamlSchema SyncStrategy where
-  yamlSchema =
-    alternatives
-      [ literalValue NeverSync
-          <??> [ "Only sync when manually running 'intray sync'.",
-                 "When using this option, you essentially promise that you will take care of ensuring that syncing happens regularly."
-               ],
-        literalValue AlwaysSync
-          <??> [ "Sync on every change to the local state.",
-                 "Commands will still succeed even if the sync fails because of internet connect problems for example."
-               ]
-      ]
+instance HasCodec SyncStrategy where
+  codec =
+    dimapCodec f g $
+      eitherCodec
+        ( literalTextValueCodec NeverSync "NeverSync"
+            <??> [ "Only sync when manually running 'intray sync'.",
+                   "When using this option, you essentially promise that you will take care of ensuring that syncing happens regularly."
+                 ]
+        )
+        ( literalTextValueCodec AlwaysSync "AlwaysSync"
+            <??> [ "Sync on every change to the local state.",
+                   "Commands will still succeed even if the sync fails because of internet connect problems for example."
+                 ]
+        )
+    where
+      f = \case
+        Left ns -> ns
+        Right as -> as
+      g = \case
+        NeverSync -> Left NeverSync
+        AlwaysSync -> Right AlwaysSync
 
 data AutoOpen = DontAutoOpen | AutoOpenWith FilePath
   deriving (Show, Read, Eq, Generic)
 
-instance FromJSON AutoOpen where
-  parseJSON = viaYamlSchema
-
-instance ToJSON AutoOpen
-
-instance YamlSchema AutoOpen where
-  yamlSchema =
-    alternatives
-      [ DontAutoOpen <$ ParseNull <?> "Explicitly _don't_ auto-open links or pictures.",
-        AutoOpenWith <$> yamlSchema <?> "Auto-open with the given command. xdg-open is the default."
-      ]
+instance HasCodec AutoOpen where
+  codec =
+    dimapCodec f g $
+      eitherCodec
+        (nullCodec <?> "Explicitly _don't_ auto-open links or pictures.")
+        (codec <?> "Auto-open with the given command. xdg-open is the default.")
+    where
+      f = \case
+        Left () -> DontAutoOpen
+        Right s -> AutoOpenWith s
+      g = \case
+        DontAutoOpen -> Left ()
+        AutoOpenWith s -> Right s
 
 data Dispatch
   = DispatchRegister RegisterSettings

@@ -1,8 +1,9 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.API.Admin.InstanceSpec
-  ( spec
-  ) where
+  ( spec,
+  )
+where
 
 import Intray.API.Admin.Gen ()
 import Intray.API.Admin.Types

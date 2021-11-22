@@ -50,8 +50,8 @@ postAddR =
                   Right bs -> pure bs
               itemType <-
                 case parseImageType (fileContentType fi) of
-                  Nothing -> invalidArgs ["Unsupported image type."]
-                  Just typ -> pure $ ImageItem typ
+                  Left err -> invalidArgs [T.pack err]
+                  Right typ -> pure $ ImageItem typ
               pure TypedItem {..}
             _ -> redirect AddR -- There's nothing we can do with the errors, so just redirect so the user can continue.
     ti <-

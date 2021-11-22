@@ -1,13 +1,14 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 
 module Intray.API.Admin.Types where
 
-import Data.Aeson as JSON
+import Autodocodec
+import Data.Aeson (FromJSON, ToJSON)
 import Import
 import Intray.API.Types ()
 
@@ -17,25 +18,19 @@ data AdminStats = AdminStats
     adminStatsNbItems :: !Word,
     adminStatsActiveUsers :: !ActiveUsers
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec AdminStats)
 
 instance Validity AdminStats
 
-instance FromJSON AdminStats where
-  parseJSON =
-    withObject "AdminStats" $ \o ->
-      AdminStats <$> o .: "accounts" <*> o .: "subscribed-users" <*> o .: "items"
-        <*> o
-        .: "active-users"
-
-instance ToJSON AdminStats where
-  toJSON AdminStats {..} =
-    object
-      [ "accounts" .= adminStatsNbAccounts,
-        "items" .= adminStatsNbItems,
-        "active-users" .= adminStatsActiveUsers,
-        "subscribed-users" .= adminStatsSubscribedUsers
-      ]
+instance HasCodec AdminStats where
+  codec =
+    object "AdminStats" $
+      AdminStats
+        <$> requiredField "accounts" "how many accounts there are" .= adminStatsNbAccounts
+        <*> requiredField "subscribed-user" "how many of those are subscribed" .= adminStatsSubscribedUsers
+        <*> requiredField "items" "total number of items that users have in their intrays" .= adminStatsNbItems
+        <*> requiredField "active-users" "X-active users stats" .= adminStatsActiveUsers
 
 data ActiveUsers = ActiveUsers
   { activeUsersDaily :: !Word,
@@ -43,20 +38,16 @@ data ActiveUsers = ActiveUsers
     activeUsersMonthly :: !Word,
     activeUsersYearly :: !Word
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec ActiveUsers)
 
 instance Validity ActiveUsers
 
-instance FromJSON ActiveUsers where
-  parseJSON =
-    withObject "ActiveUsers" $ \o ->
-      ActiveUsers <$> o .: "daily" <*> o .: "weekly" <*> o .: "monthly" <*> o .: "yearly"
-
-instance ToJSON ActiveUsers where
-  toJSON ActiveUsers {..} =
-    object
-      [ "daily" .= activeUsersDaily,
-        "weekly" .= activeUsersWeekly,
-        "monthly" .= activeUsersMonthly,
-        "yearly" .= activeUsersYearly
-      ]
+instance HasCodec ActiveUsers where
+  codec =
+    object "ActiveUsers" $
+      ActiveUsers
+        <$> requiredField "daily" "daily active users" .= activeUsersDaily
+        <*> requiredField "weekly" "weekly active users" .= activeUsersWeekly
+        <*> requiredField "monthly" "monthly active users" .= activeUsersMonthly
+        <*> requiredField "yearly" "yearly active users" .= activeUsersYearly

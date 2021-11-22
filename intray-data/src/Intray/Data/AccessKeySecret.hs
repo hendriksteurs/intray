@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -13,7 +14,8 @@ module Intray.Data.AccessKeySecret
   )
 where
 
-import Data.Aeson as JSON
+import Autodocodec
+import Data.Aeson (FromJSON, ToJSON)
 import qualified Data.ByteString as SB
 import qualified Data.ByteString.Base16 as SB16
 import qualified Data.Text.Encoding as TE
@@ -24,28 +26,21 @@ import System.Random
 
 newtype AccessKeySecret
   = AccessKeySecret ByteString
-  deriving (Show, Eq, Ord, Generic, PersistField, PersistFieldSql)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving newtype (PersistField, PersistFieldSql, Validity)
+  deriving (FromJSON, ToJSON) via (Autodocodec AccessKeySecret)
 
-instance Validity AccessKeySecret
-
-instance FromJSON AccessKeySecret where
-  parseJSON =
-    withText "AccessKeySecret" $ \t ->
-      case parseAccessKeySecretText t of
-        Nothing -> fail "Invalid AccessKeySecret"
-        Just aks -> pure aks
-
-instance ToJSON AccessKeySecret where
-  toJSON = toJSON . accessKeySecretText
+instance HasCodec AccessKeySecret where
+  codec = bimapCodec parseAccessKeySecretText accessKeySecretText codec
 
 accessKeySecretText :: AccessKeySecret -> Text
 accessKeySecretText (AccessKeySecret bs) = TE.decodeUtf8 $ SB16.encode bs
 
-parseAccessKeySecretText :: Text -> Maybe AccessKeySecret
+parseAccessKeySecretText :: Text -> Either String AccessKeySecret
 parseAccessKeySecretText t =
   case SB16.decode $ TE.encodeUtf8 t of
-    (d, "") -> Just $ AccessKeySecret d
-    _ -> Nothing
+    (d, "") -> Right $ AccessKeySecret d
+    _ -> Left $ "Invalid Base16 access key secret: " <> show t
 
 generateRandomAccessKeySecret :: IO AccessKeySecret
 generateRandomAccessKeySecret = AccessKeySecret . SB.pack <$> replicateM 16 randomIO

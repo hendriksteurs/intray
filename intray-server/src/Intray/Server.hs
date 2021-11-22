@@ -113,10 +113,10 @@ accessKeyEnv IntrayServerEnv {..} = AccessKeyEnv {accessKeyEnvAuthenticate = go}
                 flip map aks $ \(Entity _ AccessKey {..}) -> do
                   submittedKey <- parseAccessKeySecretText ak
                   if validatePassword accessKeyHashedKey (accessKeySecretText submittedKey)
-                    then Just accessKeyPermissions
-                    else Nothing
+                    then Right accessKeyPermissions
+                    else Left "invalid password"
           pure $ case msum mli of
-            Nothing -> BadPassword
-            Just perms -> Authenticated $ AuthCookie {authCookieUserUUID = userIdentifier user, authCookiePermissions = perms}
+            Left _ -> BadPassword
+            Right perms -> Authenticated $ AuthCookie {authCookieUserUUID = userIdentifier user, authCookiePermissions = perms}
 
 type IntrayContext = '[CookieSettings, JWTSettings, AccessKeyEnv]

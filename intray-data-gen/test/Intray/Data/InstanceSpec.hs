@@ -1,8 +1,9 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.Data.InstanceSpec
-  ( spec
-  ) where
+  ( spec,
+  )
+where
 
 import Intray.Data
 import Intray.Data.Gen ()

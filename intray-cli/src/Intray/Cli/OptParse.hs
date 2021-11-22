@@ -20,7 +20,9 @@ module Intray.Cli.OptParse
   )
 where
 
+import Autodocodec.Yaml
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
 import qualified Env
 import Import
 import Intray.Cli.OptParse.Types
@@ -29,7 +31,6 @@ import Options.Applicative
 import qualified Options.Applicative.Help as OptParse
 import Servant.Client
 import qualified System.Environment as System
-import qualified YamlParse.Applicative as YamlParse
 
 getInstructions :: IO Instructions
 getInstructions = do
@@ -105,10 +106,10 @@ combineToInstructions (Arguments cmd Flags {..}) Environment {..} mConf =
 getConfiguration :: Flags -> Environment -> IO (Maybe Configuration)
 getConfiguration Flags {..} Environment {..} =
   case flagConfigFile <|> envConfigFile of
-    Nothing -> defaultConfigFiles >>= YamlParse.readFirstConfigFile
+    Nothing -> defaultConfigFiles >>= readFirstYamlConfigFile
     Just cf -> do
       afp <- resolveFile' cf
-      YamlParse.readConfigFile afp
+      readYamlConfigFile afp
 
 defaultConfigFiles :: IO [Path Abs File]
 defaultConfigFiles =
@@ -159,7 +160,7 @@ argParser = info (helper <*> parseArgs) (fullDesc <> footerDoc (Just $ OptParse.
         [ Env.helpDoc environmentParser,
           "",
           "Configuration file format:",
-          T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
+          T.unpack (TE.decodeUtf8 (renderColouredSchemaViaCodec @Configuration))
         ]
 
 parseArgs :: Parser Arguments

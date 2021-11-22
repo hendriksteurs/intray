@@ -1,5 +1,7 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -13,8 +15,8 @@ module Intray.Data.Username
   )
 where
 
+import Autodocodec
 import Data.Aeson as JSON
-import Data.Aeson.Types as JSON (toJSONKeyText)
 import qualified Data.Char as Char
 import Data.Hashable
 import qualified Data.Text as T
@@ -24,7 +26,9 @@ import Intray.Data.Import
 newtype Username = Username
   { usernameText :: Text
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving newtype (Hashable, ToJSONKey)
+  deriving (FromJSON, ToJSON) via (Autodocodec Username)
 
 instance Validity Username where
   validate (Username t) =
@@ -37,15 +41,11 @@ instance Validity Username where
               annotate uc $ unwords ["character number", show (ix :: Int), "of the username:", show c]
       ]
 
-instance Hashable Username
-
 instance PersistField Username where
   toPersistValue (Username t) = PersistText t
-  fromPersistValue (PersistText t) =
-    case parseUsername t of
-      Nothing -> Left "Text isn't a valid username"
-      Just un -> Right un
-  fromPersistValue _ = Left "Not text"
+  fromPersistValue pv = do
+    t <- fromPersistValue pv
+    left T.pack $ parseUsernameWithError t
 
 instance PersistFieldSql Username where
   sqlType _ = SqlString
@@ -53,8 +53,8 @@ instance PersistFieldSql Username where
 instance FromJSONKey Username where
   fromJSONKey = FromJSONKeyTextParser parseUsername
 
-instance FromJSON Username where
-  parseJSON = withText "Username" parseUsername
+instance HasCodec Username where
+  codec = bimapCodec parseUsernameWithError usernameText codec
 
 parseUsername :: MonadFail m => Text -> m Username
 parseUsername t =
@@ -63,20 +63,7 @@ parseUsername t =
     Right un -> pure un
 
 parseUsernameWithError :: Text -> Either String Username
-parseUsernameWithError t =
-  case checkValidity $ Username t of
-    Right un -> Right un
-    Left chains -> Left $ unlines $ map go chains
-  where
-    go :: ValidationChain -> String
-    go (Violated invariant) = "Violated: " ++ show invariant
-    go (Location loc rest) = go rest ++ " in " ++ loc
-
-instance ToJSON Username where
-  toJSON = toJSON . usernameText
-
-instance ToJSONKey Username where
-  toJSONKey = toJSONKeyText usernameText
+parseUsernameWithError = prettyValidate . Username
 
 newtype UsernameChar
   = UsernameChar Char

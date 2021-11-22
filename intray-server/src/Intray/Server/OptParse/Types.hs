@@ -2,15 +2,14 @@
 
 module Intray.Server.OptParse.Types where
 
+import Autodocodec
 import Control.Monad.Logger
-import Data.Aeson hiding (object)
 import Database.Persist.Sqlite
 import Import
 import Intray.API
 import Looper
-import Web.Stripe.Client as Stripe
-import Web.Stripe.Types as Stripe
-import YamlParse.Applicative
+import qualified Web.Stripe.Client as Stripe
+import qualified Web.Stripe.Types as Stripe
 
 type Arguments = (Command, Flags)
 
@@ -54,20 +53,18 @@ data Configuration = Configuration
   }
   deriving (Show, Eq)
 
-instance FromJSON Configuration where
-  parseJSON = viaYamlSchema
-
-instance YamlSchema Configuration where
-  yamlSchema =
-    objectParser "Configuration" $
-      Configuration <$> optionalField "host" "The host to serve the api-server on"
-        <*> optionalField "port" "The port to serve the api-server on"
-        <*> optionalField "database" "The database file"
-        <*> optionalField "admins" "The list of usernames that will be considered administrators"
-        <*> optionalField "freeloaders" "The list of usernames that won't have to pay"
-        <*> optionalFieldWith "log-level" "The minimal log level for log messages" viaRead
-        <*> optionalField "signing-key-file" "The file to store the JWT signing key in"
-        <*> optionalField "monetisation" "Monetisation configuration. If this is not configured then the server is run for free."
+instance HasCodec Configuration where
+  codec =
+    object "Configuration" $
+      Configuration
+        <$> optionalFieldOrNull "host" "The host to serve the api-server on" .= confHost
+        <*> optionalFieldOrNull "port" "The port to serve the api-server on" .= confPort
+        <*> optionalFieldOrNull "database" "The database file" .= confDb
+        <*> optionalFieldOrNull "admins" "The list of usernames that will be considered administrators" .= confAdmins
+        <*> optionalFieldOrNull "freeloaders" "The list of usernames that won't have to pay" .= confFreeloaders
+        <*> optionalFieldOrNull "log-level" "The minimal log level for log messages" .= confLogLevel
+        <*> optionalFieldOrNull "signing-key-file" "The file to store the JWT signing key in" .= confSigningKeyFile
+        <*> optionalFieldOrNull "monetisation" "Monetisation configuration. If this is not configured then the server is run for free." .= confMonetisationConfig
 
 data MonetisationConfiguration = MonetisationConfiguration
   { monetisationConfStripePlan :: !(Maybe String),
@@ -79,21 +76,19 @@ data MonetisationConfiguration = MonetisationConfiguration
   }
   deriving (Show, Eq)
 
-instance FromJSON MonetisationConfiguration where
-  parseJSON = viaYamlSchema
-
-instance YamlSchema MonetisationConfiguration where
-  yamlSchema =
-    objectParser "MonetisationConfiguration" $
+instance HasCodec MonetisationConfiguration where
+  codec =
+    object "MonetisationConfiguration" $
       MonetisationConfiguration
-        <$> optionalField
+        <$> optionalFieldOrNull
           "stripe-plan"
           "The stripe identifier of the stripe plan used to checkout a subscription"
-        <*> optionalField "stripe-secret-key" "The secret key for calling the stripe api"
-        <*> optionalField "stripe-publishable-key" "The publishable key for calling the stripe api"
-        <*> optionalField "events-fetcher" "The configuration for the stripe events fetcher"
-        <*> optionalField "events-retrier" "The configuration for the stripe events fetcher"
-        <*> optionalField "max-items-free" "The number of items a free user can have on the server"
+          .= monetisationConfStripePlan
+        <*> optionalFieldOrNull "stripe-secret-key" "The secret key for calling the stripe api" .= monetisationConfStripeSecretKey
+        <*> optionalFieldOrNull "stripe-publishable-key" "The publishable key for calling the stripe api" .= monetisationConfStripePublishableKey
+        <*> optionalFieldOrNull "events-fetcher" "The configuration for the stripe events fetcher" .= monetisationConfStripeEventsFetcher
+        <*> optionalFieldOrNull "events-retrier" "The configuration for the stripe events fetcher" .= monetisationConfStripeEventsRetrier
+        <*> optionalFieldOrNull "max-items-free" "The number of items a free user can have on the server" .= monetisationConfMaxItemsFree
 
 data Environment = Environment
   { envConfigFile :: !(Maybe FilePath),
@@ -141,7 +136,7 @@ data MonetisationSettings = MonetisationSettings
 
 data StripeSettings = StripeSettings
   { stripeSetPlan :: !Stripe.PlanId,
-    stripeSetStripeConfig :: StripeConfig,
+    stripeSetStripeConfig :: Stripe.StripeConfig,
     stripeSetPublishableKey :: Text
   }
   deriving (Show)

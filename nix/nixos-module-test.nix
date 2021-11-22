@@ -27,7 +27,7 @@ pkgs.nixosTest (
           api-server = {
             enable = true;
             port = api-port;
-            log-level = "LevelDebug";
+            log-level = "Debug";
           };
         };
       };

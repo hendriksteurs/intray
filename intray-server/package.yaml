@@ -21,6 +21,8 @@ library:
   - aeson
   - aeson-pretty
   - async
+  - autodocodec
+  - autodocodec-yaml
   - bytestring
   - cache
   - conduit
@@ -58,7 +60,6 @@ library:
   - wai-cors
   - warp >=3.2
   - yaml
-  - yamlparse-applicative
 
 executables:
   intray-server:

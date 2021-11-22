@@ -1,0 +1,73 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           intray-data-gen
+version:        0.0.0.0
+synopsis:       Generators for intray-data
+category:       Intray
+homepage:       https://github.com/NorfairKing/intray-server#readme
+bug-reports:    https://github.com/NorfairKing/intray-server/issues
+author:         Tom Sydney Kerckhove
+maintainer:     syd.kerckhove@gmail.com
+copyright:      Copyright: (c) 2017-2018 Tom Sydney Kerckhove
+license:        AllRightsReserved
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/NorfairKing/intray-server
+
+library
+  exposed-modules:
+      Intray.Data.Gen
+      Intray.Data.Gen.Import
+  other-modules:
+      Paths_intray_data_gen
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  build-depends:
+      QuickCheck
+    , base >=4.7 && <5
+    , bytestring
+    , genvalidity >=1.0
+    , genvalidity-bytestring
+    , genvalidity-text
+    , genvalidity-time
+    , genvalidity-typed-uuid
+    , genvalidity-uuid
+    , intray-data
+    , text
+    , validity
+    , validity-bytestring
+    , validity-text
+    , validity-time
+  default-language: Haskell2010
+
+test-suite intray-data-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Intray.Data.InstanceSpec
+      TestImport
+      Paths_intray_data_gen
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      sydtest-discover:sydtest-discover
+  build-depends:
+      QuickCheck
+    , base
+    , bytestring
+    , genvalidity-sydtest
+    , genvalidity-sydtest-aeson
+    , genvalidity-text
+    , intray-data
+    , intray-data-gen
+    , sydtest
+    , text
+  default-language: Haskell2010

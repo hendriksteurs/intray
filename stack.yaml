@@ -31,24 +31,25 @@ extra-deps:
     - stripe-http-client
     - stripe-http-streams
 - github: NorfairKing/mergeless
-  commit: b64eec2767ee4a73d37f3bf1f141439678dfabdc
+  commit: 9a10547aba61f10a32ba2a54dbe7301ced48f9fc
   subdirs:
     - mergeless
     - genvalidity-mergeless
     - mergeless-persistent
 
 - github: NorfairKing/sydtest
-  commit: caeb25405f15098bb657a75b5f6801229525657d
+  commit: e75c55b920936e344b779093b2a0318fb35d1770
   subdirs:
     - sydtest
     - sydtest-discover
+    - sydtest-persistent
     - sydtest-persistent-sqlite
     - sydtest-servant
     - sydtest-wai
     - sydtest-yesod
 
 - github: NorfairKing/validity
-  commit: 2777b766afc4be0adf3106a73b179848f4245646
+  commit: e1750f9d29c64705a4b9ccddf9f5afd5275e7d75
   subdirs:
   - genvalidity
   - genvalidity-aeson
@@ -91,25 +92,27 @@ extra-deps:
   - validity-vector
 
 - github: NorfairKing/typed-uuid
-  commit: 80ce47fb32c574abe8e2b5e8d572d0435184a59a
+  commit: 00fbc7e0380ab2ff72e8fd02323e76f13b7d5b59
   subdirs:
     - typed-uuid
     - genvalidity-typed-uuid
 - github: NorfairKing/pretty-relative-time
-  commit: 0b321b1cb4ab5522718722d08a69ba9a92722314
+  commit: a634358ff274380a12360f7814c3aea46ea35b1b
 - github: NorfairKing/looper
-  commit: 8946c243a718bd44089f50d4c0fb624fd1f7db2a
+  commit: e01054970b47d9eaab8b9314a1400c231ac4a960
   subdirs:
     - looper
 - github: NorfairKing/safe-coloured-text
-  commit: d840dd7b0f13f4d0fd693c1dd93be33f9ee94605
+  commit: f30fe0e4d2a0fa036967ffe17538b60e5f9861f5
   subdirs:
     - safe-coloured-text
     - safe-coloured-text-terminfo
-- github: NorfairKing/yamlparse-applicative
-  commit: a250d9ea4b0c10dd6a96174f4942f73ec9652a2a
+- github: NorfairKing/autodocodec
+  commit: f0cb2ead0985b4394db0627e6befd7ce23c54c22
   subdirs:
-    - yamlparse-applicative
+    - autodocodec
+    - autodocodec-schema
+    - autodocodec-yaml
 
 nix:
   shell-file: shell.nix

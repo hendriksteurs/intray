@@ -1,0 +1,86 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           intray-api-gen
+version:        0.0.0.0
+synopsis:       Generators for intray-api
+category:       Intray
+homepage:       https://github.com/NorfairKing/intray#readme
+bug-reports:    https://github.com/NorfairKing/intray/issues
+author:         Tom Sydney Kerckhove
+maintainer:     syd.kerckhove@gmail.com
+copyright:      Copyright: (c) 2018 Tom Sydney Kerckhove
+license:        AllRightsReserved
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/NorfairKing/intray
+
+library
+  exposed-modules:
+      Intray.API.Gen
+      Intray.API.Admin.Gen
+      Intray.API.Protected.Gen
+      Intray.API.Protected.Account.Gen
+      Intray.API.Protected.Item.Gen
+  other-modules:
+      Import
+      Paths_intray_api_gen
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  build-depends:
+      QuickCheck
+    , base >=4.7 && <5
+    , bytestring
+    , genvalidity
+    , genvalidity-bytestring
+    , genvalidity-mergeless
+    , genvalidity-text
+    , genvalidity-time
+    , genvalidity-uuid
+    , intray-api
+    , intray-data
+    , intray-data-gen
+    , stripe-core
+    , stripe-haskell
+    , text
+    , validity
+    , validity-bytestring
+    , validity-text
+    , validity-time
+  default-language: Haskell2010
+
+test-suite intray-api-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Intray.API.Admin.InstanceSpec
+      Intray.API.InstanceSpec
+      Intray.API.Protected.Account.InstanceSpec
+      Intray.API.Protected.Item.InstanceSpec
+      TestImport
+      Paths_intray_api_gen
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      sydtest-discover:sydtest-discover
+  build-depends:
+      QuickCheck
+    , base
+    , bytestring
+    , genvalidity-sydtest
+    , genvalidity-sydtest-aeson
+    , genvalidity-text
+    , intray-api
+    , intray-api-gen
+    , intray-data
+    , intray-data-gen
+    , sydtest
+    , text
+  default-language: Haskell2010

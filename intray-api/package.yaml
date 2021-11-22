@@ -20,6 +20,7 @@ library:
   - JuicyPixels
   - JuicyPixels-extra
   - aeson
+  - autodocodec
   - base64-bytestring
   - blaze-html
   - blaze-markup
@@ -29,6 +30,7 @@ library:
   - hashable
   - intray-data
   - mergeless
+  - monad-logger
   - servant
   - servant-auth
   - servant-auth-server

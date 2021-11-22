@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE ExistentialQuantification #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -7,6 +8,7 @@
 
 module Intray.Data.ItemType where
 
+import Autodocodec
 import Control.Arrow
 import Data.Aeson
 import qualified Data.Text as T
@@ -18,36 +20,26 @@ import Intray.Data.Import
 data ItemType
   = TextItem
   | ImageItem ImageType
-  deriving (Show, Read, Eq, Ord, Generic)
+  deriving stock (Show, Read, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec ItemType)
 
 instance Validity ItemType
 
 instance PersistField ItemType where
   toPersistValue = toPersistValue . renderItemType
   fromPersistValue =
-    let goFromT t =
-          case parseItemType t of
-            Nothing -> Left $ "Unknown item type: " <> t
-            Just it -> pure it
-     in \case
-          PersistByteString bs -> do
-            t <- left (T.pack . show) $ TE.decodeUtf8' bs
-            goFromT t
-          PersistText t -> goFromT t
-          _ -> Left "Not a valid ItemType"
+    left T.pack . \case
+      PersistByteString bs -> do
+        t <- left show $ TE.decodeUtf8' bs
+        parseItemType t
+      PersistText t -> parseItemType t
+      _ -> Left "Not a valid ItemType"
 
 instance PersistFieldSql ItemType where
   sqlType Proxy = SqlString
 
-instance FromJSON ItemType where
-  parseJSON =
-    withText "ItemType" $ \t ->
-      case parseItemType t of
-        Nothing -> fail $ "Unknown item type: " <> T.unpack t
-        Just it -> pure it
-
-instance ToJSON ItemType where
-  toJSON = toJSON . renderItemType
+instance HasCodec ItemType where
+  codec = bimapCodec parseItemType renderItemType codec
 
 renderItemType :: ItemType -> Text
 renderItemType =
@@ -55,11 +47,13 @@ renderItemType =
     TextItem -> "text"
     ImageItem it -> renderImageType it
 
-parseItemType :: Text -> Maybe ItemType
+parseItemType :: Text -> Either String ItemType
 parseItemType =
   \case
     "text" -> pure TextItem
-    t -> ImageItem <$> parseImageType t
+    t -> case parseImageType t of
+      Left _ -> Left $ "Unknown item type: " <> show t
+      Right it -> pure $ ImageItem it
 
 data ImageType
   = JpgImage
@@ -68,12 +62,12 @@ data ImageType
 
 instance Validity ImageType
 
-parseImageType :: Text -> Maybe ImageType
+parseImageType :: Text -> Either String ImageType
 parseImageType =
   \case
-    "image/jpeg" -> Just JpgImage
-    "image/png" -> Just PngImage
-    _ -> Nothing
+    "image/jpeg" -> Right JpgImage
+    "image/png" -> Right PngImage
+    t -> Left $ "Unknown image type: " <> show t
 
 renderImageType :: ImageType -> Text
 renderImageType =

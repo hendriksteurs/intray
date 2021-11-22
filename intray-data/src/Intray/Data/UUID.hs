@@ -7,7 +7,6 @@ module Intray.Data.UUID
 where
 
 import qualified Data.ByteString.Lazy as LB
-import qualified Data.Text as T
 import qualified Data.UUID as UUID
 import Data.UUID.Typed
 import Database.Persist
@@ -16,11 +15,11 @@ import Intray.Data.Import
 
 instance PersistField (UUID a) where
   toPersistValue (UUID uuid) = PersistByteString $ LB.toStrict $ UUID.toByteString uuid
-  fromPersistValue (PersistByteString bs) =
+  fromPersistValue pv = do
+    bs <- fromPersistValue pv
     case UUID.fromByteString $ LB.fromStrict bs of
       Nothing -> Left "Invalidy Bytestring to convert to UUID"
       Just uuid -> Right $ UUID uuid
-  fromPersistValue pv = Left $ "Invalid Persist value to parse to UUID: " <> T.pack (show pv)
 
 instance PersistFieldSql (UUID a) where
   sqlType Proxy = SqlBlob

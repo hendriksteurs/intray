@@ -1,0 +1,153 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           intray-web-server
+version:        0.0.0.0
+build-type:     Simple
+
+library
+  exposed-modules:
+      Import
+      Intray.Web.Server
+      Intray.Web.Server.Application
+      Intray.Web.Server.Constants
+      Intray.Web.Server.DB
+      Intray.Web.Server.Foundation
+      Intray.Web.Server.Handler
+      Intray.Web.Server.Handler.AccessKeys
+      Intray.Web.Server.Handler.Account
+      Intray.Web.Server.Handler.Add
+      Intray.Web.Server.Handler.Admin
+      Intray.Web.Server.Handler.Checkout
+      Intray.Web.Server.Handler.Error
+      Intray.Web.Server.Handler.Home
+      Intray.Web.Server.Handler.ImageItem
+      Intray.Web.Server.Handler.IncompletionList
+      Intray.Web.Server.Handler.Pricing
+      Intray.Web.Server.Handler.Process
+      Intray.Web.Server.OptParse
+      Intray.Web.Server.OptParse.Types
+      Intray.Web.Server.Persistence
+      Intray.Web.Server.Static
+      Intray.Web.Server.Time
+      Intray.Web.Server.Widget
+  other-modules:
+      Paths_intray_web_server
+  hs-source-dirs:
+      src
+  default-extensions:
+      NoImplicitPrelude
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , aeson-pretty
+    , async
+    , autodocodec
+    , autodocodec-yaml
+    , base >=4.9 && <5
+    , base16-bytestring
+    , bytestring
+    , containers
+    , cookie
+    , data-default
+    , envparse
+    , http-client
+    , http-client-tls
+    , http-media
+    , http-types
+    , intray-api
+    , intray-client
+    , intray-data
+    , intray-server
+    , monad-logger
+    , mtl
+    , optparse-applicative >=0.13
+    , path
+    , path-io
+    , persistent
+    , persistent-sqlite
+    , persistent-template
+    , pretty-relative-time
+    , pretty-show
+    , servant
+    , servant-auth-client
+    , servant-client
+    , shakespeare
+    , stripe-core
+    , stripe-haskell
+    , template-haskell
+    , text
+    , time
+    , transformers
+    , typed-uuid
+    , unordered-containers
+    , wai
+    , yaml
+    , yesod
+    , yesod-auth
+    , yesod-core
+    , yesod-form
+    , yesod-static
+    , yesod-static-remote
+  default-language: Haskell2010
+
+executable intray-web-server
+  main-is: Main.hs
+  other-modules:
+      Paths_intray_web_server
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.9 && <5
+    , intray-web-server
+  default-language: Haskell2010
+
+test-suite intray-web-server-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Intray.Web.Server.Handler.AddRSpec
+      Intray.Web.Server.Handler.AdminRSpec
+      Intray.Web.Server.Handler.AuthRSpec
+      Intray.Web.Server.Handler.DeleteAccountSpec
+      Intray.Web.Server.Handler.ErrorRSpec
+      Intray.Web.Server.Handler.HomeRSpec
+      Intray.Web.Server.TestUtils
+      TestImport
+      Paths_intray_web_server
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      sydtest-discover:sydtest-discover
+  build-depends:
+      QuickCheck
+    , base >=4.9 && <5
+    , genvalidity-sydtest
+    , http-client
+    , http-types
+    , intray-client
+    , intray-data
+    , intray-data-gen
+    , intray-server
+    , intray-server-gen
+    , intray-web-server
+    , monad-logger
+    , mtl
+    , path
+    , path-io
+    , persistent
+    , persistent-sqlite
+    , servant-client
+    , sydtest
+    , sydtest-persistent-sqlite
+    , sydtest-wai
+    , sydtest-yesod
+    , text
+    , typed-uuid
+    , yesod-auth
+  default-language: Haskell2010

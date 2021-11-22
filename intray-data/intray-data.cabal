@@ -1,0 +1,69 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           intray-data
+version:        0.0.0.0
+synopsis:       Intray Data
+category:       Intray
+homepage:       https://github.com/NorfairKing/intray#readme
+bug-reports:    https://github.com/NorfairKing/intray/issues
+author:         Tom Sydney Kerckhove
+maintainer:     syd.kerckhove@gmail.com
+copyright:      Copyright: (c) 2017-2018 Tom Sydney Kerckhove
+license:        AllRightsReserved
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/NorfairKing/intray
+
+library
+  exposed-modules:
+      Intray.Data
+      Intray.Data.AccessKeySecret
+      Intray.Data.AccessKeyUUID
+      Intray.Data.AccountUUID
+      Intray.Data.DB
+      Intray.Data.HashedPassword
+      Intray.Data.Import
+      Intray.Data.ItemType
+      Intray.Data.ItemUUID
+      Intray.Data.Permission
+      Intray.Data.Stripe
+      Intray.Data.Username
+      Intray.Data.UUID
+  other-modules:
+      Paths_intray_data
+  hs-source-dirs:
+      src
+  default-extensions:
+      NoImplicitPrelude
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , autodocodec
+    , base >=4.7 && <5
+    , base16-bytestring
+    , bcrypt
+    , bytestring
+    , containers
+    , hashable
+    , persistent
+    , persistent-template
+    , random
+    , stripe-core
+    , stripe-haskell
+    , text
+    , time
+    , typed-uuid
+    , uuid
+    , validity
+    , validity-bytestring
+    , validity-containers
+    , validity-text
+    , validity-time
+    , validity-uuid
+  default-language: Haskell2010

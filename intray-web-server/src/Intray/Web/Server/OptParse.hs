@@ -11,9 +11,11 @@ module Intray.Web.Server.OptParse
   )
 where
 
+import Autodocodec.Yaml
 import Control.Arrow
 import Control.Monad.Logger
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as TE
 import qualified Env
 import Import
 import Intray.Web.Server.OptParse.Types
@@ -21,7 +23,6 @@ import Options.Applicative
 import qualified Options.Applicative.Help as OptParse
 import Servant.Client
 import qualified System.Environment as System
-import qualified YamlParse.Applicative as YamlParse
 
 getInstructions :: IO Instructions
 getInstructions = do
@@ -58,7 +59,7 @@ getConfiguration Flags {..} Environment {..} = do
   configFile <- case flagConfigFile <|> envConfigFile of
     Nothing -> getDefaultConfigFile
     Just cf -> resolveFile' cf
-  YamlParse.readConfigFile configFile
+  readYamlConfigFile configFile
 
 getDefaultConfigFile :: IO (Path Abs File)
 getDefaultConfigFile = resolveFile' "config.yaml"
@@ -102,7 +103,7 @@ argParser = info (helper <*> parseArgs) (fullDesc <> footerDoc (Just $ OptParse.
         [ Env.helpDoc environmentParser,
           "",
           "Configuration file format:",
-          T.unpack (YamlParse.prettyColourisedSchemaDoc @Configuration)
+          T.unpack (TE.decodeUtf8 (renderColouredSchemaViaCodec @Configuration))
         ]
 
 parseArgs :: Parser Arguments
@@ -175,7 +176,14 @@ parseCommandServe = info parser modifier
                       )
                   )
             )
-    modifier = fullDesc <> progDesc "Serve requests" <> YamlParse.confDesc @Configuration
+    modifier = fullDesc <> footerDoc (Just $ OptParse.string footerStr)
+    footerStr =
+      unlines
+        [ Env.helpDoc environmentParser,
+          "",
+          "Configuration file format:",
+          T.unpack (TE.decodeUtf8 (renderColouredSchemaViaCodec @Configuration))
+        ]
 
 parseFlags :: Parser Flags
 parseFlags =

@@ -1,10 +1,10 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 
 module Intray.API.Protected.Account.Types
   ( module Intray.API.Protected.Account.Types,
@@ -12,7 +12,8 @@ module Intray.API.Protected.Account.Types
   )
 where
 
-import Data.Aeson as JSON
+import Autodocodec
+import Data.Aeson (FromJSON, ToJSON)
 import Data.Time
 import Data.UUID.Typed
 import Import
@@ -28,69 +29,62 @@ data AccountInfo = AccountInfo
     accountInfoCount :: Int,
     accountInfoStatus :: PaidStatus
   }
-  deriving (Show, Eq, Ord, Generic)
+  deriving stock (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec AccountInfo)
 
 instance Validity AccountInfo
 
-instance FromJSON AccountInfo where
-  parseJSON =
-    withObject "AccountInfo" $ \o ->
-      AccountInfo <$> o .: "uuid" <*> o .: "username" <*> o .: "created" <*> o .: "last-login"
-        <*> o .: "admin"
-        <*> o .: "count"
-        <*> o .: "status"
-
-instance ToJSON AccountInfo where
-  toJSON AccountInfo {..} =
-    object
-      [ "uuid" .= accountInfoUUID,
-        "username" .= accountInfoUsername,
-        "created" .= accountInfoCreatedTimestamp,
-        "last-login" .= accountInfoLastLogin,
-        "admin" .= accountInfoAdmin,
-        "count" .= accountInfoCount,
-        "status" .= accountInfoStatus
-      ]
+instance HasCodec AccountInfo where
+  codec =
+    object "AccountInfo" $
+      AccountInfo
+        <$> requiredField "uuid" "account uuid" .= accountInfoUUID
+        <*> requiredField "username" "account username" .= accountInfoUsername
+        <*> requiredField "created" "creation time" .= accountInfoCreatedTimestamp
+        <*> requiredField "last-login" "last login time" .= accountInfoLastLogin
+        <*> requiredField "admin" "whether the user is an admin" .= accountInfoAdmin
+        <*> requiredField "count" "how many items the user has in their intray" .= accountInfoCount
+        <*> requiredField "status" "paid status of the account" .= accountInfoStatus
 
 data PaidStatus
   = HasNotPaid Int -- Number of extra items that they're still allowed
   | HasPaid UTCTime
   | NoPaymentNecessary
   deriving (Show, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec PaidStatus)
 
 instance Validity PaidStatus
 
-instance FromJSON PaidStatus where
-  parseJSON =
-    withObject "PaidStatus" $ \o -> do
-      t <- o .: "status"
-      case (t :: Text) of
-        "not-paid" -> HasNotPaid <$> o .: "items-left"
-        "paid" -> HasPaid <$> o .: "until"
-        "no-payment-necessary" -> pure NoPaymentNecessary
-        _ -> fail "Unknown PaidStatus"
-
-instance ToJSON PaidStatus where
-  toJSON =
-    let o t vs = object $ ("status" .= (t :: Text)) : vs
-     in \case
-          HasNotPaid itemsLeft -> o "not-paid" ["items-left" .= itemsLeft]
-          HasPaid ut -> o "paid" ["until" .= ut]
-          NoPaymentNecessary -> o "no-payment-necessary" []
+instance HasCodec PaidStatus where
+  codec =
+    object "PaidStatus" $
+      dimapCodec f g $
+        eitherCodec (requiredField "items-left" "how many free items the user has left") $
+          eitherCodec
+            (requiredField "until" "when the subscription expires")
+            (pure NoPaymentNecessary)
+    where
+      f = \case
+        Left i -> HasNotPaid i
+        Right (Left t) -> HasPaid t
+        Right (Right ps) -> ps
+      g = \case
+        HasNotPaid i -> Left i
+        HasPaid t -> Right (Left t)
+        NoPaymentNecessary -> Right (Right NoPaymentNecessary)
 
 data ChangePassphrase = ChangePassphrase
   { changePassphraseOld :: Text,
     changePassphraseNew :: Text
   }
   deriving (Show, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec ChangePassphrase)
 
 instance Validity ChangePassphrase
 
-instance FromJSON ChangePassphrase where
-  parseJSON =
-    withObject "ChangePassphrase" $ \o ->
-      ChangePassphrase <$> o .: "old-passphrase" <*> o .: "new-passphrase"
-
-instance ToJSON ChangePassphrase where
-  toJSON ChangePassphrase {..} =
-    object ["old-passphrase" .= changePassphraseOld, "new-passphrase" .= changePassphraseNew]
+instance HasCodec ChangePassphrase where
+  codec =
+    object "ChangePassphrase" $
+      ChangePassphrase
+        <$> requiredField "old-passphrase" "old passphrase" .= changePassphraseOld
+        <*> requiredField "new-passphrase" "new passphrase" .= changePassphraseNew

@@ -1,8 +1,9 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.API.Protected.Item.InstanceSpec
-  ( spec
-  ) where
+  ( spec,
+  )
+where
 
 import Intray.API.Protected.Item.Gen ()
 import Intray.API.Protected.Item.Types

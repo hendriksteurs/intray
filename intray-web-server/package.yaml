@@ -13,6 +13,8 @@ library:
   - aeson
   - aeson-pretty
   - async
+  - autodocodec
+  - autodocodec-yaml
   - base16-bytestring
   - bytestring
   - containers
@@ -51,7 +53,6 @@ library:
   - unordered-containers
   - wai
   - yaml
-  - yamlparse-applicative
   - yesod
   - yesod-auth
   - yesod-core

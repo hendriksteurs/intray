@@ -40,7 +40,7 @@ in
             log-level = mkOption {
               type = types.nullOr types.str;
               default = null;
-              example = "LevelInfo";
+              example = "Info";
               description = "The log level";
             };
             admins = mkOption {
@@ -107,7 +107,7 @@ in
             log-level = mkOption {
               type = types.nullOr types.str;
               default = null;
-              example = "LevelInfo";
+              example = "Info";
               description = "The log level";
             };
             api-url = mkOption {

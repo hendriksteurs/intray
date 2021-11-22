@@ -1,0 +1,148 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           intray-server-gen
+version:        0.0.0.0
+synopsis:       Test utils for intray-server
+description:    Please see README.md
+category:       Intray
+homepage:       https://github.com/NorfairKing/intray-server#readme
+bug-reports:    https://github.com/NorfairKing/intray-server/issues
+author:         Tom Sydney Kerckhove
+maintainer:     syd.kerckhove@gmail.com
+copyright:      Copyright: (c) 2016 Tom Sydney Kerckhove
+license:        AllRightsReserved
+license-file:   LICENSE
+build-type:     Simple
+
+source-repository head
+  type: git
+  location: https://github.com/NorfairKing/intray-server
+
+library
+  exposed-modules:
+      Import
+      Intray.Server.TestUtils
+  other-modules:
+      Paths_intray_server_gen
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  build-depends:
+      QuickCheck >=2.9
+    , base
+    , bytestring >=0.10
+    , cache
+    , containers
+    , cookie >=0.4
+    , genvalidity-bytestring
+    , genvalidity-containers
+    , genvalidity-mergeless
+    , genvalidity-sydtest
+    , genvalidity-text
+    , genvalidity-time
+    , http-client
+    , http-types
+    , intray-api
+    , intray-client
+    , intray-data
+    , intray-data-gen
+    , intray-server
+    , microlens >=0.4
+    , monad-logger
+    , path
+    , path-io
+    , persistent-sqlite
+    , resourcet
+    , servant
+    , servant-auth-client
+    , servant-auth-server
+    , servant-client
+    , servant-server
+    , stripe-core
+    , sydtest
+    , sydtest-persistent-sqlite
+    , sydtest-wai
+    , text >=1.2
+    , time
+    , typed-uuid
+    , wai
+    , warp
+  default-language: Haskell2010
+
+test-suite intray-server-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Intray.Server.Handler.AdminDeleteAccountSpec
+      Intray.Server.Handler.AdminGetAccountsSpec
+      Intray.Server.Handler.AdminGetStatsSpec
+      Intray.Server.Handler.DeleteAccountSpec
+      Intray.Server.Handler.DeleteItemSpec
+      Intray.Server.Handler.GetAccountInfoSpec
+      Intray.Server.Handler.GetItemSpec
+      Intray.Server.Handler.ListItemsSpec
+      Intray.Server.Handler.ListItemUUIDsSpec
+      Intray.Server.Handler.PostAddItemSpec
+      Intray.Server.Handler.PostChangePassphraseSpec
+      Intray.Server.Handler.RegisterSpec
+      Intray.Server.Handler.ShowItemSpec
+      Intray.Server.Handler.SizeSpec
+      Intray.Server.Handler.SyncSpec
+      TestImport
+      Paths_intray_server_gen
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:
+      sydtest-discover:sydtest-discover
+  build-depends:
+      QuickCheck
+    , base >=4.9 && <5
+    , bytestring
+    , containers
+    , genvalidity-bytestring
+    , genvalidity-sydtest
+    , genvalidity-text
+    , genvalidity-time
+    , http-types
+    , intray-api
+    , intray-api-gen
+    , intray-client
+    , intray-data
+    , intray-data-gen
+    , intray-server-gen
+    , mergeless
+    , path
+    , path-io
+    , servant
+    , servant-client
+    , servant-server
+    , sydtest
+    , text
+    , time
+  default-language: Haskell2010
+
+benchmark intray-server-bench
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_intray_server_gen
+  hs-source-dirs:
+      bench
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -fno-warn-name-shadowing
+  build-depends:
+      QuickCheck
+    , base
+    , bytestring
+    , cookie
+    , criterion
+    , intray-client
+    , intray-server-gen
+    , servant
+    , servant-auth-client
+    , servant-client
+  default-language: Haskell2010

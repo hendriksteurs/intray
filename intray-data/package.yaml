@@ -20,6 +20,8 @@ library:
 
   dependencies:
   - aeson
+  - autodocodec
+  - base16-bytestring
   - bcrypt
   - bytestring
   - containers
@@ -27,15 +29,14 @@ library:
   - persistent
   - persistent-template
   - random
-  - base16-bytestring
+  - stripe-core
+  - stripe-haskell
   - text
   - time
   - typed-uuid
   - uuid
   - validity
   - validity-bytestring
-  - stripe-core
-  - stripe-haskell
   - validity-containers
   - validity-text
   - validity-time

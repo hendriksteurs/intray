@@ -1,5 +1,6 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -19,7 +20,8 @@ module Intray.API.Protected.Item.Types
   )
 where
 
-import Data.Aeson as JSON
+import Autodocodec
+import Data.Aeson (FromJSON, ToJSON)
 import qualified Data.ByteString.Base64 as Base64
 import qualified Data.ByteString.Char8 as SB8
 import qualified Data.Text.Encoding as TE
@@ -33,23 +35,25 @@ data TypedItem = TypedItem
   { itemType :: ItemType,
     itemData :: ByteString
   }
-  deriving (Show, Read, Eq, Ord, Generic)
+  deriving stock (Show, Read, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec TypedItem)
 
 instance Validity TypedItem
 
-instance FromJSON TypedItem where
-  parseJSON =
-    withObject "TypedItem" $ \o ->
-      TypedItem <$> o .: "type"
-        <*> ( do
-                t <- o .: "data"
-                case Base64.decode $ SB8.pack t of
-                  Left err -> fail $ unwords ["Failed to decode base64-encoded typed item data:", err]
-                  Right r -> pure r
-            )
-
-instance ToJSON TypedItem where
-  toJSON TypedItem {..} = object ["type" .= itemType, "data" .= SB8.unpack (Base64.encode itemData)]
+instance HasCodec TypedItem where
+  codec =
+    object "TypedItem" $
+      TypedItem
+        <$> requiredField "type" "type of the item data" .= itemType
+        <*> requiredFieldWith
+          "data"
+          ( bimapCodec
+              (Base64.decode . SB8.pack)
+              (SB8.unpack . Base64.encode)
+              codec
+          )
+          "base64-encoded data"
+          .= itemData
 
 textTypedItem :: Text -> TypedItem
 textTypedItem t = TypedItem {itemType = TextItem, itemData = TE.encodeUtf8 t}
@@ -69,31 +73,32 @@ data AddedItem a = AddedItem
   { addedItemContents :: a,
     addedItemCreated :: UTCTime
   }
-  deriving (Show, Read, Eq, Ord, Generic)
+  deriving stock (Show, Read, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec (AddedItem a))
 
 instance Validity a => Validity (AddedItem a)
 
-instance ToJSON a => ToJSON (AddedItem a) where
-  toJSON AddedItem {..} = object ["contents" .= addedItemContents, "created" .= addedItemCreated]
-
-instance FromJSON a => FromJSON (AddedItem a) where
-  parseJSON = withObject "AddedItem" $ \o -> AddedItem <$> o .: "contents" <*> o .: "created"
+instance HasCodec a => HasCodec (AddedItem a) where
+  codec =
+    object "AddedItem" $
+      AddedItem
+        <$> requiredField "contents" "the item itself" .= addedItemContents
+        <*> requiredField "created" "creation timestamp" .= addedItemCreated
 
 data ItemInfo a = ItemInfo
   { itemInfoIdentifier :: ItemUUID,
     itemInfoContents :: a,
     itemInfoCreated :: UTCTime
   }
-  deriving (Show, Read, Eq, Ord, Generic)
+  deriving stock (Show, Read, Eq, Ord, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec (ItemInfo a))
 
 instance Validity a => Validity (ItemInfo a)
 
-instance ToJSON a => ToJSON (ItemInfo a) where
-  toJSON ItemInfo {..} =
-    object
-      ["id" .= itemInfoIdentifier, "contents" .= itemInfoContents, "created" .= itemInfoCreated]
-
-instance FromJSON a => FromJSON (ItemInfo a) where
-  parseJSON =
-    withObject "ItemInfo TypedItem" $ \o ->
-      ItemInfo <$> o .: "id" <*> o .: "contents" <*> o .: "created"
+instance HasCodec a => HasCodec (ItemInfo a) where
+  codec =
+    object "ItemInfo" $
+      ItemInfo
+        <$> requiredField "id" "uuid" .= itemInfoIdentifier
+        <*> requiredField "contents" "the item itself" .= itemInfoContents
+        <*> requiredField "created" "creation timestamp" .= itemInfoCreated

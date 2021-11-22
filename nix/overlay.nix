@@ -13,10 +13,10 @@ in
         addBuildDepend
           (
             failOnAllWarnings (
-              disableLibraryProfiling (final.haskellPackages.callCabal2nix name (pathFor name) { })
+              disableLibraryProfiling (final.haskellPackages.callCabal2nixWithOptions name (pathFor name) "--no-hpack" { })
             )
           )
-          (final.haskellPackages.autoexporter);
+          final.haskellPackages.autoexporter;
       intrayPkgWithComp =
         exeName: name:
         generateOptparseApplicativeCompletion exeName (intrayPkg name);
@@ -92,15 +92,15 @@ in
                 ${old.preConfigure or ""}
 
                 mkdir -p static/
-                cp ${jquery-js} static/jquery.min.js
+                ln -s ${jquery-js} static/jquery.min.js
                 mkdir -p static/bulma/
-                cp ${bulma-css} static/bulma/bulma.min.css
-                cp ${bulma-tooltip-css} static/bulma/bulma-tooltip.min.css
+                ln -s ${bulma-css} static/bulma/bulma.min.css
+                ln -s ${bulma-tooltip-css} static/bulma/bulma-tooltip.min.css
                 mkdir -p static/semantic/themes/default/assets/fonts
-                cp ${icons-ttf} static/semantic/themes/default/assets/fonts/icons.ttf
-                cp ${icons-woff} static/semantic/themes/default/assets/fonts/icons.woff
-                cp ${icons-woff2} static/semantic/themes/default/assets/fonts/icons.woff2
-                cp ${intrayAndroidRelease} static/intray.apk
+                ln -s ${icons-ttf} static/semantic/themes/default/assets/fonts/icons.ttf
+                ln -s ${icons-woff} static/semantic/themes/default/assets/fonts/icons.woff
+                ln -s ${icons-woff2} static/semantic/themes/default/assets/fonts/icons.woff2
+                ln -s ${intrayAndroidRelease} static/intray.apk
               '';
             postInstall =
               let
@@ -184,9 +184,6 @@ in
                     sha256 =
                       "sha256:1j76s7666vadm4q1ma73crkrks6q6nskzb3jqaf6rp2qmw1phfpr";
                   };
-                typedUuidPkg =
-                  name:
-                  self.callCabal2nix name (sources.typed-uuid + "/${name}") { };
                 stripeHaskellPkg =
                   name:
                   dontCheck (
@@ -223,10 +220,6 @@ in
                 "stripe-http-streams"
               ]
                 stripeHaskellPkg // final.lib.genAttrs [
-                "typed-uuid"
-                "genvalidity-typed-uuid"
-              ]
-                typedUuidPkg // final.lib.genAttrs [
                 "servant-auth"
                 "servant-auth-client"
                 "servant-auth-docs"
