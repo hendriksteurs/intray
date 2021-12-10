@@ -10,25 +10,15 @@ import Data.Aeson (FromJSON, ToJSON)
 import Import
 import Intray.Client
 
-type Arguments = (Command, Flags)
-
-type Instructions = (Dispatch, Settings)
-
-newtype Command
-  = CommandServe ServeFlags
-  deriving (Show, Eq)
-
-data ServeFlags = ServeFlags
-  { serveFlagPort :: !(Maybe Int),
-    serveFlagAPIBaseUrl :: !(Maybe BaseUrl),
-    serveFlagLogLevel :: !(Maybe LogLevel),
-    serveFlagTracking :: !(Maybe Text),
-    serveFlagVerification :: !(Maybe Text),
-    serveFlagLoginCacheFile :: !(Maybe FilePath)
+data Flags = Flags
+  { flagConfigFile :: !(Maybe FilePath),
+    flagPort :: !(Maybe Int),
+    flagAPIBaseUrl :: !(Maybe BaseUrl),
+    flagLogLevel :: !(Maybe LogLevel),
+    flagTracking :: !(Maybe Text),
+    flagVerification :: !(Maybe Text),
+    flagLoginCacheFile :: !(Maybe FilePath)
   }
-  deriving (Show, Eq)
-
-data Flags = Flags {flagConfigFile :: !(Maybe FilePath)}
   deriving (Show, Eq)
 
 data Configuration = Configuration
@@ -64,20 +54,12 @@ data Environment = Environment
   }
   deriving (Show, Eq)
 
-newtype Dispatch
-  = DispatchServe ServeSettings
-  deriving (Show)
-
-data ServeSettings = ServeSettings
-  { serveSetPort :: !Int,
-    serveSetLogLevel :: !LogLevel,
-    serveSetAPIBaseUrl :: !BaseUrl,
-    serveSetTracking :: !(Maybe Text),
-    serveSetVerification :: !(Maybe Text),
-    serveSetLoginCacheFile :: !FilePath
+data Settings = Settings
+  { setPort :: !Int,
+    setLogLevel :: !LogLevel,
+    setAPIBaseUrl :: !BaseUrl,
+    setTracking :: !(Maybe Text),
+    setVerification :: !(Maybe Text),
+    setLoginCacheFile :: !FilePath
   }
   deriving (Show)
-
-data Settings
-  = Settings
-  deriving (Show, Eq)

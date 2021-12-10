@@ -17,26 +17,26 @@ import Yesod
 
 intrayWebServer :: IO ()
 intrayWebServer = do
-  (DispatchServe ss, Settings) <- getInstructions
-  pPrint ss
-  runIntrayWebServer ss
+  settings <- getSettings
+  pPrint settings
+  runIntrayWebServer settings
 
-runIntrayWebServer :: ServeSettings -> IO ()
-runIntrayWebServer ServeSettings {..} =
+runIntrayWebServer :: Settings -> IO ()
+runIntrayWebServer Settings {..} =
   runStderrLoggingT $
-    filterLogger (\_ ll -> ll >= serveSetLogLevel) $
-      withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack serveSetLoginCacheFile) 1 $
+    filterLogger (\_ ll -> ll >= setLogLevel) $
+      withSqlitePoolInfo (mkSqliteConnectionInfo $ T.pack setLoginCacheFile) 1 $
         \pool -> do
           man <- liftIO Http.newTlsManager
           let app =
                 App
                   { appHttpManager = man,
                     appStatic = myStatic,
-                    appTracking = serveSetTracking,
-                    appVerification = serveSetVerification,
-                    appAPIBaseUrl = serveSetAPIBaseUrl,
+                    appTracking = setTracking,
+                    appVerification = setVerification,
+                    appAPIBaseUrl = setAPIBaseUrl,
                     appConnectionPool = pool
                   }
           liftIO $ do
             runSqlPool (runMigration migrateLoginCache) pool
-            warp serveSetPort app
+            warp setPort app

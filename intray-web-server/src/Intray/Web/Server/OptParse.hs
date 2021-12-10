@@ -3,11 +3,8 @@
 {-# LANGUAGE TypeApplications #-}
 
 module Intray.Web.Server.OptParse
-  ( getInstructions,
-    Instructions,
-    Dispatch (..),
+  ( getSettings,
     Settings (..),
-    ServeSettings (..),
   )
 where
 
@@ -24,35 +21,26 @@ import qualified Options.Applicative.Help as OptParse
 import Servant.Client
 import qualified System.Environment as System
 
-getInstructions :: IO Instructions
-getInstructions = do
-  (cmd, flags) <- getArguments
+getSettings :: IO Settings
+getSettings = do
+  flags <- getFlags
   env <- getEnvironment
   config <- getConfiguration flags env
-  combineToInstructions cmd flags env config
+  combineToSettings flags env config
 
-combineToInstructions :: Command -> Flags -> Environment -> Maybe Configuration -> IO Instructions
-combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..} mConf = do
+combineToSettings :: Flags -> Environment -> Maybe Configuration -> IO Settings
+combineToSettings Flags {..} Environment {..} mConf = do
   let mc :: (Configuration -> Maybe a) -> Maybe a
       mc func = mConf >>= func
-  let port = fromMaybe 8000 $ serveFlagPort <|> envPort <|> mc confPort
-  baseUrl <- case serveFlagAPIBaseUrl <|> envAPIBaseUrl <|> mc confAPIBaseUrl of
+  let setPort = fromMaybe 8000 $ flagPort <|> envPort <|> mc confPort
+  setAPIBaseUrl <- case flagAPIBaseUrl <|> envAPIBaseUrl <|> mc confAPIBaseUrl of
     Nothing -> die "No API URL Configured. Try --help to see how to configure it."
     Just burl -> pure burl
-  pure
-    ( DispatchServe
-        ServeSettings
-          { serveSetPort = port,
-            serveSetLogLevel = fromMaybe LevelInfo $ serveFlagLogLevel <|> envLogLevel <|> mc confLogLevel,
-            serveSetAPIBaseUrl = baseUrl,
-            serveSetTracking = serveFlagTracking <|> envTracking <|> mc confTracking,
-            serveSetVerification = serveFlagVerification <|> envVerification <|> mc confVerification,
-            serveSetLoginCacheFile =
-              fromMaybe "intray-web-server.db" $
-                serveFlagLoginCacheFile <|> envLoginCacheFile <|> mc confLoginCacheFile
-          },
-      Settings
-    )
+  let setLogLevel = fromMaybe LevelInfo $ flagLogLevel <|> envLogLevel <|> mc confLogLevel
+  let setTracking = flagTracking <|> envTracking <|> mc confTracking
+  let setVerification = flagVerification <|> envVerification <|> mc confVerification
+  let setLoginCacheFile = fromMaybe "intray-web-server.db" $ flagLoginCacheFile <|> envLoginCacheFile <|> mc confLoginCacheFile
+  pure Settings {..}
 
 getConfiguration :: Flags -> Environment -> IO (Maybe Configuration)
 getConfiguration Flags {..} Environment {..} = do
@@ -84,99 +72,20 @@ environmentParser =
   where
     mE h = Env.def Nothing <> Env.keep <> Env.help h
 
-getArguments :: IO Arguments
-getArguments = do
+getFlags :: IO Flags
+getFlags = do
   args <- System.getArgs
-  let result = runArgumentsParser args
+  let result = runFlagsParser args
   handleParseResult result
 
-runArgumentsParser :: [String] -> ParserResult Arguments
-runArgumentsParser = execParserPure prefs_ argParser
+runFlagsParser :: [String] -> ParserResult Flags
+runFlagsParser = execParserPure prefs_ flagsParser
   where
     prefs_ = defaultPrefs {prefShowHelpOnError = True, prefShowHelpOnEmpty = True}
 
-argParser :: ParserInfo Arguments
-argParser = info (helper <*> parseArgs) (fullDesc <> footerDoc (Just $ OptParse.string footerStr))
+flagsParser :: ParserInfo Flags
+flagsParser = info (helper <*> parseFlags) (fullDesc <> footerDoc (Just $ OptParse.string footerStr))
   where
-    footerStr =
-      unlines
-        [ Env.helpDoc environmentParser,
-          "",
-          "Configuration file format:",
-          T.unpack (TE.decodeUtf8 (renderColouredSchemaViaCodec @Configuration))
-        ]
-
-parseArgs :: Parser Arguments
-parseArgs = (,) <$> parseCommand <*> parseFlags
-
-parseCommand :: Parser Command
-parseCommand = hsubparser $ mconcat [command "serve" parseCommandServe]
-
-parseCommandServe :: ParserInfo Command
-parseCommandServe = info parser modifier
-  where
-    parser =
-      CommandServe
-        <$> ( ServeFlags
-                <$> optional
-                  ( option
-                      auto
-                      ( mconcat
-                          [ long "port",
-                            metavar "PORT",
-                            help "the port to serve on"
-                          ]
-                      )
-                  )
-                <*> optional
-                  ( option
-                      (eitherReader $ left show . parseBaseUrl)
-                      ( mconcat
-                          [ long "api-url",
-                            metavar "URL",
-                            help "the url to call the API server on"
-                          ]
-                      )
-                  )
-                <*> optional
-                  ( option
-                      auto
-                      ( mconcat
-                          [ long "log-level",
-                            metavar "LOG_LEVEL",
-                            help "the minimal severity for log messages"
-                          ]
-                      )
-                  )
-                <*> optional
-                  ( strOption
-                      ( mconcat
-                          [ long "analytics-tracking-id",
-                            metavar "TRACKING_ID",
-                            help "The google analytics tracking ID"
-                          ]
-                      )
-                  )
-                <*> optional
-                  ( strOption
-                      ( mconcat
-                          [ long "search-console-verification",
-                            metavar "VERIFICATION_TAG",
-                            help "The contents of the google search console verification tag"
-                          ]
-                      )
-                  )
-                <*> optional
-                  ( strOption
-                      ( mconcat
-                          [ long "login-cache-file",
-                            metavar "FILEPATH",
-                            help "The file to store the login cache database in"
-                          ]
-                      )
-                  )
-            )
-    modifier = fullDesc <> footerDoc (Just $ OptParse.string footerStr)
     footerStr =
       unlines
         [ Env.helpDoc environmentParser,
@@ -191,3 +100,60 @@ parseFlags =
     <$> option
       (Just <$> str)
       (mconcat [long "config-file", value Nothing, metavar "FILEPATH", help "The config file"])
+      <*> optional
+        ( option
+            auto
+            ( mconcat
+                [ long "port",
+                  metavar "PORT",
+                  help "the port to serve on"
+                ]
+            )
+        )
+      <*> optional
+        ( option
+            (eitherReader $ left show . parseBaseUrl)
+            ( mconcat
+                [ long "api-url",
+                  metavar "URL",
+                  help "the url to call the API server on"
+                ]
+            )
+        )
+      <*> optional
+        ( option
+            auto
+            ( mconcat
+                [ long "log-level",
+                  metavar "LOG_LEVEL",
+                  help "the minimal severity for log messages"
+                ]
+            )
+        )
+      <*> optional
+        ( strOption
+            ( mconcat
+                [ long "analytics-tracking-id",
+                  metavar "TRACKING_ID",
+                  help "The google analytics tracking ID"
+                ]
+            )
+        )
+      <*> optional
+        ( strOption
+            ( mconcat
+                [ long "search-console-verification",
+                  metavar "VERIFICATION_TAG",
+                  help "The contents of the google search console verification tag"
+                ]
+            )
+        )
+      <*> optional
+        ( strOption
+            ( mconcat
+                [ long "login-cache-file",
+                  metavar "FILEPATH",
+                  help "The file to store the login cache database in"
+                ]
+            )
+        )
