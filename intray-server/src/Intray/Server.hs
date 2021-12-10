@@ -24,24 +24,24 @@ import Intray.Server.Serve (intrayServer)
 import Intray.Server.SigningKey
 import Intray.Server.Types
 import Network.Wai as Wai
-import Network.Wai.Handler.Warp as Warp
+import qualified Network.Wai.Handler.Warp as Warp
 import Network.Wai.Middleware.Cors
 import Servant hiding (BadPassword, NoSuchUser)
 import Servant.Auth.Server as Auth
 import Servant.Server.Generic
 
-runIntrayServer :: ServeSettings -> IO ()
-runIntrayServer ServeSettings {..} =
+runIntrayServer :: Settings -> IO ()
+runIntrayServer Settings {..} =
   runStderrLoggingT $
-    filterLogger (\_ ll -> ll >= serveSetLogLevel) $
-      withSqlitePoolInfo serveSetConnectionInfo 1 $
+    filterLogger (\_ ll -> ll >= setLogLevel) $
+      withSqlitePoolInfo setConnectionInfo 1 $
         \pool -> do
           runResourceT $ flip runSqlPool pool $ runMigration migrateAll
-          signingKey <- liftIO $ loadSigningKey serveSetSigningKeyFile
+          signingKey <- liftIO $ loadSigningKey setSigningKeyFile
           let jwtCfg = defaultJWTSettings signingKey
           let cookieCfg = defaultCookieSettings
           mMonetisationEnv <-
-            forM serveSetMonetisationSettings $ \MonetisationSettings {..} -> do
+            forM setMonetisationSettings $ \MonetisationSettings {..} -> do
               planCache <- liftIO $ newCache Nothing
               pure
                 MonetisationEnv
@@ -51,27 +51,27 @@ runIntrayServer ServeSettings {..} =
                   }
           let intrayEnv =
                 IntrayServerEnv
-                  { envHost = serveSetHost,
+                  { envHost = setHost,
                     envConnectionPool = pool,
                     envCookieSettings = cookieCfg,
                     envJWTSettings = jwtCfg,
-                    envAdmins = serveSetAdmins,
-                    envFreeloaders = serveSetFreeloaders,
+                    envAdmins = setAdmins,
+                    envFreeloaders = setFreeloaders,
                     envMonetisation = mMonetisationEnv
                   }
           let mLoopersSets =
-                case serveSetMonetisationSettings of
+                case setMonetisationSettings of
                   Nothing -> Nothing
                   Just MonetisationSettings {..} ->
                     Just
                       LoopersSettings
-                        { loopersSetLogLevel = serveSetLogLevel,
+                        { loopersSetLogLevel = setLogLevel,
                           loopersSetConnectionPool = pool,
                           loopersSetStripeSettings = monetisationSetStripeSettings,
                           loopersSetStripeEventsFetcher = monetisationSetStripeEventsFetcher,
                           loopersSetStripeEventsRetrier = monetisationSetStripeEventsRetrier
                         }
-          let runServer = Warp.run serveSetPort $ intrayApp intrayEnv
+          let runServer = Warp.run setPort $ intrayApp intrayEnv
           case mLoopersSets of
             Nothing -> liftIO runServer
             Just ls -> do

@@ -24,44 +24,43 @@ import qualified System.Environment as System
 import Web.Stripe.Client as Stripe
 import Web.Stripe.Types as Stripe
 
-getInstructions :: IO Instructions
-getInstructions = do
-  (cmd, flags) <- getArguments
+getSettings :: IO Settings
+getSettings = do
+  flags <- getFlags
   env <- getEnvironment
   config <- getConfiguration flags env
-  combineToInstructions cmd flags env config
+  combineToSettings flags env config
 
-combineToInstructions :: Command -> Flags -> Environment -> Maybe Configuration -> IO Instructions
-combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..} mConf = do
+combineToSettings :: Flags -> Environment -> Maybe Configuration -> IO Settings
+combineToSettings Flags {..} Environment {..} mConf = do
   let mc :: (Configuration -> Maybe a) -> Maybe a
       mc func = mConf >>= func
-  let port = fromMaybe 8001 $ serveFlagPort <|> envPort <|> mc confPort
-  let host =
-        T.pack $ fromMaybe ("localhost:" <> show port) $ serveFlagHost <|> envHost <|> mc confHost
-  let logLevel = fromMaybe LevelInfo $ serveFlagLogLevel <|> envLogLevel <|> mc confLogLevel
-  signingKeyFile <-
-    case serveFlagSigningKeyFile <|> envSigningKeyFile <|> mc confSigningKeyFile of
+  let setPort = fromMaybe 8001 $ flagPort <|> envPort <|> mc confPort
+  let setHost =
+        T.pack $ fromMaybe ("localhost:" <> show setPort) $ flagHost <|> envHost <|> mc confHost
+  let setLogLevel = fromMaybe LevelInfo $ flagLogLevel <|> envLogLevel <|> mc confLogLevel
+  setSigningKeyFile <-
+    case flagSigningKeyFile <|> envSigningKeyFile <|> mc confSigningKeyFile of
       Nothing -> resolveFile' "signing-key.json"
       Just skf -> resolveFile' skf
-  let connInfo =
-        mkSqliteConnectionInfo $ fromMaybe "intray.db" (serveFlagDb <|> envDb <|> mc confDb)
-  admins <-
-    forM (serveFlagAdmins ++ fromMaybe [] (mc confAdmins)) $ \s ->
+  let setConnectionInfo = mkSqliteConnectionInfo $ fromMaybe "intray.db" (flagDb <|> envDb <|> mc confDb)
+  setAdmins <-
+    forM (flagAdmins ++ fromMaybe [] (mc confAdmins)) $ \s ->
       case parseUsername $ T.pack s of
         Nothing -> die $ unwords ["Invalid admin username:", s]
         Just u -> pure u
-  freeloaders <-
-    forM (serveFlagFreeloaders ++ fromMaybe [] (mc confFreeloaders)) $ \s ->
+  setFreeloaders <-
+    forM (flagFreeloaders ++ fromMaybe [] (mc confFreeloaders)) $ \s ->
       case parseUsername $ T.pack s of
         Nothing -> die $ unwords ["Invalid freeloader username:", s]
         Just u -> pure u
-  mmSets <-
+  setMonetisationSettings <-
     do
       let mmc :: (MonetisationConfiguration -> Maybe a) -> Maybe a
           mmc func = mc confMonetisationConfig >>= func
       let plan =
             Stripe.PlanId . T.pack
-              <$> (serveFlagStripePlan <|> envStripePlan <|> mmc monetisationConfStripePlan)
+              <$> (flagStripePlan <|> envStripePlan <|> mmc monetisationConfStripePlan)
       let config =
             ( \sk ->
                 StripeConfig
@@ -69,31 +68,31 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
                     stripeEndpoint = Nothing
                   }
             )
-              <$> ( serveFlagStripeSecretKey <|> envStripeSecretKey
+              <$> ( flagStripeSecretKey <|> envStripeSecretKey
                       <|> mmc monetisationConfStripeSecretKey
                   )
       let publicKey =
             T.pack
-              <$> ( serveFlagStripePublishableKey <|> envStripePublishableKey
+              <$> ( flagStripePublishableKey <|> envStripePublishableKey
                       <|> mmc monetisationConfStripePublishableKey
                   )
       let fetcherSets =
             deriveLooperSettings
               (seconds 0)
               (minutes 1)
-              serveFlagLooperStripeEventsFetcher
+              flagLooperStripeEventsFetcher
               envLooperStripeEventsFetcher
               (mmc monetisationConfStripeEventsFetcher)
       let retrierSets =
             deriveLooperSettings
               (seconds 30)
               (hours 24)
-              serveFlagLooperStripeEventsRetrier
+              flagLooperStripeEventsRetrier
               envLooperStripeEventsRetrier
               (mmc monetisationConfStripeEventsRetrier)
       let maxItemsFree =
             fromMaybe 5 $
-              serveFlagMaxItemsFree <|> envMaxItemsFree <|> mmc monetisationConfMaxItemsFree
+              flagMaxItemsFree <|> envMaxItemsFree <|> mmc monetisationConfMaxItemsFree
       pure $ do
         ss <- StripeSettings <$> plan <*> config <*> publicKey
         pure $
@@ -103,20 +102,7 @@ combineToInstructions (CommandServe ServeFlags {..}) Flags {..} Environment {..}
               monetisationSetStripeEventsRetrier = retrierSets,
               monetisationSetMaxItemsFree = maxItemsFree
             }
-  pure
-    ( DispatchServe
-        ServeSettings
-          { serveSetHost = host,
-            serveSetPort = port,
-            serveSetLogLevel = logLevel,
-            serveSetSigningKeyFile = signingKeyFile,
-            serveSetConnectionInfo = connInfo,
-            serveSetAdmins = admins,
-            serveSetFreeloaders = freeloaders,
-            serveSetMonetisationSettings = mmSets
-          },
-      Settings
-    )
+  pure Settings {..}
 
 getConfiguration :: Flags -> Environment -> IO (Maybe Configuration)
 getConfiguration Flags {..} Environment {..} = do
@@ -153,36 +139,23 @@ environmentParser =
 looperVarEnv :: String -> Env.Parser Env.Error LooperEnvironment
 looperVarEnv n = Env.prefixed "LOOPER_" $ looperEnvironmentParser n
 
-getArguments :: IO Arguments
-getArguments = do
+getFlags :: IO Flags
+getFlags = do
   args <- System.getArgs
-  let result = runArgumentsParser args
+  let result = runFlagsParser args
   handleParseResult result
 
-runArgumentsParser :: [String] -> ParserResult Arguments
-runArgumentsParser = execParserPure prefs_ argParser
+runFlagsParser :: [String] -> ParserResult Flags
+runFlagsParser = execParserPure prefs_ flagsParser
   where
-    prefs_ = defaultPrefs {prefShowHelpOnError = True, prefShowHelpOnEmpty = True}
+    prefs_ =
+      defaultPrefs
+        { prefShowHelpOnError = True,
+          prefShowHelpOnEmpty = True
+        }
 
-argParser :: ParserInfo Arguments
-argParser = info (helper <*> parseArgs) (fullDesc <> footerDoc (Just $ OptParse.string footerStr))
-  where
-    footerStr =
-      unlines
-        [ Env.helpDoc environmentParser,
-          "",
-          "Configuration file format:",
-          T.unpack (TE.decodeUtf8 (renderColouredSchemaViaCodec @Configuration))
-        ]
-
-parseArgs :: Parser Arguments
-parseArgs = (,) <$> parseCommand <*> parseFlags
-
-parseCommand :: Parser Command
-parseCommand = hsubparser $ mconcat [command "serve" parseCommandServe]
-
-parseCommandServe :: ParserInfo Command
-parseCommandServe = info (helper <*> (CommandServe <$> parseServeFlags)) (fullDesc <> footerDoc (Just $ OptParse.string footerStr))
+flagsParser :: ParserInfo Flags
+flagsParser = info (helper <*> parseFlags) (fullDesc <> footerDoc (Just $ OptParse.string footerStr))
   where
     footerStr =
       unlines
@@ -192,10 +165,13 @@ parseCommandServe = info (helper <*> (CommandServe <$> parseServeFlags)) (fullDe
           T.unpack (TE.decodeUtf8 (renderColouredSchemaViaCodec @Configuration))
         ]
 
-parseServeFlags :: Parser ServeFlags
-parseServeFlags =
-  ServeFlags
+parseFlags :: Parser Flags
+parseFlags =
+  Flags
     <$> option
+      (Just <$> str)
+      (mconcat [long "config-file", value Nothing, metavar "FILEPATH", help "The config file"])
+    <*> option
       (Just <$> str)
       (mconcat [long "host", value Nothing, metavar "HOST", help "the host to serve on"])
     <*> option
@@ -269,10 +245,3 @@ parseServeFlags =
             help "How many items a user can sync in the free plan"
           ]
       )
-
-parseFlags :: Parser Flags
-parseFlags =
-  Flags
-    <$> option
-      (Just <$> str)
-      (mconcat [long "config-file", value Nothing, metavar "FILEPATH", help "The config file"])

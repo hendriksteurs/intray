@@ -11,33 +11,21 @@ import Looper
 import qualified Web.Stripe.Client as Stripe
 import qualified Web.Stripe.Types as Stripe
 
-type Arguments = (Command, Flags)
-
-type Instructions = (Dispatch, Settings)
-
-newtype Command
-  = CommandServe ServeFlags
-  deriving (Show, Eq)
-
-data ServeFlags = ServeFlags
-  { serveFlagHost :: !(Maybe String),
-    serveFlagPort :: !(Maybe Int),
-    serveFlagDb :: !(Maybe Text),
-    serveFlagAdmins :: ![String],
-    serveFlagFreeloaders :: ![String],
-    serveFlagLogLevel :: Maybe LogLevel,
-    serveFlagSigningKeyFile :: !(Maybe FilePath),
-    serveFlagStripePlan :: !(Maybe String),
-    serveFlagStripeSecretKey :: !(Maybe String),
-    serveFlagStripePublishableKey :: !(Maybe String),
-    serveFlagLooperStripeEventsFetcher :: LooperFlags,
-    serveFlagLooperStripeEventsRetrier :: LooperFlags,
-    serveFlagMaxItemsFree :: !(Maybe Int)
-  }
-  deriving (Show, Eq)
-
 data Flags = Flags
-  { flagConfigFile :: !(Maybe FilePath)
+  { flagConfigFile :: !(Maybe FilePath),
+    flagHost :: !(Maybe String),
+    flagPort :: !(Maybe Int),
+    flagDb :: !(Maybe Text),
+    flagAdmins :: ![String],
+    flagFreeloaders :: ![String],
+    flagLogLevel :: Maybe LogLevel,
+    flagSigningKeyFile :: !(Maybe FilePath),
+    flagStripePlan :: !(Maybe String),
+    flagStripeSecretKey :: !(Maybe String),
+    flagStripePublishableKey :: !(Maybe String),
+    flagLooperStripeEventsFetcher :: LooperFlags,
+    flagLooperStripeEventsRetrier :: LooperFlags,
+    flagMaxItemsFree :: !(Maybe Int)
   }
   deriving (Show, Eq)
 
@@ -106,23 +94,15 @@ data Environment = Environment
   }
   deriving (Show, Eq)
 
-newtype Dispatch
-  = DispatchServe ServeSettings
-  deriving (Show)
-
-data Settings
-  = Settings
-  deriving (Show, Eq)
-
-data ServeSettings = ServeSettings
-  { serveSetHost :: !Text,
-    serveSetPort :: !Int,
-    serveSetLogLevel :: !LogLevel,
-    serveSetSigningKeyFile :: !(Path Abs File),
-    serveSetConnectionInfo :: !SqliteConnectionInfo,
-    serveSetAdmins :: ![Username],
-    serveSetFreeloaders :: ![Username],
-    serveSetMonetisationSettings :: !(Maybe MonetisationSettings)
+data Settings = Settings
+  { setHost :: !Text,
+    setPort :: !Int,
+    setLogLevel :: !LogLevel,
+    setSigningKeyFile :: !(Path Abs File),
+    setConnectionInfo :: !SqliteConnectionInfo,
+    setAdmins :: ![Username],
+    setFreeloaders :: ![Username],
+    setMonetisationSettings :: !(Maybe MonetisationSettings)
   }
   deriving (Show)
 
