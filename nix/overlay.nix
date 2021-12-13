@@ -121,6 +121,7 @@ in
                 ${seocheck}/bin/seocheck http://localhost:8080
 
                 ${final.killall}/bin/killall intray-web-server
+                ${final.killall}/bin/killall intray-server
               '';
           }
         );
@@ -128,7 +129,7 @@ in
   intrayRelease =
     final.symlinkJoin {
       name = "intray-release";
-      paths = final.lib.attrValues final.intrayPackages;
+      paths = builtins.map justStaticExecutables (final.lib.attrValues final.intrayPackages);
     };
 
   intrayNotification = import ./notification.nix { pkgs = final; };
