@@ -99,9 +99,9 @@ pkgs.nixosTest (
 
       client.succeed(su("testuser", "cat ~/.config/intray/config.yaml"))
 
-      client.succeed(su("testuser", "intray register"))
-      client.succeed(su("testuser", "intray login"))
-      client.succeed(su("testuser", "intray sync"))
+      # client.succeed(su("testuser", "intray register"))
+      # client.succeed(su("testuser", "intray login"))
+      # client.succeed(su("testuser", "intray sync"))
     '';
   }
 )

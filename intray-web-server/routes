@@ -14,8 +14,6 @@
 /access-keys                       AccessKeysR          GET POST
 /access-keys/revoke/#AccessKeyUUID AccessKeyRevokeR     POST
 
-/error/api-down/#Text              ErrorAPIDownR        GET
-
 /checkout/success                  CheckoutSuccessR     GET
 /checkout/canceled                 CheckoutCanceledR    GET
 

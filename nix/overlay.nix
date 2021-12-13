@@ -110,15 +110,15 @@ in
               ''
                 ${old.postInstall or ""}
 
-                export INTRAY_WEB_SERVER_API_URL=http://localhost:8001 # dummy
+                export INTRAY_WEB_SERVER_API_URL=http://localhost:8000 # dummy
 
                 ${final.intrayPackages.intray-server}/bin/intray-server --port 8000 &
-                $out/bin/intray-web-server &
+                $out/bin/intray-web-server --port 8080 &
 
                 sleep 0.5
 
-                ${linkcheck}/bin/linkcheck http://localhost:8000
-                ${seocheck}/bin/seocheck http://localhost:8000
+                ${linkcheck}/bin/linkcheck http://localhost:8080
+                ${seocheck}/bin/seocheck http://localhost:8080
 
                 ${final.killall}/bin/killall intray-web-server
               '';

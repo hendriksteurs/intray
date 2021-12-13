@@ -325,7 +325,7 @@ handleStandardServantErrs :: ClientError -> (Response -> Handler a) -> Handler a
 handleStandardServantErrs err func =
   case err of
     FailureResponse _ resp -> func resp
-    ConnectionError e -> redirect $ ErrorAPIDownR $ T.pack $ show e
+    ConnectionError e -> sendResponseStatus Http.status500 $ unwords ["Connection error while calling API:", show e]
     e -> sendResponseStatus Http.status500 $ unwords ["Error while calling API:", show e]
 
 login :: LoginForm -> Handler ()

@@ -22,7 +22,6 @@ library
       Intray.Web.Server.Handler.Add
       Intray.Web.Server.Handler.Admin
       Intray.Web.Server.Handler.Checkout
-      Intray.Web.Server.Handler.Error
       Intray.Web.Server.Handler.Home
       Intray.Web.Server.Handler.ImageItem
       Intray.Web.Server.Handler.IncompletionList
@@ -114,7 +113,6 @@ test-suite intray-web-server-test
       Intray.Web.Server.Handler.AdminRSpec
       Intray.Web.Server.Handler.AuthRSpec
       Intray.Web.Server.Handler.DeleteAccountSpec
-      Intray.Web.Server.Handler.ErrorRSpec
       Intray.Web.Server.Handler.HomeRSpec
       Intray.Web.Server.TestUtils
       TestImport
