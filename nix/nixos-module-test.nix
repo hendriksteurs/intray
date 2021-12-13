@@ -11,7 +11,7 @@ let
   };
   home-manager = import (sources.home-manager + "/nixos/default.nix");
 
-  api-port = 8081;
+  api-port = 8000;
   web-port = 8080;
 in
 pkgs.nixosTest (
@@ -61,7 +61,7 @@ pkgs.nixosTest (
               inherit intrayPackages;
               sync = {
                 enable = true;
-                url = "apiserver:${builtins.toString api-port}";
+                url = "http://apiserver:${builtins.toString api-port}";
                 username = "testuser";
                 password = "testpassword";
               };
@@ -76,14 +76,17 @@ pkgs.nixosTest (
       apiserver.start()
       webserver.start()
       client.start()
+
       apiserver.wait_for_unit("multi-user.target")
       webserver.wait_for_unit("multi-user.target")
       client.wait_for_unit("multi-user.target")
 
       apiserver.wait_for_unit("intray-api-server-production.service")
       webserver.wait_for_unit("intray-web-server-production.service")
+
       apiserver.wait_for_open_port(${builtins.toString api-port})
       client.succeed("curl apiserver:${builtins.toString api-port}")
+
       webserver.wait_for_open_port(${builtins.toString web-port})
       client.succeed("curl webserver:${builtins.toString web-port}")
 
@@ -96,10 +99,9 @@ pkgs.nixosTest (
 
       client.succeed(su("testuser", "cat ~/.config/intray/config.yaml"))
 
-      # Something is wrong such that the register command hangs, for unknown reasons
-      # machine.succeed(su("testuser", "intray register"))
-      # machine.succeed(su("testuser", "intray login"))
-      # machine.succeed(su("testuser", "intray sync"))
+      client.succeed(su("testuser", "intray register"))
+      client.succeed(su("testuser", "intray login"))
+      client.succeed(su("testuser", "intray sync"))
     '';
   }
 )

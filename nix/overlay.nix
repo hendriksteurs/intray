@@ -7,13 +7,13 @@ in
 {
   intrayPackages =
     let
-      pathFor = name: final.gitignoreSource (../. + "/${name}");
       intrayPkg =
         name:
         addBuildDepend
           (
             failOnAllWarnings (
-              disableLibraryProfiling (final.haskellPackages.callCabal2nixWithOptions name (pathFor name) "--no-hpack" { })
+              disableLibraryProfiling (final.haskellPackages.callCabal2nixWithOptions name (final.gitignoreSource (../. + "/${name}")) "--no-hpack" { }
+              )
             )
           )
           final.haskellPackages.autoexporter;
@@ -104,34 +104,22 @@ in
               '';
             postInstall =
               let
-                linkcheck =
-                  (
-                    import (
-                      builtins.fetchGit {
-                        url = "https://github.com/NorfairKing/linkcheck";
-                        rev = "dc65f22965d92e6145814cdc674d160f3c422559";
-                        ref = "master";
-                      }
-                    )
-                  ).linkcheck;
-                seocheck =
-                  (
-                    import (
-                      builtins.fetchGit {
-                        url = "https://github.com/NorfairKing/seocheck";
-                        rev = "5a0314f103a2146ed5f3798e5a5821ab44e27c99";
-                        ref = "master";
-                      }
-                    )
-                  ).seocheck;
+                linkcheck = (import sources.linkcheck).linkcheck;
+                seocheck = (import sources.seocheck).seocheck;
               in
               ''
+                ${old.postInstall or ""}
+
                 export INTRAY_WEB_SERVER_API_URL=http://localhost:8001 # dummy
-                ${final.intrayPackages.intray-server}/bin/intray-server serve &
-                $out/bin/intray-web-server serve &
+
+                ${final.intrayPackages.intray-server}/bin/intray-server --port 8000 &
+                $out/bin/intray-web-server &
+
                 sleep 0.5
+
                 ${linkcheck}/bin/linkcheck http://localhost:8000
                 ${seocheck}/bin/seocheck http://localhost:8000
+
                 ${final.killall}/bin/killall intray-web-server
               '';
           }
@@ -176,14 +164,6 @@ in
                     sha256 =
                       "sha256:0q1n0s126ywqw3g9xiiaw59s9jn2543v7p4zgxw99p68pihdlysv";
                   };
-                persistentRepo =
-                  final.fetchFromGitHub {
-                    owner = "yesodweb";
-                    repo = "persistent";
-                    rev = "333be4996eb6eea2dc37d3a14858b668f0b9e381";
-                    sha256 =
-                      "sha256:1j76s7666vadm4q1ma73crkrks6q6nskzb3jqaf6rp2qmw1phfpr";
-                  };
                 stripeHaskellPkg =
                   name:
                   dontCheck (
@@ -194,19 +174,6 @@ in
                   doJailbreak (
                     self.callCabal2nix name (servantAuthRepo + "/${name}") { }
                   );
-                persistentPkg =
-                  name:
-                  overrideCabal
-                    (
-                      # Because there is some nastiness that makes nix think we need the haskell sqlite library.
-                      self.callCabal2nix name (persistentRepo + "/${name}") { }
-                    )
-                    (
-                      old:
-                      {
-                        librarySystemDepends = [ final.sqlite ];
-                      }
-                    );
               in
               {
                 yesod-static-remote = dontCheck (self.callCabal2nix "yesod-static-remote" yesodStaticRemoteRepo { });
@@ -226,12 +193,7 @@ in
                 "servant-auth-swagger"
                 "servant-auth-server"
               ]
-                servantAuthPkg // final.lib.genAttrs [
-                "persistent"
-                "persistent-sqlite"
-                "persistent-template"
-              ]
-                persistentPkg // final.intrayPackages
+                servantAuthPkg // final.intrayPackages
           );
       }
     );

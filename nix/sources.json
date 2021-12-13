@@ -35,6 +35,18 @@
         "url": "https://github.com/nix-community/home-manager/archive/f5395026bf5c77d83fff17152b1403d50c9f05f1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "linkcheck": {
+        "branch": "master",
+        "description": "A fast link checker for CI",
+        "homepage": null,
+        "owner": "NorfairKing",
+        "repo": "linkcheck",
+        "rev": "04168bc98011cf5c9589bc3e94086d7e72f86981",
+        "sha256": "19sdi3zzb8xv61lzrn6vad4lxm12nxrym5xybyhwhr2vkjjm5fg2",
+        "type": "tarball",
+        "url": "https://github.com/NorfairKing/linkcheck/archive/04168bc98011cf5c9589bc3e94086d7e72f86981.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "looper": {
         "branch": "master",
         "description": "Run actions periodically",
@@ -117,6 +129,18 @@
         "sha256": "0lgq503wa3ws5cci82kmaz4ws6bl9fz11i73kkqmmrldsr0gsvs0",
         "type": "tarball",
         "url": "https://github.com/NorfairKing/safe-coloured-text/archive/f30fe0e4d2a0fa036967ffe17538b60e5f9861f5.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "seocheck": {
+        "branch": "master",
+        "description": null,
+        "homepage": null,
+        "owner": "NorfairKing",
+        "repo": "seocheck",
+        "rev": "499d88b40243b06cad216a492deca782738fa0b3",
+        "sha256": "0svlqvak3pcgbr50f28csf6mn8djbvvfi2av7xwfbnz1adagww7r",
+        "type": "tarball",
+        "url": "https://github.com/NorfairKing/seocheck/archive/499d88b40243b06cad216a492deca782738fa0b3.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "sydtest": {
