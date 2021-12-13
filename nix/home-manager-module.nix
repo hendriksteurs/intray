@@ -83,7 +83,7 @@ in
         cfg.config
       ];
       intrayConfigFile = toYamlFile "intray-config" intrayConfig;
-      cli = cfg.intrayPackages.intray-cli;
+      cli = pkgs.haskell.lib.justStaticExecutables cfg.intrayPackages.intray-cli;
 
       syncIntrayName = "sync-intray";
       syncIntrayService =

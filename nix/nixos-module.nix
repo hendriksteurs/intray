@@ -157,7 +157,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${intrayPackages.intray-server}/bin/intray-server
+              ${pkgs.haskell.lib.justStaticExecutables intrayPackages.intray-server}/bin/intray-server
             '';
           serviceConfig =
             {
@@ -202,7 +202,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${intrayPackages.intray-web-server}/bin/intray-web-server
+              ${pkgs.haskell.lib.justStaticExecutables intrayPackages.intray-web-server}/bin/intray-web-server
             '';
           serviceConfig =
             {
