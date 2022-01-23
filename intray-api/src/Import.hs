@@ -12,6 +12,7 @@ import Data.ByteString as X (ByteString)
 import Data.Monoid as X
 import Data.Proxy as X
 import Data.Text as X (Text)
+import Data.Time as X
 import Data.Validity as X
 import Data.Validity.ByteString as X ()
 import Data.Validity.Containers as X ()

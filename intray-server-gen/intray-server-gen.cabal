@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -80,6 +80,7 @@ test-suite intray-server-test
       Intray.Server.Handler.AdminDeleteAccountSpec
       Intray.Server.Handler.AdminGetAccountsSpec
       Intray.Server.Handler.AdminGetStatsSpec
+      Intray.Server.Handler.AdminPutUserSubscriptionSpec
       Intray.Server.Handler.DeleteAccountSpec
       Intray.Server.Handler.DeleteItemSpec
       Intray.Server.Handler.GetAccountInfoSpec

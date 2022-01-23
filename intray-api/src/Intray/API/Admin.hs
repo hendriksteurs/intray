@@ -24,7 +24,8 @@ type IntrayAdminAPI = ToServantApi IntrayAdminSite
 data IntrayAdminSite route = IntrayAdminSite
   { adminGetStats :: !(route :- AdminGetStats),
     adminDeleteAccount :: !(route :- AdminDeleteAccount),
-    adminGetAccounts :: !(route :- AdminGetAccounts)
+    adminGetAccounts :: !(route :- AdminGetAccounts),
+    adminPutUserSubscription :: !(route :- PutUserSubscription)
   }
   deriving (Generic)
 
@@ -34,3 +35,5 @@ type AdminDeleteAccount =
   ProtectAPI :> "account" :> Capture "uuid" AccountUUID :> Delete '[JSON] NoContent
 
 type AdminGetAccounts = ProtectAPI :> "accounts" :> Get '[JSON] [AccountInfo]
+
+type PutUserSubscription = ProtectAPI :> "accounts" :> Capture "uuid" AccountUUID :> ReqBody '[JSON] UTCTime :> PutNoContent '[JSON] NoContent

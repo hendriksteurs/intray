@@ -70,9 +70,9 @@ intrayAdminServer :: IntrayAdminSite (AsServerT IntrayHandler)
 intrayAdminServer =
   IntrayAdminSite
     { adminGetStats = withAuthResultAndPermission PermitAdminGetStats serveAdminGetStats,
-      adminDeleteAccount =
-        withAuthResultAndPermission PermitAdminDeleteAccount serveAdminDeleteAccount,
-      adminGetAccounts = withAuthResultAndPermission PermitAdminGetAccounts serveAdminGetAccounts
+      adminDeleteAccount = withAuthResultAndPermission PermitAdminDeleteAccount serveAdminDeleteAccount,
+      adminGetAccounts = withAuthResultAndPermission PermitAdminGetAccounts serveAdminGetAccounts,
+      adminPutUserSubscription = withAuthResultAndPermission PermitAdminPutUserSubscription serveAdminPutUserSubscription
     }
 
 intrayPublicServer :: IntrayPublicSite (AsServerT IntrayHandler)

@@ -37,6 +37,7 @@ data Permission
   | PermitAdminDeleteAccount
   | PermitAdminGetAccounts
   | PermitAdminGetStats
+  | PermitAdminPutUserSubscription
   deriving stock (Show, Read, Eq, Ord, Generic, Enum, Bounded)
   deriving (FromJSON, ToJSON) via (Autodocodec Permission)
 

@@ -13,6 +13,7 @@ import Data.Monoid as X
 import Data.Proxy as X
 import Data.Set as X (Set)
 import Data.Text as X (Text)
+import Data.Time as X
 import Data.Validity as X
 import Data.Validity.ByteString as X ()
 import Data.Validity.Containers as X ()
