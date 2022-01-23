@@ -65,6 +65,17 @@ StripeEvent
     deriving Generic
 
 
+Subscription
+    user AccountUUID
+    end UTCTime
+
+    UniqueSubscriptionUser user
+
+    deriving Show
+    deriving Eq
+    deriving Generic
+
+
 IntrayItem
     identifier ItemUUID
     userId AccountUUID
