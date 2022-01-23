@@ -46,11 +46,11 @@ User
     deriving Generic
 
 
-Customer
+StripeCustomer
     user AccountUUID
-    stripeCustomer Stripe.CustomerId
-    UniqueCustomerUser user
-    UniqueUserCustomer stripeCustomer
+    customer Stripe.CustomerId
+    UniqueStripeCustomer user customer
+
     deriving Show
     deriving Eq
     deriving Generic

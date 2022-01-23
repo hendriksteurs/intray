@@ -78,9 +78,9 @@ completePayment eventId account cid = do
   void $
     looperDB $
       upsertBy
-        (UniqueCustomerUser account)
-        (Customer {customerUser = account, customerStripeCustomer = cid})
-        [CustomerStripeCustomer =. cid]
+        (UniqueStripeCustomer account cid)
+        (StripeCustomer {stripeCustomerUser = account, stripeCustomerCustomer = cid})
+        [StripeCustomerCustomer =. cid]
   pure StripeEvent {stripeEventEvent = eventId, stripeEventError = Nothing}
 
 looperStripeOrErr ::

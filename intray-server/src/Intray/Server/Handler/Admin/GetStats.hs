@@ -12,7 +12,7 @@ import Data.Time
 import Database.Persist
 import Import
 import Intray.API
-import Intray.Server.Handler.GetAccountInfo
+import Intray.Server.Handler.Stripe
 import Intray.Server.Handler.Utils
 import Intray.Server.Types
 
@@ -30,10 +30,13 @@ serveAdminGetStats AuthCookie {..} = do
   activeUsersMonthly <- activeUsers $ 30 * day
   activeUsersYearly <- activeUsers $ 365 * day
   let adminStatsActiveUsers = ActiveUsers {..}
-  adminStatsSubscribedUsers <-
-    do
-      us <- runDb $ selectList [] []
-      fmap (fromIntegral . length . catMaybes) $
-        forM us $
-          \(Entity _ u) -> getAccountSubscribed (userIdentifier u)
+  adminStatsSubscribedUsers <- do
+    us <- runDb $ selectList [] []
+    fmap (fromIntegral . length . catMaybes) $
+      forM us $ \(Entity _ u) -> do
+        ps <- getUserPaidStatus (userIdentifier u)
+        pure $ case ps of
+          HasNotPaid _ -> Nothing
+          HasPaid t -> Just t
+          NoPaymentNecessary -> Nothing
   pure AdminStats {..}
