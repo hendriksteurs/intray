@@ -78,6 +78,7 @@ test-suite intray-server-test
   main-is: Spec.hs
   other-modules:
       Intray.Server.Handler.AdminDeleteAccountSpec
+      Intray.Server.Handler.AdminGetAccountSpec
       Intray.Server.Handler.AdminGetAccountsSpec
       Intray.Server.Handler.AdminGetStatsSpec
       Intray.Server.Handler.AdminPutUserSubscriptionSpec

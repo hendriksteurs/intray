@@ -34,6 +34,7 @@ library
       Intray.Server.Handler.AccessKey.PostAddAccessKey
       Intray.Server.Handler.Admin
       Intray.Server.Handler.Admin.DeleteAccount
+      Intray.Server.Handler.Admin.GetAccount
       Intray.Server.Handler.Admin.GetAccounts
       Intray.Server.Handler.Admin.GetStats
       Intray.Server.Handler.Admin.PutUserSubscription

@@ -44,7 +44,31 @@ clientPostLogin :: LoginForm -> ClientM (Headers '[Header "Set-Cookie" Text] NoC
 clientGetPricing :: ClientM (Maybe Pricing)
 clientAdminGetStats :: Token -> ClientM AdminStats
 clientAdminDeleteAccount :: Token -> AccountUUID -> ClientM NoContent
+clientAdminGetAccount :: Token -> AccountUUID -> ClientM AccountInfo
 clientAdminGetAccounts :: Token -> ClientM [AccountInfo]
 clientAdminPutUserSubscription :: Token -> AccountUUID -> UTCTime -> ClientM NoContent
-clientGetShowItem :<|> clientGetSize :<|> clientGetItemUUIDs :<|> clientGetItems :<|> clientPostAddItem :<|> clientGetItem :<|> clientDeleteItem :<|> clientPostSync :<|> clientGetAccountInfo :<|> clientPostChangePassphrase :<|> clientDeleteAccount :<|> clientPostAddAccessKey :<|> clientGetAccessKey :<|> clientGetAccessKeys :<|> clientDeleteAccessKey :<|> clientGetPermissions :<|> clientPostRegister :<|> clientPostLogin :<|> clientGetPricing :<|> clientAdminGetStats :<|> clientAdminDeleteAccount :<|> clientAdminGetAccounts :<|> clientAdminPutUserSubscription =
-  client (flatten intrayAPI)
+clientGetShowItem
+  :<|> clientGetSize
+  :<|> clientGetItemUUIDs
+  :<|> clientGetItems
+  :<|> clientPostAddItem
+  :<|> clientGetItem
+  :<|> clientDeleteItem
+  :<|> clientPostSync
+  :<|> clientGetAccountInfo
+  :<|> clientPostChangePassphrase
+  :<|> clientDeleteAccount
+  :<|> clientPostAddAccessKey
+  :<|> clientGetAccessKey
+  :<|> clientGetAccessKeys
+  :<|> clientDeleteAccessKey
+  :<|> clientGetPermissions
+  :<|> clientPostRegister
+  :<|> clientPostLogin
+  :<|> clientGetPricing
+  :<|> clientAdminGetStats
+  :<|> clientAdminDeleteAccount
+  :<|> clientAdminGetAccount
+  :<|> clientAdminGetAccounts
+  :<|> clientAdminPutUserSubscription =
+    client (flatten intrayAPI)

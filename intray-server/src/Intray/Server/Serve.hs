@@ -72,6 +72,7 @@ intrayAdminServer =
     { adminGetStats = withAuthResultAndPermission PermitAdminGetStats serveAdminGetStats,
       adminDeleteAccount = withAuthResultAndPermission PermitAdminDeleteAccount serveAdminDeleteAccount,
       adminGetAccounts = withAuthResultAndPermission PermitAdminGetAccounts serveAdminGetAccounts,
+      adminGetAccount = withAuthResultAndPermission PermitAdminGetAccounts serveAdminGetAccount,
       adminPutUserSubscription = withAuthResultAndPermission PermitAdminPutUserSubscription serveAdminPutUserSubscription
     }
 

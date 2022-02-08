@@ -36,6 +36,7 @@ data Permission
   | PermitGetPermissions
   | PermitAdminDeleteAccount
   | PermitAdminGetAccounts
+  | PermitAdminGetAccount
   | PermitAdminGetStats
   | PermitAdminPutUserSubscription
   deriving stock (Show, Read, Eq, Ord, Generic, Enum, Bounded)
@@ -80,7 +81,12 @@ userPermissions =
 
 adminOnlyPermissions :: Set Permission
 adminOnlyPermissions =
-  S.fromList [PermitAdminDeleteAccount, PermitAdminGetAccounts, PermitAdminGetStats]
+  S.fromList
+    [ PermitAdminDeleteAccount,
+      PermitAdminGetAccounts,
+      PermitAdminGetAccount,
+      PermitAdminGetStats
+    ]
 
 adminPermissions :: Set Permission
 adminPermissions = S.union userPermissions adminOnlyPermissions
