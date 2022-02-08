@@ -9,7 +9,6 @@ export INTRAY_WEB_SERVER_API_URL="localhost:8001"
 
 cd intray-web-server
 
-intray-server serve \
-  --admin admin &
+intray-server --admin admin &
 
-intray-web-server serve &
+intray-web-server &
