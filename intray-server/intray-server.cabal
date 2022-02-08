@@ -26,6 +26,7 @@ library
   exposed-modules:
       Import
       Intray.Server
+      Intray.Server.AccountInfo
       Intray.Server.Handler
       Intray.Server.Handler.AccessKey
       Intray.Server.Handler.AccessKey.DeleteAccessKey

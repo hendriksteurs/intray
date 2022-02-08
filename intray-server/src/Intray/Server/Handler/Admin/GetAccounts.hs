@@ -11,7 +11,7 @@ where
 import Database.Persist
 import Import
 import Intray.API
-import Intray.Server.Handler.Admin.GetAccount
+import Intray.Server.AccountInfo
 import Intray.Server.Handler.Utils
 import Intray.Server.Types
 
