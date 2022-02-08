@@ -3,6 +3,7 @@
 
 module Intray.Web.Server.Handler.Admin
   ( getAdminR,
+    getAdminAccountR,
     postAdminAccountDeleteR,
   )
 where
@@ -27,8 +28,9 @@ getAdminR =
     withNavBar $(widgetFile "admin")
 
 getAdminAccountR :: AccountUUID -> Handler Html
-getAdminAccountR = withAdminCreds $ \t -> do
-  accountInfo <- runClientOrErr $ clientAdminGetAccount t uuid
+getAdminAccountR uuid = withAdminCreds $ \t -> do
+  AccountInfo {..} <- runClientOrErr $ clientAdminGetAccount t uuid
+  now <- liftIO getCurrentTime
   withNavBar $(widgetFile "admin/account")
 
 postAdminAccountDeleteR :: AccountUUID -> Handler Html
