@@ -35,7 +35,7 @@ combineToSettings :: Flags -> Environment -> Maybe Configuration -> IO Settings
 combineToSettings Flags {..} Environment {..} mConf = do
   let mc :: (Configuration -> Maybe a) -> Maybe a
       mc func = mConf >>= func
-  let setPort = fromMaybe 8001 $ flagPort <|> envPort <|> mc confPort
+  let setPort = fromMaybe 8000 $ flagPort <|> envPort <|> mc confPort
   let setHost =
         T.pack $ fromMaybe ("localhost:" <> show setPort) $ flagHost <|> envHost <|> mc confHost
   let setLogLevel = fromMaybe LevelInfo $ flagLogLevel <|> envLogLevel <|> mc confLogLevel

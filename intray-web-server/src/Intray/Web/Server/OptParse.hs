@@ -32,7 +32,7 @@ combineToSettings :: Flags -> Environment -> Maybe Configuration -> IO Settings
 combineToSettings Flags {..} Environment {..} mConf = do
   let mc :: (Configuration -> Maybe a) -> Maybe a
       mc func = mConf >>= func
-  let setPort = fromMaybe 8000 $ flagPort <|> envPort <|> mc confPort
+  let setPort = fromMaybe 8080 $ flagPort <|> envPort <|> mc confPort
   setAPIBaseUrl <- case flagAPIBaseUrl <|> envAPIBaseUrl <|> mc confAPIBaseUrl of
     Nothing -> die "No API URL Configured. Try --help to see how to configure it."
     Just burl -> pure burl

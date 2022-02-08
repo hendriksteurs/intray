@@ -96,8 +96,9 @@
       $forall u <- users
         <tr>
           <td>
-            <div data-tooltip="#{uuidText $ accountInfoUUID u}">
-              #{usernameText $ accountInfoUsername u}
+            <a href=@{AdminAccountR $ accountInfoUUID u}>
+              <div data-tooltip="#{uuidText $ accountInfoUUID u}">
+                #{usernameText $ accountInfoUsername u}
           <td>
             <div data-tooltip="#{prettyTimestamp now $ accountInfoCreatedTimestamp u}">
               #{prettyTimeAuto now $ accountInfoCreatedTimestamp u}
