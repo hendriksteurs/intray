@@ -23,5 +23,5 @@
 
 -- Admin pages
 /admin                             AdminR               GET
-/admin/account/#AccountUUID        AdminAccountR        GET
-/admin/account/#AccountUUID/delete AdminAccountDeleteR  POST
+/admin/account/#{Username}         AdminAccountR        GET
+/admin/account/#{Username}/delete  AdminAccountDeleteR  POST

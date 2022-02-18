@@ -96,7 +96,7 @@
       $forall u <- users
         <tr>
           <td>
-            <a href=@{AdminAccountR $ accountInfoUUID u}>
+            <a href=@{AdminAccountR $ accountInfoUsername u}>
               <div data-tooltip="#{uuidText $ accountInfoUUID u}">
                 #{usernameText $ accountInfoUsername u}
           <td>
@@ -124,7 +124,7 @@
           <td>
             <form
               method=post
-              action=@{AdminAccountDeleteR $ accountInfoUUID u}>
+              action=@{AdminAccountDeleteR $ accountInfoUsername u}>
              ^{token}
              <button
                .is-danger .button

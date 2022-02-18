@@ -27,13 +27,13 @@ getAdminR =
     token <- genToken
     withNavBar $(widgetFile "admin")
 
-getAdminAccountR :: AccountUUID -> Handler Html
+getAdminAccountR :: Username -> Handler Html
 getAdminAccountR uuid = withAdminCreds $ \t -> do
   AccountInfo {..} <- runClientOrErr $ clientAdminGetAccount t uuid
   now <- liftIO getCurrentTime
   withNavBar $(widgetFile "admin/account")
 
-postAdminAccountDeleteR :: AccountUUID -> Handler Html
+postAdminAccountDeleteR :: Username -> Handler Html
 postAdminAccountDeleteR uuid =
   withAdminCreds $ \t -> do
     NoContent <- runClientOrErr $ clientAdminDeleteAccount t uuid

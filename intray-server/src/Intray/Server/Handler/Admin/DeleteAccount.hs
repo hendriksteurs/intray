@@ -8,13 +8,15 @@ module Intray.Server.Handler.Admin.DeleteAccount
   )
 where
 
+import Database.Persist
 import Import
 import Intray.API
 import Intray.Server.Handler.Utils
 import Intray.Server.Types
 import Servant
 
-serveAdminDeleteAccount :: AuthCookie -> AccountUUID -> IntrayHandler NoContent
-serveAdminDeleteAccount AuthCookie {..} uuid = do
-  deleteAccountFully uuid
+serveAdminDeleteAccount :: AuthCookie -> Username -> IntrayHandler NoContent
+serveAdminDeleteAccount AuthCookie {..} username = do
+  mAccount <- runDb $ getBy $ UniqueUsername username
+  mapM_ (deleteAccountFully . userIdentifier . entityVal) mAccount
   pure NoContent

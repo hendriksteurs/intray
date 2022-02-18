@@ -84,10 +84,6 @@ instance Yesod App where
       |]
   errorHandler other = defaultErrorHandler other
 
-instance PathPiece Username where
-  fromPathPiece = parseUsername
-  toPathPiece = usernameText
-
 instance YesodAuth App where
   type AuthId App = Username
   loginDest _ = AddR

@@ -38,13 +38,13 @@ type AdminGetStats =
 type AdminDeleteAccount =
   ProtectAPI
     :> "account"
-    :> Capture "uuid" AccountUUID
+    :> Capture "username" Username
     :> Delete '[JSON] NoContent
 
 type AdminGetAccount =
   ProtectAPI
     :> "account"
-    :> Capture "uuid" AccountUUID
+    :> Capture "username" Username
     :> Get '[JSON] AccountInfo
 
 type AdminGetAccounts =
@@ -55,6 +55,6 @@ type AdminGetAccounts =
 type PutUserSubscription =
   ProtectAPI
     :> "accounts"
-    :> Capture "uuid" AccountUUID
+    :> Capture "username" Username
     :> ReqBody '[JSON] UTCTime
     :> PutNoContent '[JSON] NoContent

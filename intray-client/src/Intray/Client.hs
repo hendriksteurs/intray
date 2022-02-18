@@ -43,10 +43,10 @@ clientPostRegister :: Registration -> ClientM NoContent
 clientPostLogin :: LoginForm -> ClientM (Headers '[Header "Set-Cookie" Text] NoContent)
 clientGetPricing :: ClientM (Maybe Pricing)
 clientAdminGetStats :: Token -> ClientM AdminStats
-clientAdminDeleteAccount :: Token -> AccountUUID -> ClientM NoContent
-clientAdminGetAccount :: Token -> AccountUUID -> ClientM AccountInfo
+clientAdminDeleteAccount :: Token -> Username -> ClientM NoContent
+clientAdminGetAccount :: Token -> Username -> ClientM AccountInfo
 clientAdminGetAccounts :: Token -> ClientM [AccountInfo]
-clientAdminPutUserSubscription :: Token -> AccountUUID -> UTCTime -> ClientM NoContent
+clientAdminPutUserSubscription :: Token -> Username -> UTCTime -> ClientM NoContent
 clientGetShowItem
   :<|> clientGetSize
   :<|> clientGetItemUUIDs

@@ -22,11 +22,13 @@ import Data.Hashable
 import qualified Data.Text as T
 import Database.Persist.Sql
 import Intray.Data.Import
+import Web.HttpApiData
+import Web.PathPieces
 
 newtype Username = Username
   { usernameText :: Text
   }
-  deriving stock (Show, Eq, Ord, Generic)
+  deriving stock (Show, Read, Eq, Ord, Generic)
   deriving newtype (Hashable, ToJSONKey)
   deriving (FromJSON, ToJSON) via (Autodocodec Username)
 
@@ -55,6 +57,18 @@ instance FromJSONKey Username where
 
 instance HasCodec Username where
   codec = bimapCodec parseUsernameWithError usernameText codec
+
+instance PathPiece Username where
+  fromPathPiece = parseUsername
+  toPathPiece = usernameText
+
+instance ToHttpApiData Username where
+  toUrlPiece = usernameText
+  toQueryParam = usernameText
+
+instance FromHttpApiData Username where
+  parseUrlPiece = left T.pack . parseUsernameWithError
+  parseQueryParam = left T.pack . parseUsernameWithError
 
 parseUsername :: MonadFail m => Text -> m Username
 parseUsername t =
