@@ -28,7 +28,7 @@ spec =
           withValidNewUser cenv $ \ut ->
             withAdmin cenv $ \token -> do
               AccountInfo {..} <- runClientOrError cenv $ clientGetAccountInfo ut
-              NoContent <- runClientOrError cenv $ clientAdminDeleteAccount token accountInfoUUID
+              NoContent <- runClientOrError cenv $ clientAdminDeleteAccount token accountInfoUsername
               errOrAccountInfo <- runClient cenv $ clientGetAccountInfo ut
               case errOrAccountInfo of
                 Left err ->

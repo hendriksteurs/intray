@@ -16,17 +16,17 @@ spec :: Spec
 spec = withIntrayServer $
   describe "AdminGetAccount" $ do
     it "fails without PermitAdminGetAccount" $ \cenv ->
-      forAllValid $ \accountUuid ->
+      forAllValid $ \username ->
         failsWithOutPermission cenv PermitAdminGetAccount $ \token ->
-          clientAdminGetAccount token accountUuid
+          clientAdminGetAccount token username
     it "forbids non-admin users from getting account info" $ \cenv ->
-      forAllValid $ \accountUuid ->
+      forAllValid $ \username ->
         requiresAdmin cenv $ \token ->
-          clientAdminGetAccount token accountUuid
+          clientAdminGetAccount token username
     it "returns the same account info as when a user logs in" $ \cenv ->
       withValidNewUserAndData cenv $ \_ _ userToken ->
         withAdmin cenv $ \adminToken ->
           runClientOrError cenv $ do
             accountInfoViaUser <- clientGetAccountInfo userToken
-            accountInfoViaAdmin <- clientAdminGetAccount adminToken (accountInfoUUID accountInfoViaUser)
+            accountInfoViaAdmin <- clientAdminGetAccount adminToken (accountInfoUsername accountInfoViaUser)
             liftIO $ accountInfoViaAdmin `shouldBe` accountInfoViaUser

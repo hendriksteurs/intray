@@ -342,7 +342,7 @@ login form = do
           sendResponseStatus Http.status500 $
             unwords ["The server responded but with an invalid header for login", show sessionHeader]
 
-withLogin :: ToTypedContent a => (Token -> Handler a) -> Handler a
+withLogin :: (Token -> Handler a) -> Handler a
 withLogin func = do
   un <- requireAuthId
   mLoginToken <- lookupToginToken un

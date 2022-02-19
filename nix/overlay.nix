@@ -1,4 +1,5 @@
 final: previous:
+with final.lib;
 with final.haskell.lib;
 
 let
@@ -7,16 +8,44 @@ in
 {
   intrayPackages =
     let
-      intrayPkg =
-        name:
-        addBuildDepend
+      intrayPkg = name:
+        overrideCabal
           (
-            failOnAllWarnings (
-              disableLibraryProfiling (final.haskellPackages.callCabal2nixWithOptions name (final.gitignoreSource (../. + "/${name}")) "--no-hpack" { }
-              )
-            )
+            final.haskellPackages.callCabal2nixWithOptions name
+              (final.gitignoreSource (../. + "/${name}"))
+              "--no-hpack"
+              { }
           )
-          final.haskellPackages.autoexporter;
+          (old: {
+            doBenchmark = true;
+            doHaddock = false;
+            doCoverage = false;
+            doHoogle = false;
+            doCheck = false; # Only check the release version.
+            hyperlinkSource = false;
+            enableLibraryProfiling = false;
+            enableExecutableProfiling = false;
+
+            configureFlags = (old.configureFlags or [ ]) ++ [
+              # Optimisations
+              "--ghc-options=-O2"
+              # Extra warnings
+              "--ghc-options=-Wall"
+              "--ghc-options=-Wincomplete-uni-patterns"
+              "--ghc-options=-Wincomplete-record-updates"
+              "--ghc-options=-Wpartial-fields"
+              "--ghc-options=-Widentities"
+              "--ghc-options=-Wredundant-constraints"
+              "--ghc-options=-Wcpp-undef"
+              "--ghc-options=-Werror"
+            ];
+            buildDepends = (old.buildDepends or [ ]) ++ [
+              final.haskellPackages.autoexporter
+            ];
+            # Ugly hack because we can't just add flags to the 'test' invocation.
+            # Show test output as we go, instead of all at once afterwards.
+            testTarget = (old.testTarget or "") + " --show-details=direct";
+          });
       intrayPkgWithComp =
         exeName: name:
         generateOptparseApplicativeCompletion exeName (intrayPkg name);
@@ -126,10 +155,16 @@ in
           }
         );
     };
+
+  intrayReleasePackages = mapAttrs
+    (_: pkg: justStaticExecutables (doCheck pkg))
+    final.intrayPackages;
+
+
   intrayRelease =
     final.symlinkJoin {
       name = "intray-release";
-      paths = builtins.map justStaticExecutables (final.lib.attrValues final.intrayPackages);
+      paths = attrValues final.intrayReleasePackages;
     };
 
   intrayNotification = import ./notification.nix { pkgs = final; };
@@ -138,7 +173,7 @@ in
       old:
       {
         overrides =
-          final.lib.composeExtensions (old.overrides or (_: _: { })) (
+          composeExtensions (old.overrides or (_: _: { })) (
             self: super:
               let
                 stripeHaskellRepo =
@@ -181,13 +216,13 @@ in
                 servant-auth-server = doJailbreak (super.servant-auth-server);
                 looper = self.callCabal2nix "looper" (sources.looper + "/looper") { };
                 envparse = self.callHackage "envparse" "0.4.1" { };
-              } // final.lib.genAttrs [
+              } // genAttrs [
                 "stripe-core"
                 "stripe-haskell"
                 "stripe-http-client"
                 "stripe-http-streams"
               ]
-                stripeHaskellPkg // final.lib.genAttrs [
+                stripeHaskellPkg // genAttrs [
                 "servant-auth"
                 "servant-auth-client"
                 "servant-auth-docs"
