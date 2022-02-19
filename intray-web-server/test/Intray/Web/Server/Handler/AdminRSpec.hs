@@ -12,23 +12,43 @@ import TestImport
 spec :: Spec
 spec = intrayWebServerSpec $ do
   describe "AdminR" $ do
-    it "gets a 404 when not logged in as admin" $
+    it "GETs a 404 when not logged in as admin" $
       withExampleAccount_ $ do
         get AdminR
         statusIs 404
-    it "gets a 200 when logged in as admin" $
-      withAdminAccount_ $ do
+
+    it "GETs a 200 when logged in as admin" $
+      withAdminAccountAndLogin_ $ do
         get AdminR
         statusIs 200
 
   describe "AdminAccountR" $ do
-    it "gets a 404 when not logged in as admin" $
+    it "GETs a 404 when not logged in as admin" $
       withExampleAccount $ \username _ -> do
         get $ AdminAccountR username
         statusIs 404
 
-    it "gets a 200 when logged in as admin" $
+    it "GETs a 200 when logged in as admin" $
       withExampleAccount $ \username _ -> do
-        withAdminAccount_ $ do
+        withAdminAccountAndLogin_ $ do
           get $ AdminAccountR username
           statusIs 200
+
+  describe "AdminAccountDeleteR" $ do
+    it "POSTs a 200 when logged in as admin" $
+      withExampleAccount $ \username _ -> do
+        withAdminAccountAndLogin_ $ do
+          -- An account beforehand
+          get $ AdminAccountR username
+          statusIs 200
+          -- Can delete it
+          request $ do
+            setMethod methodPost
+            setUrl $ AdminAccountDeleteR username
+            addToken
+          statusIs 303
+          _ <- followRedirect
+          statusIs 200
+          -- No more account afterwards
+          get $ AdminAccountR username
+          statusIs 404

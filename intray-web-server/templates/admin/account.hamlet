@@ -1,8 +1,9 @@
 <section .section>
   <div .container>
     <div .box .content>
+
       <h3 .title .is-3>
-        Account: #{usernameText accountInfoUsername}
+        Account: #{usernameText username}
 
       <p>
         Admin: #{accountInfoAdmin}
@@ -34,4 +35,18 @@
             No subscription necessary
           $of HasNotPaid left
             Not subscribed, #{left} items left.
+
+
+      <h4 .title .is-4>
+        Delete Account
+
+      <form .form
+        method=post
+        action=@{AdminAccountDeleteR username}>
+        ^{token}
+        <div .field>
+          <div .control>
+          <button .button .is-danger
+            type=submit>
+            Override
 
