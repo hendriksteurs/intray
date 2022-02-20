@@ -2,7 +2,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.Admin
-  ( getAdminR,
+  ( getAdminPanelR,
     getAdminAccountR,
     postAdminAccountDeleteR,
   )
@@ -18,8 +18,8 @@ import Network.HTTP.Types as HTTP
 import Text.Time.Pretty
 import Yesod
 
-getAdminR :: Handler Html
-getAdminR =
+getAdminPanelR :: Handler Html
+getAdminPanelR =
   withAdminCreds $ \t -> do
     AdminStats {..} <- runClientOrErr $ clientAdminGetStats t
     mPricing <- runClientOrErr clientGetPricing
@@ -27,7 +27,7 @@ getAdminR =
     users <- runClientOrErr $ clientAdminGetAccounts t
     now <- liftIO getCurrentTime
     token <- genToken
-    withNavBar $(widgetFile "admin")
+    withNavBar $(widgetFile "admin/panel")
 
 getAdminAccountR :: Username -> Handler Html
 getAdminAccountR username = withAdminCreds $ \t -> do
@@ -49,7 +49,7 @@ postAdminAccountDeleteR :: Username -> Handler Html
 postAdminAccountDeleteR uuid =
   withAdminCreds $ \t -> do
     NoContent <- runClientOrErr $ clientAdminDeleteAccount t uuid
-    redirect AdminR
+    redirect $ AdminR AdminPanelR
 
 withAdminCreds :: (Token -> Handler Html) -> Handler Html
 withAdminCreds func =

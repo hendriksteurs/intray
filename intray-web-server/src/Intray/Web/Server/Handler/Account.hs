@@ -95,7 +95,7 @@ adminSegment (Just AccountInfo {..})
                 <p>
                   This account is an administrator.
                 <p>
-                  <a .is-success .button href=@{AdminR}>
+                  <a .is-success .button href=@{AdminR AdminPanelR}>
                     The Admin Panel|]
   | otherwise = mempty
 

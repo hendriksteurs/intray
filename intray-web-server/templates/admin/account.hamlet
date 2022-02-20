@@ -42,7 +42,7 @@
 
       <form .form
         method=post
-        action=@{AdminAccountDeleteR username}>
+        action=@{AdminR $ AdminAccountDeleteR username}>
         ^{token}
         <div .field>
           <div .control>
