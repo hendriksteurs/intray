@@ -24,6 +24,7 @@ import Control.Monad.Trans.Maybe
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import Database.Persist.Sql
+import Database.Persist.Sqlite
 import Import
 import Intray.Client
 import Intray.Web.Server.Constants
@@ -83,6 +84,12 @@ instance Yesod App where
         Page not found
       |]
   errorHandler other = defaultErrorHandler other
+
+instance YesodPersist App where
+  type YesodPersistBackend App = SqlBackend
+  runDB func = do
+    pool <- getsYesod appConnectionPool
+    runSqlPool (retryOnBusy func) pool
 
 instance YesodAuth App where
   type AuthId App = Username
@@ -351,19 +358,14 @@ withLogin func = do
     Just token -> func token
 
 lookupToginToken :: Username -> Handler (Maybe Token)
-lookupToginToken un = runDb $ fmap (userTokenToken . entityVal) <$> getBy (UniqueUserToken un)
+lookupToginToken un = runDB $ fmap (userTokenToken . entityVal) <$> getBy (UniqueUserToken un)
 
 recordLoginToken :: Username -> Text -> Handler ()
 recordLoginToken un session = do
   let token = Token $ setCookieValue $ parseSetCookie $ TE.encodeUtf8 session
   void $
-    runDb $
+    runDB $
       upsert UserToken {userTokenName = un, userTokenToken = token} [UserTokenToken =. token]
-
-runDb :: SqlPersistT IO a -> Handler a
-runDb func = do
-  pool <- getsYesod appConnectionPool
-  liftIO $ runSqlPool func pool
 
 addInfoMessage :: Html -> Handler ()
 addInfoMessage = addMessage ""
