@@ -18,7 +18,7 @@ import Intray.Server.Types
 getAccountInfoForUser :: User -> IntrayHandler AccountInfo
 getAccountInfoForUser User {..} = do
   admins <- asks envAdmins
-  c <- runDb $ count ([IntrayItemUserId ==. userIdentifier] :: [Filter IntrayItem])
+  c <- runDB $ count ([IntrayItemUserId ==. userIdentifier] :: [Filter IntrayItem])
   ups <- getUserPaidStatus userIdentifier
   pure
     AccountInfo

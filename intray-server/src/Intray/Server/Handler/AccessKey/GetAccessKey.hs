@@ -19,7 +19,7 @@ import Servant.Auth.Server as Auth
 
 serveGetAccessKey :: AuthCookie -> AccessKeyUUID -> IntrayHandler AccessKeyInfo
 serveGetAccessKey AuthCookie {..} uuid = do
-  mac <- runDb $ getBy $ UniqueAccessKeyIdentifier uuid
+  mac <- runDB $ getBy $ UniqueAccessKeyIdentifier uuid
   case mac of
     Nothing -> throwAll err404 {errBody = "AccessKey not found."}
     Just (Entity _ ak) -> pure $ makeAccessKeyInfo ak

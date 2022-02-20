@@ -18,20 +18,20 @@ import Intray.Server.Types
 
 serveAdminGetStats :: AuthCookie -> IntrayHandler AdminStats
 serveAdminGetStats AuthCookie {..} = do
-  adminStatsNbAccounts <- fmap fromIntegral $ runDb $ count ([] :: [Filter User])
-  adminStatsNbItems <- fmap fromIntegral $ runDb $ count ([] :: [Filter IntrayItem])
+  adminStatsNbAccounts <- fmap fromIntegral $ runDB $ count ([] :: [Filter User])
+  adminStatsNbItems <- fmap fromIntegral $ runDB $ count ([] :: [Filter IntrayItem])
   now <- liftIO getCurrentTime
   let day :: NominalDiffTime
       day = 86400
   let activeUsers time =
-        fmap fromIntegral $ runDb $ count [UserLastLogin >=. Just (addUTCTime (- time) now)]
+        fmap fromIntegral $ runDB $ count [UserLastLogin >=. Just (addUTCTime (- time) now)]
   activeUsersDaily <- activeUsers day
   activeUsersWeekly <- activeUsers $ 7 * day
   activeUsersMonthly <- activeUsers $ 30 * day
   activeUsersYearly <- activeUsers $ 365 * day
   let adminStatsActiveUsers = ActiveUsers {..}
   adminStatsSubscribedUsers <- do
-    us <- runDb $ selectList [] []
+    us <- runDB $ selectList [] []
     fmap (fromIntegral . length . catMaybes) $
       forM us $ \(Entity _ u) -> do
         ps <- getUserPaidStatus (userIdentifier u)

@@ -17,6 +17,6 @@ import Servant
 
 serveAdminDeleteAccount :: AuthCookie -> Username -> IntrayHandler NoContent
 serveAdminDeleteAccount AuthCookie {..} username = do
-  mAccount <- runDb $ getBy $ UniqueUsername username
+  mAccount <- runDB $ getBy $ UniqueUsername username
   mapM_ (deleteAccountFully . userIdentifier . entityVal) mAccount
   pure NoContent

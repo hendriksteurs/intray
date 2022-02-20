@@ -17,5 +17,5 @@ import Intray.Server.Types
 
 serveAdminGetAccounts :: AuthCookie -> IntrayHandler [AccountInfo]
 serveAdminGetAccounts AuthCookie {..} = do
-  users <- runDb $ selectList [] [Desc UserLastLogin]
+  users <- runDB $ selectList [] [Desc UserLastLogin]
   forM users $ \(Entity _ user) -> getAccountInfoForUser user

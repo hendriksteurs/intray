@@ -17,5 +17,5 @@ import Servant
 
 serveDeleteItem :: AuthCookie -> ItemUUID -> IntrayHandler NoContent
 serveDeleteItem AuthCookie {..} id_ = do
-  runDb . deleteBy $ UniqueItemIdentifier id_
+  runDB . deleteBy $ UniqueItemIdentifier id_
   pure NoContent

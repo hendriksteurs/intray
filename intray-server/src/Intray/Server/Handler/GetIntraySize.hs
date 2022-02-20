@@ -15,4 +15,4 @@ import Intray.Server.Handler.Utils
 import Intray.Server.Types
 
 serveGetIntraySize :: AuthCookie -> IntrayHandler Int
-serveGetIntraySize AuthCookie {..} = runDb $ count [IntrayItemUserId ==. authCookieUserUUID]
+serveGetIntraySize AuthCookie {..} = runDB $ count [IntrayItemUserId ==. authCookieUserUUID]

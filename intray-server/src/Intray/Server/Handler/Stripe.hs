@@ -61,7 +61,7 @@ getUserPaidStatus userId = do
   case mss of
     Nothing -> pure NoPaymentNecessary
     Just MonetisationEnv {..} -> do
-      mu <- runDb $ getBy $ UniqueUserIdentifier userId
+      mu <- runDB $ getBy $ UniqueUserIdentifier userId
       case mu of
         Nothing -> throwAll err404
         Just (Entity _ User {..}) -> do
@@ -77,12 +77,12 @@ getUserPaidStatus userId = do
                   case mSub of
                     Just u -> pure $ HasPaid u
                     Nothing -> do
-                      c <- runDb $ count [IntrayItemUserId ==. userId]
+                      c <- runDB $ count [IntrayItemUserId ==. userId]
                       pure $ HasNotPaid (monetisationEnvMaxItemsFree - c)
 
 hasSubscribed :: StripeSettings -> AccountUUID -> IntrayHandler (Maybe UTCTime)
 hasSubscribed ss uuid = do
-  cs <- runDb $ selectList [StripeCustomerUser ==. uuid] []
+  cs <- runDB $ selectList [StripeCustomerUser ==. uuid] []
   ends <- forM cs $ \(Entity _ StripeCustomer {..}) -> do
     sl <-
       runStripeHandlerOrErrorWith ss (Stripe.getSubscriptionsByCustomerId stripeCustomerCustomer)
@@ -104,7 +104,7 @@ hasSubscribed ss uuid = do
         pure $ NE.head $ NE.sortWith Down ne
   -- Put it in our db
   forM_ mt $ \t ->
-    runDb $
+    runDB $
       upsertBy
         (UniqueSubscriptionUser uuid)
         (Subscription {subscriptionUser = uuid, subscriptionEnd = t})

@@ -32,7 +32,7 @@ doSync ::
   SyncRequest ClientId ItemUUID (AddedItem TypedItem) ->
   IntrayHandler (SyncResponse ClientId ItemUUID (AddedItem TypedItem))
 doSync ps userId =
-  runDb
+  runDB
     . serverProcessSyncWithCustomIdQuery
       nextRandomUUID
       IntrayItemIdentifier

@@ -21,7 +21,7 @@ import Servant.Auth.Server as Auth
 
 servePostLogin :: LoginForm -> IntrayHandler (Headers '[Header "Set-Cookie" Text] NoContent)
 servePostLogin LoginForm {..} = do
-  me <- runDb $ getBy $ UniqueUsername loginFormUsername
+  me <- runDB $ getBy $ UniqueUsername loginFormUsername
   case me of
     Nothing -> throwError err401
     Just (Entity uid user) ->
@@ -34,7 +34,7 @@ servePostLogin LoginForm {..} = do
                   else userPermissions
           setLoggedIn uid user perms
         else do
-          aks <- runDb $ selectList [AccessKeyUser ==. userIdentifier user] [Asc AccessKeyCreatedTimestamp]
+          aks <- runDB $ selectList [AccessKeyUser ==. userIdentifier user] [Asc AccessKeyCreatedTimestamp]
           let mli =
                 flip map aks $ \(Entity _ AccessKey {..}) -> do
                   submittedKey <- parseAccessKeySecretText loginFormPassword
@@ -54,5 +54,5 @@ servePostLogin LoginForm {..} = do
         Nothing -> throwError err401
         Just setCookie -> do
           now <- liftIO getCurrentTime
-          runDb $ update uid [UserLastLogin =. Just now]
+          runDB $ update uid [UserLastLogin =. Just now]
           return $ addHeader (decodeUtf8 setCookie) NoContent

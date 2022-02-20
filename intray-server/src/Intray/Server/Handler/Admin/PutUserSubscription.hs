@@ -16,7 +16,7 @@ import Servant
 serveAdminPutUserSubscription :: AuthCookie -> Username -> UTCTime -> IntrayHandler NoContent
 serveAdminPutUserSubscription AuthCookie {..} username end = do
   _ <-
-    runDb $ do
+    runDB $ do
       mUser <- getBy (UniqueUsername username)
       forM_ mUser $ \(Entity _ user) ->
         let uuid = userIdentifier user

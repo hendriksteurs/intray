@@ -14,5 +14,5 @@ import Intray.Server.Types
 
 serveGetItems :: AuthCookie -> IntrayHandler [ItemInfo TypedItem]
 serveGetItems AuthCookie {..} = do
-  itemsEnts <- runDb $ selectList [IntrayItemUserId ==. authCookieUserUUID] [Asc IntrayItemCreated]
+  itemsEnts <- runDB $ selectList [IntrayItemUserId ==. authCookieUserUUID] [Asc IntrayItemCreated]
   pure $ map (makeItemInfo . entityVal) itemsEnts

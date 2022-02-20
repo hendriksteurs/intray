@@ -19,7 +19,7 @@ import Servant
 
 serveAdminGetAccount :: AuthCookie -> Username -> IntrayHandler AccountInfo
 serveAdminGetAccount AuthCookie {..} username = do
-  mUserEntity <- runDb $ getBy $ UniqueUsername username
+  mUserEntity <- runDB $ getBy $ UniqueUsername username
   case mUserEntity of
     Nothing -> throwError err404 {errBody = "User not found."}
     Just (Entity _ user) -> getAccountInfoForUser user

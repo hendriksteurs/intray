@@ -34,5 +34,5 @@ servePostAddItem AuthCookie {..} typedItem = do
     goAhead = do
       now <- liftIO getCurrentTime
       uuid <- liftIO nextRandomUUID
-      runDb $ insert_ $ makeIntrayItem authCookieUserUUID uuid now typedItem
+      runDB $ insert_ $ makeIntrayItem authCookieUserUUID uuid now typedItem
       pure uuid

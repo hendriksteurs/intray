@@ -16,5 +16,5 @@ import Intray.Server.Types
 
 serveGetAccessKeys :: AuthCookie -> IntrayHandler [AccessKeyInfo]
 serveGetAccessKeys AuthCookie {..} = do
-  aks <- runDb $ selectList [AccessKeyUser ==. authCookieUserUUID] []
+  aks <- runDB $ selectList [AccessKeyUser ==. authCookieUserUUID] []
   pure $ map (makeAccessKeyInfo . entityVal) aks
