@@ -7,12 +7,9 @@ module Main where
 import Criterion.Main
 import qualified Data.ByteString as SB
 import Intray.Client
-import Intray.Server.TestUtils hiding (login)
-import Servant.API
-import Servant.Auth.Client
-import Servant.Client
-import System.Exit
-import Web.Cookie
+import Intray.Server.TestUtils
+import Network.HTTP.Client as HTTP
+import Test.Syd.Def.SetupFunc
 
 smallTextItem :: TypedItem
 smallTextItem = TypedItem {itemType = TextItem, itemData = "Example Data"}
@@ -21,8 +18,10 @@ largeTextItem :: TypedItem
 largeTextItem = smallTextItem {itemData = SB.concat $ replicate 100 $ itemData smallTextItem}
 
 main :: IO ()
-main =
-  withServer $ \cenv -> do
+main = do
+  man <- newManager defaultManagerSettings
+  -- TODO empty the server for each benchmark, otherwise benchmarks are not independent
+  withServer man $ \cenv -> do
     (_, tok) <- setupTestUser cenv
     defaultMain
       [ bench "register" $ register cenv,
@@ -76,20 +75,12 @@ setupTestUser :: ClientEnv -> IO (Registration, Token)
 setupTestUser cenv = do
   r <- randomRegistration
   NoContent <- runClientOrError cenv $ clientPostRegister r
-  t <- login cenv $ registrationLoginForm r
+  t <- login cenv (registrationUsername r) (registrationPassword r)
   pure (r, t)
-
-login :: ClientEnv -> LoginForm -> IO Token
-login cenv form = do
-  Headers NoContent (HCons _ (HCons sessionHeader HNil)) <-
-    runClientOrError cenv $ clientPostLogin form
-  case sessionHeader of
-    Header session -> pure $ Token $ setCookieValue session
-    _ -> die "something is wrong in the benchmark"
 
 registrationLoginForm :: Registration -> LoginForm
 registrationLoginForm Registration {..} =
   LoginForm {loginFormUsername = registrationUsername, loginFormPassword = registrationPassword}
 
-withServer :: (ClientEnv -> IO ()) -> IO ()
-withServer func = setupIntrayTestApp >>= withIntrayApp func
+withServer :: HTTP.Manager -> (ClientEnv -> IO ()) -> IO ()
+withServer man = unSetupFunc $ intrayTestClientEnvSetupFunc Nothing man

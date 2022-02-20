@@ -106,8 +106,10 @@ benchmarks:
     - bytestring
     - cookie
     - criterion
+    - http-client
     - intray-client
+    - intray-server-gen
     - servant
     - servant-auth-client
     - servant-client
-    - intray-server-gen
+    - sydtest
