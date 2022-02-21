@@ -106,5 +106,6 @@ tests:
     - sydtest-wai
     - sydtest-yesod
     - text
+    - time
     - typed-uuid
     - yesod-auth

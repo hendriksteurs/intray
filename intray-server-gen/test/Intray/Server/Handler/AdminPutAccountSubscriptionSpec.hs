@@ -1,4 +1,4 @@
-module Intray.Server.Handler.AdminPutUserSubscriptionSpec
+module Intray.Server.Handler.AdminPutAccountSubscriptionSpec
   ( spec,
   )
 where
@@ -11,15 +11,15 @@ import TestImport
 spec :: Spec
 spec =
   withIntrayServer $
-    describe "AdminPutUserSubscription" $ do
-      it "fails without PermitAdminPutUserSubscription" $ \cenv ->
+    describe "AdminPutAccountSubscription" $ do
+      it "fails without PermitAdminPutAccountSubscription" $ \cenv ->
         forAllValid $ \uuid ->
           forAllValid $ \end ->
-            failsWithOutPermission cenv PermitAdminPutUserSubscription $ \t ->
-              clientAdminPutUserSubscription t uuid end
+            failsWithOutPermission cenv PermitAdminPutAccountSubscription $ \t ->
+              clientAdminPutAccountSubscription t uuid end
       it "forbids non-admin users from deleting a user" $ \cenv ->
         forAllValid $ \uuid ->
           forAllValid $ \end ->
             requiresAdmin cenv $ \token ->
-              clientAdminPutUserSubscription token uuid end
+              clientAdminPutAccountSubscription token uuid end
       pending "sets the subscription time correctly"

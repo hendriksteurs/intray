@@ -81,7 +81,7 @@ test-suite intray-server-test
       Intray.Server.Handler.AdminGetAccountSpec
       Intray.Server.Handler.AdminGetAccountsSpec
       Intray.Server.Handler.AdminGetStatsSpec
-      Intray.Server.Handler.AdminPutUserSubscriptionSpec
+      Intray.Server.Handler.AdminPutAccountSubscriptionSpec
       Intray.Server.Handler.DeleteAccountSpec
       Intray.Server.Handler.DeleteItemSpec
       Intray.Server.Handler.GetAccountInfoSpec

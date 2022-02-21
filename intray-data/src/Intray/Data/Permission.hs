@@ -38,7 +38,7 @@ data Permission
   | PermitAdminGetAccounts
   | PermitAdminGetAccount
   | PermitAdminGetStats
-  | PermitAdminPutUserSubscription
+  | PermitAdminPutAccountSubscription
   deriving stock (Show, Read, Eq, Ord, Generic, Enum, Bounded)
   deriving (FromJSON, ToJSON) via (Autodocodec Permission)
 
@@ -85,7 +85,8 @@ adminOnlyPermissions =
     [ PermitAdminDeleteAccount,
       PermitAdminGetAccounts,
       PermitAdminGetAccount,
-      PermitAdminGetStats
+      PermitAdminGetStats,
+      PermitAdminPutAccountSubscription
     ]
 
 adminPermissions :: Set Permission

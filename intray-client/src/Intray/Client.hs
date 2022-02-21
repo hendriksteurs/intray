@@ -46,7 +46,7 @@ clientAdminGetStats :: Token -> ClientM AdminStats
 clientAdminDeleteAccount :: Token -> Username -> ClientM NoContent
 clientAdminGetAccount :: Token -> Username -> ClientM AccountInfo
 clientAdminGetAccounts :: Token -> ClientM [AccountInfo]
-clientAdminPutUserSubscription :: Token -> Username -> UTCTime -> ClientM NoContent
+clientAdminPutAccountSubscription :: Token -> Username -> UTCTime -> ClientM NoContent
 clientGetShowItem
   :<|> clientGetSize
   :<|> clientGetItemUUIDs
@@ -70,5 +70,5 @@ clientGetShowItem
   :<|> clientAdminDeleteAccount
   :<|> clientAdminGetAccount
   :<|> clientAdminGetAccounts
-  :<|> clientAdminPutUserSubscription =
+  :<|> clientAdminPutAccountSubscription =
     client (flatten intrayAPI)

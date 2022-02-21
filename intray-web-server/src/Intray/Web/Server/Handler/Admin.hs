@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
 
@@ -5,6 +6,7 @@ module Intray.Web.Server.Handler.Admin
   ( getAdminPanelR,
     getAdminAccountR,
     postAdminAccountDeleteR,
+    postAdminAccountSetSubscriptionR,
   )
 where
 
@@ -50,6 +52,12 @@ postAdminAccountDeleteR uuid =
   withAdminCreds $ \t -> do
     NoContent <- runClientOrErr $ clientAdminDeleteAccount t uuid
     redirect $ AdminR AdminPanelR
+
+postAdminAccountSetSubscriptionR :: Username -> Handler Html
+postAdminAccountSetSubscriptionR username = withAdminCreds $ \t -> do
+  endDate <- runInputPost $ ireq dayField "end-date"
+  NoContent <- runClientOrErr $ clientAdminPutAccountSubscription t username $ UTCTime endDate 0
+  redirect $ AdminR $ AdminAccountR username
 
 withAdminCreds :: (Token -> Handler Html) -> Handler Html
 withAdminCreds func =
