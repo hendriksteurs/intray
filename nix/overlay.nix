@@ -4,6 +4,16 @@ with final.haskell.lib;
 
 let
   sources = import ./sources.nix;
+
+
+  generateOpenAPIClient = import (sources.openapi-code-generator + "/nix/generate-client.nix") { pkgs = final; };
+  generatedStripe = generateOpenAPIClient {
+    name = "stripe-client";
+    configFile = ../stripe-client-gen.yaml;
+    src = sources.stripe-spec + "/openapi/spec3.yaml";
+  };
+  generatedStripeCode = generatedStripe.code;
+
 in
 {
   intrayPackages =
@@ -168,6 +178,9 @@ in
     };
 
   intrayNotification = import ./notification.nix { pkgs = final; };
+
+  inherit generatedStripeCode;
+
   haskellPackages =
     previous.haskellPackages.override (
       old:
@@ -217,6 +230,7 @@ in
                 looper = self.callCabal2nix "looper" (sources.looper + "/looper") { };
                 envparse = self.callHackage "envparse" "0.4.1" { };
                 yesod-autoreload = self.callCabal2nix "yesod-autoreload" sources.yesod-autoreload { };
+                stripe-client = generatedStripe.package;
               } // genAttrs [
                 "stripe-core"
                 "stripe-haskell"
