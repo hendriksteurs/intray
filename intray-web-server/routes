@@ -26,5 +26,5 @@
   / AdminPanelR GET
   /account/#{Username} AdminAccountR GET
   /account/#{Username}/delete AdminAccountDeleteR POST
-  /admin/user/#{Username}/set-subscription AdminAccountSetSubscriptionR POST
+  /account/#{Username}/set-subscription AdminAccountSetSubscriptionR GET POST
 

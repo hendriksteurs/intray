@@ -15,18 +15,20 @@ import Servant
 
 serveAdminPutUserSubscription :: AuthCookie -> Username -> UTCTime -> IntrayHandler NoContent
 serveAdminPutUserSubscription AuthCookie {..} username end = do
-  _ <-
-    runDB $ do
-      mUser <- getBy (UniqueUsername username)
-      forM_ mUser $ \(Entity _ user) ->
-        let uuid = userIdentifier user
-         in upsertBy
-              (UniqueSubscriptionUser uuid)
-              ( Subscription
-                  { subscriptionUser = uuid,
-                    subscriptionEnd = end
-                  }
-              )
-              [ SubscriptionEnd =. end
-              ]
+  mUserEntity <- runDB $ getBy (UniqueUsername username)
+  case mUserEntity of
+    Nothing -> throwError err404
+    Just (Entity _ user) ->
+      let uuid = userIdentifier user
+       in runDB $
+            void $
+              upsertBy
+                (UniqueSubscriptionUser uuid)
+                ( Subscription
+                    { subscriptionUser = uuid,
+                      subscriptionEnd = end
+                    }
+                )
+                [ SubscriptionEnd =. end
+                ]
   pure NoContent

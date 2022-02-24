@@ -103,10 +103,12 @@ hasSubscribed ss uuid = do
         ne <- NE.nonEmpty $ catMaybes ends
         pure $ NE.head $ NE.sortWith Down ne
   -- Put it in our db
-  forM_ mt $ \t ->
-    runDB $
-      upsertBy
-        (UniqueSubscriptionUser uuid)
-        (Subscription {subscriptionUser = uuid, subscriptionEnd = t})
-        [SubscriptionEnd =. t]
-  pure mt
+  runDB $ case mt of
+    Nothing -> fmap (fmap (subscriptionEnd . entityVal)) $ getBy $ UniqueSubscriptionUser uuid
+    Just end -> do
+      _ <-
+        upsertBy
+          (UniqueSubscriptionUser uuid)
+          (Subscription {subscriptionUser = uuid, subscriptionEnd = end})
+          [SubscriptionEnd =. end]
+      pure (Just end)

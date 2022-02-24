@@ -9,17 +9,34 @@ import Intray.Server.TestUtils
 import TestImport
 
 spec :: Spec
-spec =
+spec = do
   withIntrayServer $
     describe "AdminPutAccountSubscription" $ do
       it "fails without PermitAdminPutAccountSubscription" $ \cenv ->
-        forAllValid $ \uuid ->
+        forAllValid $ \username ->
           forAllValid $ \end ->
             failsWithOutPermission cenv PermitAdminPutAccountSubscription $ \t ->
-              clientAdminPutAccountSubscription t uuid end
+              clientAdminPutAccountSubscription t username end
       it "forbids non-admin users from deleting a user" $ \cenv ->
-        forAllValid $ \uuid ->
+        forAllValid $ \username ->
           forAllValid $ \end ->
             requiresAdmin cenv $ \token ->
-              clientAdminPutAccountSubscription token uuid end
-      pending "sets the subscription time correctly"
+              clientAdminPutAccountSubscription token username end
+  withFreeIntrayServer $
+    it "sets the subscription time correctly" $ \cenv ->
+      forAllValid $ \end ->
+        withAdmin cenv $ \adminToken ->
+          withValidNewUserAndData cenv $ \username _ userToken ->
+            runClientOrError cenv $ do
+              NoContent <- clientAdminPutAccountSubscription adminToken username end
+              accountInfo <- clientGetAccountInfo userToken
+              liftIO $ accountInfoStatus accountInfo `shouldBe` NoPaymentNecessary
+  withPaidIntrayServer 5 $
+    it "sets the subscription time correctly" $ \cenv ->
+      forAllValid $ \end ->
+        withAdmin cenv $ \adminToken ->
+          withValidNewUserAndData cenv $ \username _ userToken ->
+            runClientOrError cenv $ do
+              NoContent <- clientAdminPutAccountSubscription adminToken username end
+              accountInfo <- clientGetAccountInfo userToken
+              liftIO $ accountInfoStatus accountInfo `shouldBe` HasPaid end

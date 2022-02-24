@@ -61,7 +61,7 @@ spec = intrayWebServerSpec $ do
         withExampleAccount $ \username _ -> do
           withAdminAccountAndLogin_ $ do
             -- An account beforehand
-            get $ AdminR $ AdminAccountR username
+            get $ AdminR $ AdminAccountSetSubscriptionR username
             statusIs 200
             -- Can delete it
             request $ do
@@ -70,7 +70,6 @@ spec = intrayWebServerSpec $ do
               addToken
               addPostParam "end-date" $ T.pack $ formatTime defaultTimeLocale "%F" (day :: Day)
             statusIs 303
+            locationShouldBe $ AdminR $ AdminAccountSetSubscriptionR username
             _ <- followRedirect
-            statusIs 200
-            get $ AdminR $ AdminAccountR username
             statusIs 200

@@ -37,24 +37,10 @@
             Not subscribed, #{left} items left.
 
 
-      <h4 .title .is-4>
+      <a .button href=@{AdminR $ AdminAccountSetSubscriptionR username}>
         Override Subscription
 
-      <form .form
-        method=post
-        action=@{AdminR $ AdminAccountSetSubscriptionR username}>
-        ^{token}
-        <div .field>
-          <label .label>
-            End date
-          <div .control>
-            <input required type="date" name="end-date">
-        <div .field>
-          <div .control>
-          <button .button .is-danger
-            type=submit>
-            Override
-
+      <p>
 
       <h4 .title .is-4>
         Delete Account
@@ -62,9 +48,9 @@
       <form .form
         method=post
         action=@{AdminR $ AdminAccountDeleteR username}>
-        ^{token}
         <div .field>
           <div .control>
+            ^{token}
           <button .button .is-danger
             type=submit>
             Override
