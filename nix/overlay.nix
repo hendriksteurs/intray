@@ -216,6 +216,7 @@ in
                 servant-auth-server = doJailbreak (super.servant-auth-server);
                 looper = self.callCabal2nix "looper" (sources.looper + "/looper") { };
                 envparse = self.callHackage "envparse" "0.4.1" { };
+                yesod-autoreload = self.callCabal2nix "yesod-autoreload" sources.yesod-autoreload { };
               } // genAttrs [
                 "stripe-core"
                 "stripe-haskell"

@@ -28,3 +28,4 @@
   /account/#{Username}/delete AdminAccountDeleteR POST
   /account/#{Username}/set-subscription AdminAccountSetSubscriptionR GET POST
 
+/reload ReloadR GET
