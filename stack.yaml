@@ -103,10 +103,6 @@ extra-deps:
     - genvalidity-typed-uuid
 - github: NorfairKing/pretty-relative-time
   commit: a634358ff274380a12360f7814c3aea46ea35b1b
-- github: NorfairKing/looper
-  commit: e01054970b47d9eaab8b9314a1400c231ac4a960
-  subdirs:
-    - looper
 - github: NorfairKing/safe-coloured-text
   commit: f30fe0e4d2a0fa036967ffe17538b60e5f9861f5
   subdirs:

@@ -20,7 +20,6 @@ library:
   dependencies:
   - aeson
   - aeson-pretty
-  - async
   - autodocodec
   - autodocodec-yaml
   - bytestring
@@ -33,7 +32,6 @@ library:
   - intray-api
   - intray-data
   - jose
-  - looper
   - markdown
   - mergeless
   - mergeless-persistent

@@ -59,18 +59,6 @@
         "url": "https://github.com/NorfairKing/linkcheck/archive/04168bc98011cf5c9589bc3e94086d7e72f86981.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
-    "looper": {
-        "branch": "master",
-        "description": "Run actions periodically",
-        "homepage": "http://hackage.haskell.org/package/looper",
-        "owner": "NorfairKing",
-        "repo": "looper",
-        "rev": "e01054970b47d9eaab8b9314a1400c231ac4a960",
-        "sha256": "1n1g6ypibfjxs5msqlph0x0wzsic9p0ff6l0nzy1h3d6zp6bwk54",
-        "type": "tarball",
-        "url": "https://github.com/NorfairKing/looper/archive/e01054970b47d9eaab8b9314a1400c231ac4a960.tar.gz",
-        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
     "mergeless": {
         "branch": "master",
         "description": "Merge-less syncing of arbitrary immutable items",

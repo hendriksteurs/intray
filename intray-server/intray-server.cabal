@@ -58,11 +58,6 @@ library
       Intray.Server.Handler.Stripe
       Intray.Server.Handler.Utils
       Intray.Server.Item
-      Intray.Server.Looper
-      Intray.Server.Looper.DB
-      Intray.Server.Looper.Import
-      Intray.Server.Looper.Stripe
-      Intray.Server.Looper.StripeEventsFetcher
       Intray.Server.OptParse
       Intray.Server.OptParse.Types
       Intray.Server.Serve
@@ -81,7 +76,6 @@ library
   build-depends:
       aeson
     , aeson-pretty
-    , async
     , autodocodec
     , autodocodec-yaml
     , base >=4.7 && <5
@@ -95,7 +89,6 @@ library
     , intray-api
     , intray-data
     , jose
-    , looper
     , markdown
     , mergeless
     , mergeless-persistent

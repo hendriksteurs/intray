@@ -11,14 +11,12 @@ module Intray.Server
   )
 where
 
-import Control.Concurrent.Async
 import Control.Monad.Logger
 import Control.Monad.Trans.Resource (runResourceT)
 import Data.Cache
 import Database.Persist.Sqlite
 import Import
 import Intray.API
-import Intray.Server.Looper (LoopersSettings (..), runIntrayServerLoopers)
 import Intray.Server.OptParse.Types
 import Intray.Server.Serve (intrayServer)
 import Intray.Server.SigningKey
@@ -59,24 +57,8 @@ runIntrayServer Settings {..} =
                     envFreeloaders = setFreeloaders,
                     envMonetisation = mMonetisationEnv
                   }
-          let mLoopersSets =
-                case setMonetisationSettings of
-                  Nothing -> Nothing
-                  Just MonetisationSettings {..} ->
-                    Just
-                      LoopersSettings
-                        { loopersSetLogLevel = setLogLevel,
-                          loopersSetConnectionPool = pool,
-                          loopersSetStripeSettings = monetisationSetStripeSettings,
-                          loopersSetStripeEventsFetcher = monetisationSetStripeEventsFetcher,
-                          loopersSetStripeEventsRetrier = monetisationSetStripeEventsRetrier
-                        }
           let runServer = Warp.run setPort $ intrayApp intrayEnv
-          case mLoopersSets of
-            Nothing -> liftIO runServer
-            Just ls -> do
-              let runLoopers = runIntrayServerLoopers ls
-              liftIO $ race_ runServer runLoopers
+          liftIO runServer
 
 intrayApp :: IntrayServerEnv -> Wai.Application
 intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ makeIntrayServer se
