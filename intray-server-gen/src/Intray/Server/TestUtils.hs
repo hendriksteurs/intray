@@ -26,6 +26,7 @@ module Intray.Server.TestUtils
   )
 where
 
+import Control.Monad.Logger
 import Data.Cache as Cache
 import Data.Set (Set)
 import qualified Data.Set as S
@@ -110,9 +111,11 @@ intrayTestClientEnvSetupFunc' menv man pool = do
   signingKey <- liftIO Auth.generateKey
   let jwtCfg = defaultJWTSettings signingKey
   let cookieCfg = defaultCookieSettings
+  logFunc <- runNoLoggingT askLoggerIO
   let intrayEnv =
         IntrayServerEnv
-          { envHost = "localhost",
+          { envLogFunc = logFunc,
+            envHost = "localhost",
             envConnectionPool = pool,
             envCookieSettings = cookieCfg,
             envJWTSettings = jwtCfg,

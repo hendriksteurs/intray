@@ -1,6 +1,15 @@
 loops:
   ci: nix-build ci.nix --no-out-link
 
+  test-all:
+    command: |
+      stack test \
+        --fast \
+        --no-nix --system-ghc --ghc-options='-freverse-errors' \
+        --with-hpack hpack \
+        --no-nix-pure \
+        --no-rerun-tests
+
   web-server:
     script: |
       stack install :intray-server :intray-web-server \

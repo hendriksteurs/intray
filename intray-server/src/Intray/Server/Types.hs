@@ -14,8 +14,11 @@ import Servant
 import Servant.Auth.Server
 import Web.Stripe.Plan as Stripe
 
+type LF = Loc -> LogSource -> LogLevel -> LogStr -> IO ()
+
 data IntrayServerEnv = IntrayServerEnv
-  { envHost :: Text,
+  { envHost :: !Text,
+    envLogFunc :: !LF,
     envConnectionPool :: !ConnectionPool,
     envCookieSettings :: !CookieSettings,
     envJWTSettings :: !JWTSettings,

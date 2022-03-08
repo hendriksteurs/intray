@@ -47,9 +47,11 @@ runIntrayServer Settings {..} =
                     monetisationEnvMaxItemsFree = monetisationSetMaxItemsFree,
                     monetisationEnvPlanCache = planCache
                   }
+          logFunc <- askLoggerIO
           let intrayEnv =
                 IntrayServerEnv
-                  { envHost = setHost,
+                  { envLogFunc = logFunc,
+                    envHost = setHost,
                     envConnectionPool = pool,
                     envCookieSettings = cookieCfg,
                     envJWTSettings = jwtCfg,
@@ -61,7 +63,7 @@ runIntrayServer Settings {..} =
           liftIO runServer
 
 intrayApp :: IntrayServerEnv -> Wai.Application
-intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ makeIntrayServer se
+intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ makeIntrayServer (envLogFunc se) se
   where
     addPolicy = cors (const $ Just policy)
     policy =
@@ -70,12 +72,12 @@ intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ ma
           corsMethods = ["GET", "POST", "HEAD", "DELETE"]
         }
 
-makeIntrayServer :: IntrayServerEnv -> Server IntrayAPI
-makeIntrayServer cfg =
+makeIntrayServer :: LF -> IntrayServerEnv -> Server IntrayAPI
+makeIntrayServer logFunc cfg =
   hoistServerWithContext
     intrayAPI
     (Proxy :: Proxy IntrayContext)
-    (`runReaderT` cfg)
+    (\func -> runLoggingT (runReaderT func cfg) logFunc)
     (genericServerT intrayServer)
 
 intrayAppContext :: IntrayServerEnv -> Context IntrayContext
