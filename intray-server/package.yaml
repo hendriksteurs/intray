@@ -49,11 +49,13 @@ library:
   - servant-auth-server
   - servant-docs
   - servant-server
+  - stripe-client
   - stripe-core
   - stripe-haskell
   - text
   - time
   - typed-uuid
+  - unordered-containers
   - wai
   - wai-cors
   - warp >=3.2

@@ -48,7 +48,7 @@ User
 
 StripeCustomer
     user AccountUUID
-    customer Stripe.CustomerId
+    customer Text -- Stripe customer id
     UniqueStripeCustomer user customer
 
     deriving Show

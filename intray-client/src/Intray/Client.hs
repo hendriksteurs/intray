@@ -11,6 +11,7 @@ module Intray.Client
   )
 where
 
+import Data.Aeson as JSON
 import Data.Mergeless
 import qualified Data.UUID.Typed
 import Import
@@ -42,6 +43,7 @@ clientGetPermissions :: Token -> ClientM (Set Permission)
 clientPostRegister :: Registration -> ClientM NoContent
 clientPostLogin :: LoginForm -> ClientM (Headers '[Header "Set-Cookie" Text] NoContent)
 clientGetPricing :: ClientM (Maybe Pricing)
+clientPostStripeHook :: JSON.Value -> ClientM NoContent
 clientAdminGetStats :: Token -> ClientM AdminStats
 clientAdminDeleteAccount :: Token -> Username -> ClientM NoContent
 clientAdminGetAccount :: Token -> Username -> ClientM AccountInfo
@@ -66,6 +68,7 @@ clientGetShowItem
   :<|> clientPostRegister
   :<|> clientPostLogin
   :<|> clientGetPricing
+  :<|> clientPostStripeHook
   :<|> clientAdminGetStats
   :<|> clientAdminDeleteAccount
   :<|> clientAdminGetAccount

@@ -15,6 +15,7 @@ module Intray.API
   )
 where
 
+import Data.Aeson as JSON
 import Data.UUID.Typed
 import Import
 import Intray.API.Admin
@@ -51,7 +52,8 @@ type IntrayPublicAPI = ToServantApi IntrayPublicSite
 data IntrayPublicSite route = IntrayPublicSite
   { postRegister :: !(route :- PostRegister),
     postLogin :: !(route :- PostLogin),
-    getPricing :: !(route :- GetPricing)
+    getPricing :: !(route :- GetPricing),
+    postStripeHook :: !(route :- PostStripeHook)
   }
   deriving (Generic)
 
@@ -62,3 +64,5 @@ type PostLogin =
   "login" :> ReqBody '[JSON] LoginForm :> PostNoContent '[JSON] (Headers '[Header "Set-Cookie" Text] NoContent)
 
 type GetPricing = "pricing" :> Get '[JSON] (Maybe Pricing)
+
+type PostStripeHook = "stripe" :> ReqBody '[JSON] JSON.Value :> Verb 'POST 204 '[JSON] NoContent

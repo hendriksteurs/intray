@@ -14,8 +14,6 @@ where
 import Control.Exception
 import Data.Aeson
 import qualified Data.ByteString.Lazy.Char8 as LB8
-import qualified Data.List.NonEmpty as NE
-import Data.Ord
 import Data.Time
 import Database.Persist
 import Import
@@ -27,8 +25,6 @@ import Intray.Server.Types
 import Servant
 import Servant.Auth.Server
 import Web.Stripe as Stripe (StripeError, StripeRequest, StripeReturn)
-import qualified Web.Stripe.Subscription as Stripe
-import qualified Web.Stripe.Types as Stripe
 
 runStripeHandler ::
   FromJSON (StripeReturn a) =>
@@ -73,42 +69,12 @@ getUserPaidStatus userId = do
               if isFreeloader
                 then pure NoPaymentNecessary
                 else do
-                  mSub <- hasSubscribed monetisationEnvStripeSettings userId
+                  mSub <- hasSubscribed userId
                   case mSub of
                     Just u -> pure $ HasPaid u
                     Nothing -> do
                       c <- runDB $ count [IntrayItemUserId ==. userId]
                       pure $ HasNotPaid (monetisationEnvMaxItemsFree - c)
 
-hasSubscribed :: StripeSettings -> AccountUUID -> IntrayHandler (Maybe UTCTime)
-hasSubscribed ss uuid = do
-  cs <- runDB $ selectList [StripeCustomerUser ==. uuid] []
-  ends <- forM cs $ \(Entity _ StripeCustomer {..}) -> do
-    sl <-
-      runStripeHandlerOrErrorWith ss (Stripe.getSubscriptionsByCustomerId stripeCustomerCustomer)
-    let relevantSubs =
-          filter
-            ( \s ->
-                Stripe.planId (Stripe.subscriptionPlan s) == stripeSetPlan ss
-                  && ( Stripe.subscriptionStatus s == Stripe.Active
-                         || Stripe.subscriptionStatus s == Stripe.Trialing
-                     )
-            )
-            $ Stripe.list sl
-    pure $
-      case sortOn Down $ map Stripe.subscriptionCurrentPeriodEnd relevantSubs of
-        [] -> Nothing
-        (end : _) -> Just end
-  let mt = do
-        ne <- NE.nonEmpty $ catMaybes ends
-        pure $ NE.head $ NE.sortWith Down ne
-  -- Put it in our db
-  runDB $ case mt of
-    Nothing -> fmap (fmap (subscriptionEnd . entityVal)) $ getBy $ UniqueSubscriptionUser uuid
-    Just end -> do
-      _ <-
-        upsertBy
-          (UniqueSubscriptionUser uuid)
-          (Subscription {subscriptionUser = uuid, subscriptionEnd = end})
-          [SubscriptionEnd =. end]
-      pure (Just end)
+hasSubscribed :: AccountUUID -> IntrayHandler (Maybe UTCTime)
+hasSubscribed uuid = runDB $ fmap (fmap (subscriptionEnd . entityVal)) $ getBy $ UniqueSubscriptionUser uuid

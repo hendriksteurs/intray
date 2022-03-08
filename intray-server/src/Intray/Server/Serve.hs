@@ -81,7 +81,8 @@ intrayPublicServer =
   IntrayPublicSite
     { postRegister = servePostRegister,
       postLogin = servePostLogin,
-      getPricing = serveGetPricing
+      getPricing = serveGetPricing,
+      postStripeHook = servePostStripeHook
     }
 
 withAuthResult :: ThrowAll a => (AuthCookie -> a) -> (AuthResult AuthCookie -> a)

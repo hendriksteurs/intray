@@ -1,6 +1,6 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
@@ -50,6 +50,7 @@ library
       Intray.Server.Handler.GetShowItem
       Intray.Server.Handler.PostAddItem
       Intray.Server.Handler.PostChangePassphrase
+      Intray.Server.Handler.PostStripeHook
       Intray.Server.Handler.PostSync
       Intray.Server.Handler.Public
       Intray.Server.Handler.Public.GetPricing
@@ -106,11 +107,13 @@ library
     , servant-auth-server
     , servant-docs
     , servant-server
+    , stripe-client
     , stripe-core
     , stripe-haskell
     , text
     , time
     , typed-uuid
+    , unordered-containers
     , wai
     , wai-cors
     , warp >=3.2

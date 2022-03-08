@@ -4,6 +4,7 @@ module Intray.Server.Types
   )
 where
 
+import Control.Monad.Logger
 import Data.Cache
 import Database.Persist.Sqlite
 import Import
@@ -29,4 +30,4 @@ data MonetisationEnv = MonetisationEnv
     monetisationEnvPlanCache :: !(Cache Stripe.PlanId Stripe.Plan)
   }
 
-type IntrayHandler = ReaderT IntrayServerEnv Handler
+type IntrayHandler = ReaderT IntrayServerEnv (LoggingT Handler)
