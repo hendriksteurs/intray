@@ -10,6 +10,7 @@ import sources.nixpkgs {
       (import (sources.sydtest + "/nix/overlay.nix"))
       (import (sources.typed-uuid + "/nix/overlay.nix"))
       (import (sources.validity + "/nix/overlay.nix"))
+      (import (sources.feedback + "/nix/overlay.nix"))
       (final: previous: { inherit (import sources.gitignore { inherit (final) lib; }) gitignoreSource; })
       (import ./overlay.nix)
     ];

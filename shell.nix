@@ -8,6 +8,7 @@ pkgs.haskell.lib.buildStackProject {
   buildInputs = with pkgs; [
     (import sources.niv { }).niv
     haskellPackages.autoexporter
+    feedback
     killall
     unzip
     zlib

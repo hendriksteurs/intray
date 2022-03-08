@@ -11,6 +11,18 @@
         "url": "https://github.com/NorfairKing/autodocodec/archive/f0cb2ead0985b4394db0627e6befd7ce23c54c22.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "feedback": {
+        "branch": "master",
+        "description": "Feedback loop manager",
+        "homepage": "",
+        "owner": "NorfairKing",
+        "repo": "feedback",
+        "rev": "e34870d7c31d8c19dd0b8bd3a5c200ad7049d0f2",
+        "sha256": "1innfzb4hisq6kwkphgafl3cj58inxgw7kihn4jp14mdw87m1rdh",
+        "type": "tarball",
+        "url": "https://github.com/NorfairKing/feedback/archive/e34870d7c31d8c19dd0b8bd3a5c200ad7049d0f2.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "gitignore": {
         "branch": "master",
         "description": "Nix function for filtering local git sources",
