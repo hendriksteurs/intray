@@ -63,7 +63,7 @@ runIntrayServer Settings {..} =
           liftIO runServer
 
 intrayApp :: IntrayServerEnv -> Wai.Application
-intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ makeIntrayServer (envLogFunc se) se
+intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ makeIntrayServer se
   where
     addPolicy = cors (const $ Just policy)
     policy =
@@ -72,12 +72,12 @@ intrayApp se = addPolicy . serveWithContext intrayAPI (intrayAppContext se) $ ma
           corsMethods = ["GET", "POST", "HEAD", "DELETE"]
         }
 
-makeIntrayServer :: LF -> IntrayServerEnv -> Server IntrayAPI
-makeIntrayServer logFunc cfg =
+makeIntrayServer :: IntrayServerEnv -> Server IntrayAPI
+makeIntrayServer cfg =
   hoistServerWithContext
     intrayAPI
     (Proxy :: Proxy IntrayContext)
-    (\func -> runLoggingT (runReaderT func cfg) logFunc)
+    (\func -> runLoggingT (runReaderT func cfg) (envLogFunc cfg))
     (genericServerT intrayServer)
 
 intrayAppContext :: IntrayServerEnv -> Context IntrayContext
