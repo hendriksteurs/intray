@@ -19,6 +19,7 @@ spec = sequential $
             setEnv "INTRAY_URL" $ showBaseUrl burl
             setEnv "INTRAY_CACHE_DIR" $ fromAbsDir cacheDir
             setEnv "INTRAY_DATA_DIR" $ fromAbsDir dataDir
+            setEnv "INTRAY_AUTO_OPEN" "true"
             intray ["register"]
             intray ["login"]
             intray ["add", "hello", "world"]
@@ -36,6 +37,7 @@ spec = sequential $
               setEnv "INTRAY_URL" $ showBaseUrl burl
               setEnv "INTRAY_CACHE_DIR" $ fromAbsDir cacheDir
               setEnv "INTRAY_DATA_DIR" $ fromAbsDir $ dataDir </> relDataDir
+              setEnv "INTRAY_AUTO_OPEN" "true"
               intray ["register"]
               intray ["login"]
               intray ["add", "hello", "world"]
@@ -53,6 +55,7 @@ spec = sequential $
               setEnv "INTRAY_URL" $ showBaseUrl burl
               setEnv "INTRAY_CACHE_DIR" $ fromAbsDir $ cacheDir </> relCacheDir
               setEnv "INTRAY_DATA_DIR" $ fromAbsDir dataDir
+              setEnv "INTRAY_AUTO_OPEN" "true"
               intray ["register"]
               intray ["login"]
               intray ["add", "hello", "world"]

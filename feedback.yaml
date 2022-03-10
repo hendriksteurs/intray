@@ -10,6 +10,15 @@ loops:
         --no-nix-pure \
         --no-rerun-tests
 
+  cli:
+    command: |
+      stack test intray-cli \
+        --fast \
+        --no-nix --system-ghc --ghc-options='-freverse-errors' \
+        --with-hpack hpack \
+        --no-nix-pure \
+        --test-arguments=''
+
   web-server:
     script: |
       stack install :intray-server :intray-web-server \
