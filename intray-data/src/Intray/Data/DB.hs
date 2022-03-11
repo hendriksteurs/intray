@@ -23,9 +23,7 @@ import Intray.Data.Import
 import Intray.Data.ItemType
 import Intray.Data.ItemUUID
 import Intray.Data.Permission
-import Intray.Data.Stripe ()
 import Intray.Data.Username
-import qualified Web.Stripe.Types as Stripe
 
 share
   [mkPersist sqlSettings, mkMigrate "migrateAll"]
@@ -54,16 +52,6 @@ StripeCustomer
     deriving Show
     deriving Eq
     deriving Generic
-
-
-StripeEvent
-    event Stripe.EventId
-    error Text Maybe
-    UniqueStripeEvent event
-    deriving Show
-    deriving Eq
-    deriving Generic
-
 
 Subscription
     user AccountUUID

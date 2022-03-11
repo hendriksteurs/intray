@@ -12,10 +12,8 @@ import Data.Time
 import Import
 import Intray.Client
 import Intray.Web.Server.Foundation
-import Intray.Web.Server.Handler.Pricing
 import Intray.Web.Server.Time
 import Text.Julius
-import Web.Stripe.Plan as Stripe
 import Yesod
 import Yesod.Auth
 
@@ -61,7 +59,7 @@ accountInfoSegment (Just ai@AccountInfo {..}) mp = do
 
 pricingStripeForm :: AccountInfo -> Pricing -> Widget
 pricingStripeForm AccountInfo {..} p =
-  let Stripe.PlanId planText = pricingPlan p
+  let planText = pricingPlan p
       clientReferenceId = uuidText accountInfoUUID
       sf = $(widgetFile "stripe-form")
    in [whamlet|
@@ -70,14 +68,11 @@ pricingStripeForm AccountInfo {..} p =
           <p>
             <ul>
               <li>
-                #{pricingShowAmountPerYear p} per year
+                #{pricingPrice p} per year
               <li>
                 Unlimited items
               <li>
                 Full API access
-              $maybe tp <- pricingTrialPeriod p
-                <li>
-                  #{show tp} day Trial period
           <p>
             ^{sf}
     |]

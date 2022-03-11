@@ -8,7 +8,8 @@ loops:
         --no-nix --system-ghc --ghc-options='-freverse-errors' \
         --with-hpack hpack \
         --no-nix-pure \
-        --no-rerun-tests
+        --no-rerun-tests \
+        --pedantic
 
   cli:
     command: |
@@ -28,10 +29,10 @@ loops:
         --no-nix-pure
       killall intray-server >/dev/null 2>&1 || true
       killall intray-web-server >/dev/null 2>&1 || true
-      cd /tmp
       ~/.local/bin/intray-server --admin admin & disown
       sleep 0.1
       ~/.local/bin/intray-web-server & disown
+    working-dir: intray-web-server
     env:
       INTRAY_WEB_SERVER_API_URL: 'localhost:8000'
       INTRAY_SERVER_LOG_LEVEL: 'Debug'

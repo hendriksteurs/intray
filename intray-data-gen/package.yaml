@@ -1,17 +1,9 @@
 name: intray-data-gen
 version: '0.0.0.0'
 synopsis: Generators for intray-data
-category: Intray
-author: Tom Sydney Kerckhove
-maintainer: syd.kerckhove@gmail.com
-copyright: ! 'Copyright: (c) 2017-2018 Tom Sydney Kerckhove'
-license: AllRightsReserved
-github: NorfairKing/intray-server
 
 library:
   source-dirs: src
-  ghc-options: -Wall
-
   dependencies:
   - QuickCheck
   - base >=4.7 && <5

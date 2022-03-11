@@ -27,11 +27,9 @@ module Intray.Server.TestUtils
 where
 
 import Control.Monad.Logger
-import Data.Cache as Cache
 import Data.Set (Set)
 import qualified Data.Set as S
 import Data.Text.Encoding (encodeUtf8)
-import Data.Time
 import Data.UUID.Typed
 import Database.Persist.Sqlite
 import Import
@@ -49,7 +47,6 @@ import Servant.Client
 import Test.Syd.Persistent.Sqlite
 import Test.Syd.Wai
 import Web.Cookie
-import Web.Stripe.Plan as Stripe
 
 {-# ANN module ("HLint: ignore Use camelCase" :: String) #-}
 
@@ -75,31 +72,13 @@ intrayTestConnectionSetupFunc = connectionPoolSetupFunc migrateAll
 
 paidIntrayTestClientEnvSetupFunc :: Int -> HTTP.Manager -> SetupFunc ClientEnv
 paidIntrayTestClientEnvSetupFunc maxFree man = do
-  now <- liftIO getCurrentTime
-  let planName = PlanId "dummyPlan"
-      dummyPlan =
-        Stripe.Plan
-          { planInterval = Year,
-            planName = "dummy plan",
-            planCreated = now,
-            planAmount = 1200,
-            planCurrency = CHF,
-            planId = planName,
-            planObject = "plan",
-            planLiveMode = False,
-            planIntervalCount = Nothing,
-            planTrialPeriodDays = Nothing,
-            planMetaData = MetaData [],
-            planDescription = Nothing
-          }
-  monetisationEnvPlanCache <- liftIO $ newCache Nothing
-  liftIO $ Cache.insert monetisationEnvPlanCache planName dummyPlan
   let monetisationEnvStripeSettings =
         StripeSettings
-          { stripeSetPlan = planName,
-            stripeSetStripeConfig = error "should not try to access stripe during testing",
+          { stripeSetPlan = "dummy-plan",
+            stripeSetSecretKey = error "should not try to access stripe during testing",
             stripeSetPublishableKey = "Example, should not be used."
           }
+  let monetisationEnvPrice = "dummy price"
   let monetisationEnvMaxItemsFree = maxFree
   intrayTestClientEnvSetupFunc (Just MonetisationEnv {..}) man
 

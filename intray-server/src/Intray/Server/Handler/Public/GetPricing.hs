@@ -5,31 +5,18 @@ module Intray.Server.Handler.Public.GetPricing
   )
 where
 
-import Data.Cache as Cache
 import Import
 import Intray.API
-import Intray.Server.Handler.Stripe
 import Intray.Server.OptParse.Types
 import Intray.Server.Types
-import Web.Stripe.Plan as Stripe
 
 serveGetPricing :: IntrayHandler (Maybe Pricing)
 serveGetPricing = do
   mMone <- asks envMonetisation
   forM mMone $ \MonetisationEnv {..} -> do
     let StripeSettings {..} = monetisationEnvStripeSettings
-    mPlan <- liftIO $ Cache.lookup monetisationEnvPlanCache stripeSetPlan
-    Stripe.Plan {..} <-
-      case mPlan of
-        Nothing -> do
-          plan <- runStripeHandlerOrErrorWith monetisationEnvStripeSettings $ getPlan stripeSetPlan
-          liftIO $ Cache.insert monetisationEnvPlanCache stripeSetPlan plan
-          pure plan
-        Just plan -> pure plan
     let pricingPlan = stripeSetPlan
-        pricingTrialPeriod = planTrialPeriodDays
-        pricingPrice = Stripe.Amount planAmount
-        pricingCurrency = planCurrency
+        pricingPrice = monetisationEnvPrice
         pricingStripePublishableKey = stripeSetPublishableKey
         pricingMaxItemsFree = monetisationEnvMaxItemsFree
     pure Pricing {..}

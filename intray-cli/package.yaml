@@ -1,17 +1,9 @@
 name: intray-cli
 version: '0.0.0.0'
-synopsis: A command line interface for the intray app.
-description: Please see README.md
 category: Intray
-author: Tom Sydney Kerckhove & Nick Van den Broeck
-maintainer: syd.kerckhove@gmail.com
-copyright: ! 'Copyright: (c) 2017-2018 Tom Sydney Kerckhove'
-license: AllRightsReserved
-github: NorfairKing/intray-cli
 
 library:
   source-dirs: src/
-  ghc-options: -Wall
   default-extensions:
   - NoImplicitPrelude
 

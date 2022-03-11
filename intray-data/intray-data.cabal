@@ -7,18 +7,7 @@ cabal-version: 1.12
 name:           intray-data
 version:        0.0.0.0
 synopsis:       Intray Data
-category:       Intray
-homepage:       https://github.com/NorfairKing/intray#readme
-bug-reports:    https://github.com/NorfairKing/intray/issues
-author:         Tom Sydney Kerckhove
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2017-2018 Tom Sydney Kerckhove
-license:        AllRightsReserved
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray
 
 library
   exposed-modules:
@@ -32,7 +21,6 @@ library
       Intray.Data.ItemType
       Intray.Data.ItemUUID
       Intray.Data.Permission
-      Intray.Data.Stripe
       Intray.Data.Username
       Intray.Data.UUID
   other-modules:
@@ -41,7 +29,6 @@ library
       src
   default-extensions:
       NoImplicitPrelude
-  ghc-options: -Wall
   build-depends:
       aeson
     , autodocodec
@@ -56,8 +43,6 @@ library
     , persistent
     , persistent-template
     , random
-    , stripe-core
-    , stripe-haskell
     , text
     , time
     , typed-uuid

@@ -7,18 +7,7 @@ cabal-version: 1.12
 name:           intray-api
 version:        0.0.0.0
 synopsis:       Intray API
-category:       Intray
-homepage:       https://github.com/NorfairKing/intray#readme
-bug-reports:    https://github.com/NorfairKing/intray/issues
-author:         Tom Sydney Kerckhove
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2016-2018 Tom Sydney Kerckhove
-license:        AllRightsReserved
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray
 
 library
   exposed-modules:
@@ -62,7 +51,6 @@ library
     , servant-auth
     , servant-auth-server
     , servant-blaze
-    , stripe-core
     , text
     , time
     , typed-uuid

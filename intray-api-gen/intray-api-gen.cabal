@@ -7,32 +7,20 @@ cabal-version: 1.12
 name:           intray-api-gen
 version:        0.0.0.0
 synopsis:       Generators for intray-api
-category:       Intray
-homepage:       https://github.com/NorfairKing/intray#readme
-bug-reports:    https://github.com/NorfairKing/intray/issues
-author:         Tom Sydney Kerckhove
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2018 Tom Sydney Kerckhove
-license:        AllRightsReserved
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray
 
 library
   exposed-modules:
-      Intray.API.Gen
+      Import
       Intray.API.Admin.Gen
-      Intray.API.Protected.Gen
+      Intray.API.Gen
       Intray.API.Protected.Account.Gen
+      Intray.API.Protected.Gen
       Intray.API.Protected.Item.Gen
   other-modules:
-      Import
       Paths_intray_api_gen
   hs-source-dirs:
       src
-  ghc-options: -Wall
   build-depends:
       QuickCheck
     , base >=4.7 && <5
@@ -46,8 +34,6 @@ library
     , intray-api
     , intray-data
     , intray-data-gen
-    , stripe-core
-    , stripe-haskell
     , text
     , validity
     , validity-bytestring

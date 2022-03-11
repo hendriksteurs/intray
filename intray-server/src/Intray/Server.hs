@@ -13,7 +13,6 @@ where
 
 import Control.Monad.Logger
 import Control.Monad.Trans.Resource (runResourceT)
-import Data.Cache
 import Database.Persist.Sqlite
 import Import
 import Intray.API
@@ -40,12 +39,11 @@ runIntrayServer Settings {..} =
           let cookieCfg = defaultCookieSettings
           mMonetisationEnv <-
             forM setMonetisationSettings $ \MonetisationSettings {..} -> do
-              planCache <- liftIO $ newCache Nothing
               pure
                 MonetisationEnv
                   { monetisationEnvStripeSettings = monetisationSetStripeSettings,
                     monetisationEnvMaxItemsFree = monetisationSetMaxItemsFree,
-                    monetisationEnvPlanCache = planCache
+                    monetisationEnvPrice = monetisationSetPrice
                   }
           logFunc <- askLoggerIO
           let intrayEnv =

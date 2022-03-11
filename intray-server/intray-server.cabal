@@ -7,20 +7,7 @@ cabal-version: 1.12
 name:           intray-server
 version:        0.0.0.0
 synopsis:       Intray Server
-description:    Please see README.md
-category:       Intray
-homepage:       https://github.com/NorfairKing/intray-server#readme
-bug-reports:    https://github.com/NorfairKing/intray-server/issues
-author:         Tom Sydney Kerckhove
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2016-2018 Tom Sydney Kerckhove
-license:        AllRightsReserved
-license-file:   LICENSE
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray-server
 
 library
   exposed-modules:
@@ -63,17 +50,14 @@ library
       Intray.Server.OptParse.Types
       Intray.Server.Serve
       Intray.Server.SigningKey
-      Intray.Server.Stripe
       Intray.Server.Types
       IntrayServer
-      Web.Stripe.Conduit
   other-modules:
       Paths_intray_server
   hs-source-dirs:
       src
   default-extensions:
       NoImplicitPrelude
-  ghc-options: -Wall
   build-depends:
       aeson
     , aeson-pretty
@@ -81,7 +65,6 @@ library
     , autodocodec-yaml
     , base >=4.7 && <5
     , bytestring
-    , cache
     , conduit
     , containers
     , envparse
@@ -108,8 +91,6 @@ library
     , servant-docs
     , servant-server
     , stripe-client
-    , stripe-core
-    , stripe-haskell
     , text
     , time
     , typed-uuid
@@ -126,7 +107,7 @@ executable intray-server
       Paths_intray_server
   hs-source-dirs:
       app
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base
     , intray-server

@@ -1,20 +1,12 @@
 name: intray-server
 version: '0.0.0.0'
 synopsis: Intray Server
-description: Please see README.md
-category: Intray
-author: Tom Sydney Kerckhove
-maintainer: syd.kerckhove@gmail.com
-copyright: ! 'Copyright: (c) 2016-2018 Tom Sydney Kerckhove'
-license: AllRightsReserved
-github: NorfairKing/intray-server
 
 dependencies:
 - base >=4.7 && <5
 
 library:
   source-dirs: src
-  ghc-options: -Wall
   default-extensions:
   - NoImplicitPrelude
   dependencies:
@@ -23,7 +15,6 @@ library:
   - autodocodec
   - autodocodec-yaml
   - bytestring
-  - cache
   - conduit
   - containers
   - envparse
@@ -50,8 +41,6 @@ library:
   - servant-docs
   - servant-server
   - stripe-client
-  - stripe-core
-  - stripe-haskell
   - text
   - time
   - typed-uuid
@@ -66,7 +55,6 @@ executables:
     main: Main.hs
     source-dirs: app
     ghc-options:
-    - -Wall
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N

@@ -9,7 +9,6 @@ where
 import Import
 import Intray.Client
 import Intray.Web.Server.Foundation
-import Intray.Web.Server.Handler.Pricing
 import Yesod
 
 getHomeR :: Handler Html

@@ -189,14 +189,6 @@ in
           composeExtensions (old.overrides or (_: _: { })) (
             self: super:
               let
-                stripeHaskellRepo =
-                  final.fetchFromGitHub {
-                    owner = "NorfairKing";
-                    repo = "stripe";
-                    rev = "008e992cae9c9bdb025bcf575c1bdf1037632a8a";
-                    sha256 =
-                      "sha256:1sxp8phdw1ahndy6h9q4ad0hdfraxyy5qnjd7w80v6m83py419gk";
-                  };
                 yesodStaticRemoteRepo =
                   final.fetchFromGitHub {
                     owner = "NorfairKing";
@@ -213,11 +205,6 @@ in
                     sha256 =
                       "sha256:0q1n0s126ywqw3g9xiiaw59s9jn2543v7p4zgxw99p68pihdlysv";
                   };
-                stripeHaskellPkg =
-                  name:
-                  dontCheck (
-                    self.callCabal2nix name (stripeHaskellRepo + "/${name}") { }
-                  );
                 servantAuthPkg =
                   name:
                   doJailbreak (
@@ -231,12 +218,6 @@ in
                 yesod-autoreload = self.callCabal2nix "yesod-autoreload" sources.yesod-autoreload { };
                 stripe-client = generatedStripe.package;
               } // genAttrs [
-                "stripe-core"
-                "stripe-haskell"
-                "stripe-http-client"
-                "stripe-http-streams"
-              ]
-                stripeHaskellPkg // genAttrs [
                 "servant-auth"
                 "servant-auth-client"
                 "servant-auth-docs"

@@ -1,12 +1,6 @@
 name: intray-data
 version: '0.0.0.0'
 synopsis: Intray Data
-category: Intray
-author: Tom Sydney Kerckhove
-maintainer: syd.kerckhove@gmail.com
-copyright: ! 'Copyright: (c) 2017-2018 Tom Sydney Kerckhove'
-license: AllRightsReserved
-github: NorfairKing/intray
 
 dependencies:
 - base >=4.7 && <5
@@ -16,7 +10,6 @@ default-extensions:
 
 library:
   source-dirs: src
-  ghc-options: -Wall
 
   dependencies:
   - aeson
@@ -31,8 +24,6 @@ library:
   - persistent
   - persistent-template
   - random
-  - stripe-core
-  - stripe-haskell
   - text
   - time
   - typed-uuid
