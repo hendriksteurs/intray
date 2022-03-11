@@ -35,5 +35,6 @@ loops:
     working-dir: intray-web-server
     env:
       INTRAY_WEB_SERVER_API_URL: 'localhost:8000'
-      INTRAY_SERVER_LOG_LEVEL: 'Debug'
+      INTRAY_WEB_SERVER_LOG_LEVEL: 'LevelDebug'
+      INTRAY_SERVER_LOG_LEVEL: 'LevelDebug'
       DEVELOPMENT: 'True'
