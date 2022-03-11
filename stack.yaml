@@ -1,4 +1,4 @@
-snapshot: lts-16.12
+snapshot: lts-18.16
 packages:
 - intray-api
 - intray-api-gen
@@ -22,24 +22,17 @@ extra-deps:
 - envparse-0.4.1@sha256:989902e6368532548f61de1fa245ad2b39176cddd8743b20071af519a709ce30,2842
 - servant-flatten-0.2@sha256:276896f7c5cdec5b8f8493f6205fded0cc602d050b58fdb09a6d7c85c3bb0837,1234
 
-- github: haskell-servant/servant-auth
-  commit: 23971e889f8cbe8790305bda8915f00aa8be5ad9
-  subdirs:
-    - servant-auth-client
-    - servant-auth-docs
-    - servant-auth-swagger
-    - servant-auth-server
 - github: NorfairKing/yesod-static-remote
-  commit: 22c0a92c1d62f1b8d432003844ef0636a9131b08
+  commit: ed6bf8ef434d49b160429028613a1f6882fccfdf
 - github: NorfairKing/mergeless
-  commit: 9a10547aba61f10a32ba2a54dbe7301ced48f9fc
+  commit: 639cdca0dc7cce53a62cf40aa856b156e2ab1f32
   subdirs:
     - mergeless
     - genvalidity-mergeless
     - mergeless-persistent
 
 - github: NorfairKing/sydtest
-  commit: e75c55b920936e344b779093b2a0318fb35d1770
+  commit: 54b5d0bf59e5bdabd3be098780afee63fbbbf158
   subdirs:
     - sydtest
     - sydtest-discover
@@ -50,7 +43,7 @@ extra-deps:
     - sydtest-yesod
 
 - github: NorfairKing/validity
-  commit: e1750f9d29c64705a4b9ccddf9f5afd5275e7d75
+  commit: 466bb2f140e62cae0d4fe3770681c3d74e99cf40
   subdirs:
   - genvalidity
   - genvalidity-aeson
@@ -105,7 +98,7 @@ extra-deps:
     - safe-coloured-text
     - safe-coloured-text-terminfo
 - github: NorfairKing/autodocodec
-  commit: f0cb2ead0985b4394db0627e6befd7ce23c54c22
+  commit: 9880ec062f1166bdac50b8eb59c6dd010bc9af0c
   subdirs:
     - autodocodec
     - autodocodec-schema

@@ -1,8 +1,3 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE RecordWildCards #-}
-
 module Intray.Server.Handler.Admin.DeleteAccount
   ( serveAdminDeleteAccount,
   )
@@ -16,7 +11,7 @@ import Intray.Server.Types
 import Servant
 
 serveAdminDeleteAccount :: AuthCookie -> Username -> IntrayHandler NoContent
-serveAdminDeleteAccount AuthCookie {..} username = do
+serveAdminDeleteAccount _ username = do
   mAccount <- runDB $ getBy $ UniqueUsername username
   mapM_ (deleteAccountFully . userIdentifier . entityVal) mAccount
   pure NoContent

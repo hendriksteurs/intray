@@ -1,5 +1,7 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -71,7 +73,7 @@ IntrayItem
     contents ByteString
     created UTCTime
 
-    UniqueItemIdentifier identifier
+    UniqueItemIdentifier identifier userId
 
     deriving Show
     deriving Eq
@@ -86,7 +88,7 @@ AccessKey
     createdTimestamp UTCTime
     permissions (Set Permission)
 
-    UniqueAccessKeyIdentifier identifier
+    UniqueAccessKeyIdentifier identifier user
 
     deriving Show
     deriving Eq

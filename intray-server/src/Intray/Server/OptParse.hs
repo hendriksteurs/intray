@@ -29,13 +29,14 @@ getSettings = do
   combineToSettings flags env config
 
 combineToSettings :: Flags -> Environment -> Maybe Configuration -> IO Settings
-combineToSettings Flags {..} Environment {..} mConf = do
+combineToSettings flags@Flags {..} env@Environment {..} mConf = do
   let mc :: (Configuration -> Maybe a) -> Maybe a
       mc func = mConf >>= func
+  let setLogLevel = fromMaybe LevelInfo $ flagLogLevel <|> envLogLevel <|> mc confLogLevel
+  when (setLogLevel >= LevelDebug) $ pPrint (flags, env, mConf)
   let setPort = fromMaybe 8000 $ flagPort <|> envPort <|> mc confPort
   let setHost =
         T.pack $ fromMaybe ("localhost:" <> show setPort) $ flagHost <|> envHost <|> mc confHost
-  let setLogLevel = fromMaybe LevelInfo $ flagLogLevel <|> envLogLevel <|> mc confLogLevel
   setSigningKeyFile <-
     case flagSigningKeyFile <|> envSigningKeyFile <|> mc confSigningKeyFile of
       Nothing -> resolveFile' "signing-key.json"
@@ -109,7 +110,7 @@ environmentParser =
       <*> Env.var (fmap Just . Env.str) "STRIPE_SECRET_KEY" (mE "stripe secret key")
       <*> Env.var (fmap Just . Env.str) "STRIPE_PUBLISHABLE_KEY" (mE "stripe publishable key")
       <*> Env.var (fmap Just . Env.auto) "MAX_ITEMS_FREE" (mE "maximum items that a free user can have")
-      <*> Env.var (fmap Just . Env.auto) "PRICE" (mE "A text description of the plan price")
+      <*> Env.var (fmap Just . Env.str) "PRICE" (mE "A text description of the plan price")
   where
     mE h = Env.def Nothing <> Env.keep <> Env.help h
 

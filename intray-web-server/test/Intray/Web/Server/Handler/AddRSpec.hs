@@ -37,7 +37,7 @@ spec =
                     liftIO $ loc `shouldBe` Right AddR
                     man <- asks $ appHttpManager . yesodClientSite
                     burl <- asks $ appAPIBaseUrl . yesodClientSite
-                    let cenv = ClientEnv man burl Nothing
+                    let cenv = mkClientEnv man burl
                     liftIO $ do
                       token <- TestUtils.login cenv un pw
                       runClientOrError cenv $ do

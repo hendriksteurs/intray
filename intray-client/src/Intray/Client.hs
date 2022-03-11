@@ -16,7 +16,7 @@ import Data.Mergeless
 import qualified Data.UUID.Typed
 import Import
 import Intray.API
-import Servant.API
+import Servant.API hiding (Unique)
 import Servant.API.Flatten
 import Servant.Auth.Client
 import Servant.Client

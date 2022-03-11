@@ -30,9 +30,15 @@ data IntrayProtectedAccountSite route = IntrayProtectedAccountSite
   }
   deriving (Generic)
 
-type GetAccountInfo = ProtectAPI :> Get '[JSON] AccountInfo
+type GetAccountInfo =
+  ProtectAPI
+    :> Get '[JSON] AccountInfo
 
 type PostChangePassphrase =
-  ProtectAPI :> ReqBody '[JSON] ChangePassphrase :> PostNoContent '[JSON] NoContent
+  ProtectAPI
+    :> ReqBody '[JSON] ChangePassphrase
+    :> Verb 'POST 204 '[JSON] NoContent
 
-type DeleteAccount = ProtectAPI :> Delete '[JSON] NoContent
+type DeleteAccount =
+  ProtectAPI
+    :> Verb 'DELETE 204 '[JSON] NoContent

@@ -58,11 +58,21 @@ data IntrayPublicSite route = IntrayPublicSite
   deriving (Generic)
 
 -- | The order of the items is not guaranteed to be the same for every call.
-type PostRegister = "register" :> ReqBody '[JSON] Registration :> Post '[JSON] NoContent
+type PostRegister =
+  "register"
+    :> ReqBody '[JSON] Registration
+    :> Verb 'POST 204 '[JSON] NoContent
 
 type PostLogin =
-  "login" :> ReqBody '[JSON] LoginForm :> PostNoContent '[JSON] (Headers '[Header "Set-Cookie" Text] NoContent)
+  "login"
+    :> ReqBody '[JSON] LoginForm
+    :> Verb 'POST 204 '[JSON] (Headers '[Header "Set-Cookie" Text] NoContent)
 
-type GetPricing = "pricing" :> Get '[JSON] (Maybe Pricing)
+type GetPricing =
+  "pricing"
+    :> Get '[JSON] (Maybe Pricing)
 
-type PostStripeHook = "stripe" :> ReqBody '[JSON] JSON.Value :> Verb 'POST 204 '[JSON] NoContent
+type PostStripeHook =
+  "stripe"
+    :> ReqBody '[JSON] JSON.Value
+    :> Verb 'POST 204 '[JSON] NoContent

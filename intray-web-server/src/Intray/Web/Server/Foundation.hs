@@ -304,7 +304,7 @@ runClient :: ClientM a -> Handler (Either ClientError a)
 runClient func = do
   man <- getsYesod appHttpManager
   burl <- getsYesod appAPIBaseUrl
-  let cenv = ClientEnv man burl Nothing
+  let cenv = mkClientEnv man burl
   liftIO $ runClientM func cenv
 
 runClientOrErr :: ClientM a -> Handler a

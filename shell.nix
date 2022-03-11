@@ -7,9 +7,12 @@ pkgs.haskell.lib.buildStackProject {
   name = "intray-shell";
   buildInputs = with pkgs; [
     (import sources.niv { }).niv
-    haskellPackages.autoexporter
     feedback
+    haskellPackages.autoexporter
     killall
+    linkcheck
+    seocheck
+    stripe-cli
     unzip
     zlib
   ] ++ pre-commit.tools;
