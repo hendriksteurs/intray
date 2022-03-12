@@ -157,7 +157,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${pkgs.intrayReleasePackages.intray-server}/bin/intray-server
+              ${intrayReleasePackages.intray-server}/bin/intray-server
             '';
           serviceConfig =
             {
@@ -202,7 +202,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${pkgs.intrayReleasePackages.intray-web-server}/bin/intray-web-server
+              ${intrayReleasePackages.intray-web-server}/bin/intray-web-server
             '';
           serviceConfig =
             {
