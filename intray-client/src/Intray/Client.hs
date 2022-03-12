@@ -35,6 +35,7 @@ clientPostSync ::
 clientGetAccountInfo :: Token -> ClientM AccountInfo
 clientPostChangePassphrase :: Token -> ChangePassphrase -> ClientM NoContent
 clientDeleteAccount :: Token -> ClientM NoContent
+clientPostInitiateStripeCheckoutSession :: Token -> InitiateStripeCheckoutSession -> ClientM InitiatedCheckoutSession
 clientPostAddAccessKey :: Token -> AddAccessKey -> ClientM AccessKeyCreated
 clientGetAccessKey :: Token -> AccessKeyUUID -> ClientM AccessKeyInfo
 clientGetAccessKeys :: Token -> ClientM [AccessKeyInfo]
@@ -60,6 +61,7 @@ clientGetShowItem
   :<|> clientGetAccountInfo
   :<|> clientPostChangePassphrase
   :<|> clientDeleteAccount
+  :<|> clientPostInitiateStripeCheckoutSession
   :<|> clientPostAddAccessKey
   :<|> clientGetAccessKey
   :<|> clientGetAccessKeys

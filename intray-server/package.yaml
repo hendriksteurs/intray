@@ -20,6 +20,7 @@ library:
   - envparse
   - exceptions
   - file-embed
+  - http-client
   - intray-api
   - intray-data
   - jose

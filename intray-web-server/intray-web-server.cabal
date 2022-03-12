@@ -73,7 +73,6 @@ library
     , servant-auth-client
     , servant-client
     , shakespeare
-    , stripe-client
     , template-haskell
     , text
     , time

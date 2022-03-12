@@ -20,6 +20,21 @@ loops:
         --no-nix-pure \
         --test-arguments=''
 
+  server:
+    script: |
+      stack install :intray-server \
+        --fast \
+        --no-nix --system-ghc --ghc-options='-freverse-errors' \
+        --with-hpack hpack \
+        --no-nix-pure
+      if [[ "$?" != "0" ]]; then exit 1; fi
+      killall intray-server >/dev/null 2>&1 || true
+      ~/.local/bin/intray-server --admin admin & disown
+    working-dir: intray-server
+    env:
+      INTRAY_SERVER_LOG_LEVEL: 'LevelDebug'
+      DEVELOPMENT: 'True'
+
   web-server:
     script: |
       stack install :intray-server :intray-web-server \
@@ -27,6 +42,7 @@ loops:
         --no-nix --system-ghc --ghc-options='-freverse-errors' \
         --with-hpack hpack \
         --no-nix-pure
+      if [[ "$?" != "0" ]]; then exit 1; fi
       killall intray-server >/dev/null 2>&1 || true
       killall intray-web-server >/dev/null 2>&1 || true
       ~/.local/bin/intray-server --admin admin & disown

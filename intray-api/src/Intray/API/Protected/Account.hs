@@ -26,7 +26,8 @@ type IntrayProtectedAccountAPI = ToServantApi IntrayProtectedAccountSite
 data IntrayProtectedAccountSite route = IntrayProtectedAccountSite
   { getAccountInfo :: !(route :- GetAccountInfo),
     postChangePassphrase :: !(route :- PostChangePassphrase),
-    deleteAccount :: !(route :- DeleteAccount)
+    deleteAccount :: !(route :- DeleteAccount),
+    postInitiateStripeCheckoutSession :: !(route :- PostInitiateStripeCheckoutSession)
   }
   deriving (Generic)
 
@@ -36,9 +37,18 @@ type GetAccountInfo =
 
 type PostChangePassphrase =
   ProtectAPI
+    :> "change-passphrase"
     :> ReqBody '[JSON] ChangePassphrase
     :> Verb 'POST 204 '[JSON] NoContent
 
 type DeleteAccount =
   ProtectAPI
     :> Verb 'DELETE 204 '[JSON] NoContent
+
+type PostInitiateStripeCheckoutSession =
+  ProtectAPI
+    :> "checkout"
+    :> "stripe"
+    :> "session"
+    :> ReqBody '[JSON] InitiateStripeCheckoutSession
+    :> Post '[JSON] InitiatedCheckoutSession

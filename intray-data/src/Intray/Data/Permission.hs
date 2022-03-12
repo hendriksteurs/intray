@@ -34,6 +34,7 @@ data Permission
   | PermitGetAccessKeys
   | PermitDeleteAccessKey
   | PermitGetPermissions
+  | PermitInitiateCheckout
   | PermitAdminDeleteAccount
   | PermitAdminGetAccounts
   | PermitAdminGetAccount
@@ -76,7 +77,8 @@ userPermissions =
       PermitGetAccessKey,
       PermitGetAccessKeys,
       PermitDeleteAccessKey,
-      PermitGetPermissions
+      PermitGetPermissions,
+      PermitInitiateCheckout
     ]
 
 adminOnlyPermissions :: Set Permission
