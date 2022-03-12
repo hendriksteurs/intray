@@ -16,9 +16,9 @@ in
       programs.intray =
         {
           enable = mkEnableOption "Intray cli";
-          intrayPackages = mkOption {
-            description = "The intrayPackages attribute defined in the nix/overlay.nix file in the intray repository.";
-            default = (import ./pkgs.nix { }).intrayPackages;
+          intrayReleasePackages = mkOption {
+            description = "The intrayReleasePackages attribute defined in the nix/overlay.nix file in the intray repository.";
+            default = (import ./pkgs.nix { }).intrayReleasePackages;
           };
           config = mkOption {
             default = { };
@@ -83,7 +83,7 @@ in
         cfg.config
       ];
       intrayConfigFile = toYamlFile "intray-config" intrayConfig;
-      cli = pkgs.haskell.lib.justStaticExecutables cfg.intrayPackages.intray-cli;
+      cli = cfg.intrayReleasePackages.intray-cli;
 
       syncIntrayName = "sync-intray";
       syncIntrayService =

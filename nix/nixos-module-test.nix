@@ -1,12 +1,12 @@
 { sources ? import ./sources.nix
 , pkgs ? import ./pkgs.nix { inherit sources; }
-, intrayPackages ? pkgs.intrayPackages
+, intrayReleasePackages ? pkgs.intrayReleasePackages
 }:
 let
   intray-production = import (./nixos-module.nix) {
     inherit sources;
     inherit pkgs;
-    inherit intrayPackages;
+    inherit intrayReleasePackages;
     envname = "production";
   };
   home-manager = import (sources.home-manager + "/nixos/default.nix");
@@ -58,7 +58,7 @@ pkgs.nixosTest (
             home.stateVersion = "20.09";
             programs.intray = {
               enable = true;
-              inherit intrayPackages;
+              inherit intrayReleasePackages;
               sync = {
                 enable = true;
                 url = "http://apiserver:${builtins.toString api-port}";

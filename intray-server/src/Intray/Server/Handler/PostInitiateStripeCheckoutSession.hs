@@ -84,7 +84,11 @@ servePostInitiateStripeCheckoutSession AuthCookie {..} iscs = do
                     postCheckoutSessionsRequestBodySubscriptionData =
                       Just $
                         mkPostCheckoutSessionsRequestBodySubscriptionData'
-                          { postCheckoutSessionsRequestBodySubscriptionData'Metadata = Just metadata
+                          { postCheckoutSessionsRequestBodySubscriptionData'Metadata = Just metadata,
+                            postCheckoutSessionsRequestBodySubscriptionData'Items =
+                              Just
+                                [ mkPostCheckoutSessionsRequestBodySubscriptionData'Items' stripeSetPlan
+                                ]
                           }
                   }
 

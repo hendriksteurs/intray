@@ -1,6 +1,6 @@
 { sources ? import ./sources.nix
 , pkgs ? import ./pkgs.nix { inherit sources; }
-, intrayPackages ? pkgs.intrayPackages
+, intrayReleasePackages ? pkgs.intrayReleasePackages
 , envname
 }:
 { lib, pkgs, config, ... }:
@@ -157,7 +157,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${pkgs.haskell.lib.justStaticExecutables intrayPackages.intray-server}/bin/intray-server
+              ${pkgs.intrayReleasePackages.intray-server}/bin/intray-server
             '';
           serviceConfig =
             {
@@ -202,7 +202,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${pkgs.haskell.lib.justStaticExecutables intrayPackages.intray-web-server}/bin/intray-web-server
+              ${pkgs.intrayReleasePackages.intray-web-server}/bin/intray-web-server
             '';
           serviceConfig =
             {

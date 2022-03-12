@@ -1,3 +1,4 @@
+{-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE TemplateHaskell #-}
 
 module Intray.Web.Server.Handler.Checkout
@@ -7,15 +8,18 @@ module Intray.Web.Server.Handler.Checkout
   )
 where
 
+import Data.Time
 import Intray.Client
 import Intray.Web.Server.Foundation
+import Text.Julius
+import Text.Time.Pretty
 import Yesod
 
 getCheckoutR :: Handler Html
 getCheckoutR = do
   withLogin $ \t -> do
-    mMonetisation <- runClientOrErr clientGetMonetisation
-    status <- runClientOrErr $ clientGetUserSubscription t
+    mPricing <- runClientOrErr clientGetPricing
+    AccountInfo {..} <- runClientOrErr $ clientGetAccountInfo t
     renderUrl <- getUrlRender
     InitiatedCheckoutSession {..} <-
       runClientOrErr $
@@ -25,7 +29,7 @@ getCheckoutR = do
             { initiateStripeCheckoutSessionSuccessUrl = renderUrl CheckoutSuccessR,
               initiateStripeCheckoutSessionCanceledUrl = renderUrl CheckoutCanceledR
             }
-    let stripeForm Monetisation {..} = $(widgetFile "stripe-form")
+    let stripeForm Pricing {..} = $(widgetFile "stripe-form")
     now <- liftIO getCurrentTime
     withNavBar $(widgetFile "checkout")
 

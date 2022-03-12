@@ -13,7 +13,6 @@ import Import
 import Intray.Client
 import Intray.Web.Server.Foundation
 import Intray.Web.Server.Time
-import Text.Julius
 import Yesod
 import Yesod.Auth
 
@@ -33,7 +32,7 @@ accountInfoSegment Nothing _ =
         <div .is-negative .message>
             You are not authorised to view account info.
             |]
-accountInfoSegment (Just ai@AccountInfo {..}) mp = do
+accountInfoSegment (Just AccountInfo {..}) mp = do
   now <- liftIO getCurrentTime
   let subbedWidget =
         case accountInfoStatus of
@@ -53,16 +52,13 @@ accountInfoSegment (Just ai@AccountInfo {..}) mp = do
               Status: ^{subbedWidget}
         |],
         case accountInfoStatus of
-          HasNotPaid _ -> maybe mempty (pricingStripeForm ai) mp
+          HasNotPaid _ -> maybe mempty pricingStripeForm mp
           _ -> mempty -- Already subscribed or no payment necessary
       ]
 
-pricingStripeForm :: AccountInfo -> Pricing -> Widget
-pricingStripeForm AccountInfo {..} p =
-  let planText = pricingPlan p
-      clientReferenceId = uuidText accountInfoUUID
-      sf = $(widgetFile "stripe-form")
-   in [whamlet|
+pricingStripeForm :: Pricing -> Widget
+pricingStripeForm p =
+  [whamlet|
           <h2 .title .is-4> Subscribe
 
           <p>
@@ -74,7 +70,8 @@ pricingStripeForm AccountInfo {..} p =
               <li>
                 Full API access
           <p>
-            ^{sf}
+            <a .button .is-primary href=@{CheckoutR}>
+              Checkout
     |]
 
 adminSegment :: Maybe AccountInfo -> Widget

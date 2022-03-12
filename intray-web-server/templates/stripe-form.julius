@@ -1,6 +1,6 @@
-var stripe = Stripe('#{rawJS $ pricingStripePublishableKey p}');
+var stripe = Stripe('#{rawJS pricingStripePublishableKey}');
 
-var checkoutButton = document.getElementById('checkout-button-#{rawJS planText}');
+var checkoutButton = document.getElementById('checkout-button-#{rawJS pricingPlan}');
 checkoutButton.addEventListener('click', function () {
   // When the customer clicks on the button, redirect
   // them to Checkout.
