@@ -122,5 +122,7 @@ extra-deps:
 - github: NorfairKing/yesod-autoreload
   commit: 7135e864c0d4a48efeae473ee2761f5168946e58
 
+- persistent-2.10.5.3
+
 nix:
   shell-file: shell.nix

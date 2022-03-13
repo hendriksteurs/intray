@@ -107,6 +107,18 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/1c1f5649bb9c1b0d98637c8c365228f57126f361.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "persistent": {
+        "branch": "master",
+        "description": "Persistence interface for Haskell allowing multiple storage methods.",
+        "homepage": "",
+        "owner": "yesodweb",
+        "repo": "persistent",
+        "rev": "eb1905716827667872afc97391e96444e48dbf2f",
+        "sha256": "1jr7lsaw5lm236s6zfzr4d2i5yyvypkpjrfc60lx67s7flxrrbwd",
+        "type": "tarball",
+        "url": "https://github.com/yesodweb/persistent/archive/eb1905716827667872afc97391e96444e48dbf2f.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "pre-commit-hooks": {
         "branch": "master",
         "description": "Seamless integration of https://pre-commit.com git hooks with Nix.",

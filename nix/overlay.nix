@@ -200,6 +200,14 @@ in
                     sha256 =
                       "sha256:0q1n0s126ywqw3g9xiiaw59s9jn2543v7p4zgxw99p68pihdlysv";
                   };
+                persistentRepo =
+                  final.fetchFromGitHub {
+                    owner = "yesodweb";
+                    repo = "persistent";
+                    rev = "333be4996eb6eea2dc37d3a14858b668f0b9e381";
+                    sha256 =
+                      "sha256:1j76s7666vadm4q1ma73crkrks6q6nskzb3jqaf6rp2qmw1phfpr";
+                  };
                 stripeHaskellPkg =
                   name:
                   dontCheck (
@@ -210,6 +218,11 @@ in
                   doJailbreak (
                     self.callCabal2nix name (servantAuthRepo + "/${name}") { }
                   );
+                persistentPkg =
+                  name:
+                  doJailbreak (
+                    self.callCabal2nix name (persistentRepo + "/${name}") { }
+                  );
               in
               {
                 yesod-static-remote = dontCheck (self.callCabal2nix "yesod-static-remote" yesodStaticRemoteRepo { });
@@ -217,6 +230,7 @@ in
                 looper = self.callCabal2nix "looper" (sources.looper + "/looper") { };
                 envparse = self.callHackage "envparse" "0.4.1" { };
                 yesod-autoreload = self.callCabal2nix "yesod-autoreload" sources.yesod-autoreload { };
+                persistent = self.callHackage "persistent" "2.10.5.3" { };
               } // genAttrs [
                 "stripe-core"
                 "stripe-haskell"
