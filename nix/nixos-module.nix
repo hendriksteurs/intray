@@ -76,6 +76,16 @@ in
                         example = "pk_test_XXXXXXXXXXXXXXXXXXXXXXXX";
                         description = "Stripe publishable key.";
                       };
+                      max-items-free = mkOption {
+                        type = types.int;
+                        example = 5;
+                        description = "Maximum number of items a user can use without a subscription";
+                      };
+                      price = mkOption {
+                        type = types.str;
+                        example = "12 CHF";
+                        description = "Display price";
+                      };
                     };
                   }
                 );
