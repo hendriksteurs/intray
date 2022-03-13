@@ -1,8 +1,3 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE RecordWildCards #-}
-
 module Intray.Server.Handler.Admin.GetAccounts
   ( serveAdminGetAccounts,
   )
@@ -16,6 +11,6 @@ import Intray.Server.Handler.Utils
 import Intray.Server.Types
 
 serveAdminGetAccounts :: AuthCookie -> IntrayHandler [AccountInfo]
-serveAdminGetAccounts AuthCookie {..} = do
+serveAdminGetAccounts _ = do
   users <- runDB $ selectList [] [Desc UserLastLogin]
   forM users $ \(Entity _ user) -> getAccountInfoForUser user

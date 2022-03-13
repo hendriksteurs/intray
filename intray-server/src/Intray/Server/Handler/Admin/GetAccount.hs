@@ -1,8 +1,4 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
 
 module Intray.Server.Handler.Admin.GetAccount
   ( serveAdminGetAccount,
@@ -18,7 +14,7 @@ import Intray.Server.Types
 import Servant
 
 serveAdminGetAccount :: AuthCookie -> Username -> IntrayHandler AccountInfo
-serveAdminGetAccount AuthCookie {..} username = do
+serveAdminGetAccount _ username = do
   mUserEntity <- runDB $ getBy $ UniqueUsername username
   case mUserEntity of
     Nothing -> throwError err404 {errBody = "User not found."}

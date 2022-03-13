@@ -39,7 +39,7 @@ type AdminDeleteAccount =
   ProtectAPI
     :> "account"
     :> Capture "username" Username
-    :> Delete '[JSON] NoContent
+    :> Verb 'DELETE 204 '[JSON] NoContent
 
 type AdminGetAccount =
   ProtectAPI
@@ -57,4 +57,4 @@ type PutUserSubscription =
     :> "accounts"
     :> Capture "username" Username
     :> ReqBody '[JSON] UTCTime
-    :> PutNoContent '[JSON] NoContent
+    :> Verb 'PUT 204 '[JSON] NoContent

@@ -17,7 +17,7 @@ import Intray.Server.Handler.Utils
 import Intray.Server.Types
 
 serveAdminGetStats :: AuthCookie -> IntrayHandler AdminStats
-serveAdminGetStats AuthCookie {..} = do
+serveAdminGetStats _ = do
   adminStatsNbAccounts <- fmap fromIntegral $ runDB $ count ([] :: [Filter User])
   adminStatsNbItems <- fmap fromIntegral $ runDB $ count ([] :: [Filter IntrayItem])
   now <- liftIO getCurrentTime

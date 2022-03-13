@@ -34,7 +34,7 @@ intrayWebServerSpec :: YesodSpec App -> Spec
 intrayWebServerSpec = API.withIntrayServer . yesodSpecWithSiteSetupFunc' webServerSetupFunc
 
 webServerSetupFunc :: Http.Manager -> ClientEnv -> SetupFunc App
-webServerSetupFunc man (ClientEnv _ burl _) = do
+webServerSetupFunc man cenv = do
   pool <- connectionPoolSetupFunc migrateLoginCache
   pure $
     App
@@ -42,7 +42,7 @@ webServerSetupFunc man (ClientEnv _ burl _) = do
         appStatic = myStatic,
         appTracking = Nothing,
         appVerification = Nothing,
-        appAPIBaseUrl = burl,
+        appAPIBaseUrl = baseUrl cenv,
         appConnectionPool = pool
       }
 

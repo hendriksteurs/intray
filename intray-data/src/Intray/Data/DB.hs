@@ -1,5 +1,7 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -23,9 +25,7 @@ import Intray.Data.Import
 import Intray.Data.ItemType
 import Intray.Data.ItemUUID
 import Intray.Data.Permission
-import Intray.Data.Stripe ()
 import Intray.Data.Username
-import qualified Web.Stripe.Types as Stripe
 
 share
   [mkPersist sqlSettings, mkMigrate "migrateAll"]
@@ -48,22 +48,12 @@ User
 
 StripeCustomer
     user AccountUUID
-    customer Stripe.CustomerId
+    customer Text -- Stripe customer id
     UniqueStripeCustomer user customer
 
     deriving Show
     deriving Eq
     deriving Generic
-
-
-StripeEvent
-    event Stripe.EventId
-    error Text Maybe
-    UniqueStripeEvent event
-    deriving Show
-    deriving Eq
-    deriving Generic
-
 
 Subscription
     user AccountUUID
@@ -83,7 +73,7 @@ IntrayItem
     contents ByteString
     created UTCTime
 
-    UniqueItemIdentifier identifier
+    UniqueItemIdentifier identifier userId
 
     deriving Show
     deriving Eq
@@ -98,7 +88,7 @@ AccessKey
     createdTimestamp UTCTime
     permissions (Set Permission)
 
-    UniqueAccessKeyIdentifier identifier
+    UniqueAccessKeyIdentifier identifier user
 
     deriving Show
     deriving Eq

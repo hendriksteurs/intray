@@ -1,5 +1,3 @@
-{-# LANGUAGE RecordWildCards #-}
-
 module Intray.Server.Handler.Admin.PutUserSubscription
   ( serveAdminPutUserSubscription,
   )
@@ -14,7 +12,7 @@ import Intray.Server.Types
 import Servant
 
 serveAdminPutUserSubscription :: AuthCookie -> Username -> UTCTime -> IntrayHandler NoContent
-serveAdminPutUserSubscription AuthCookie {..} username end = do
+serveAdminPutUserSubscription _ username end = do
   mUserEntity <- runDB $ getBy (UniqueUsername username)
   case mUserEntity of
     Nothing -> throwError err404

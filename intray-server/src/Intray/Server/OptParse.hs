@@ -17,12 +17,9 @@ import qualified Env
 import Import
 import Intray.API
 import Intray.Server.OptParse.Types
-import Looper
 import Options.Applicative
 import qualified Options.Applicative.Help as OptParse
 import qualified System.Environment as System
-import Web.Stripe.Client as Stripe
-import Web.Stripe.Types as Stripe
 
 getSettings :: IO Settings
 getSettings = do
@@ -32,13 +29,14 @@ getSettings = do
   combineToSettings flags env config
 
 combineToSettings :: Flags -> Environment -> Maybe Configuration -> IO Settings
-combineToSettings Flags {..} Environment {..} mConf = do
+combineToSettings flags@Flags {..} env@Environment {..} mConf = do
   let mc :: (Configuration -> Maybe a) -> Maybe a
       mc func = mConf >>= func
+  let setLogLevel = fromMaybe LevelInfo $ flagLogLevel <|> envLogLevel <|> mc confLogLevel
+  when (setLogLevel >= LevelDebug) $ pPrint (flags, env, mConf)
   let setPort = fromMaybe 8000 $ flagPort <|> envPort <|> mc confPort
   let setHost =
         T.pack $ fromMaybe ("localhost:" <> show setPort) $ flagHost <|> envHost <|> mc confHost
-  let setLogLevel = fromMaybe LevelInfo $ flagLogLevel <|> envLogLevel <|> mc confLogLevel
   setSigningKeyFile <-
     case flagSigningKeyFile <|> envSigningKeyFile <|> mc confSigningKeyFile of
       Nothing -> resolveFile' "signing-key.json"
@@ -59,15 +57,10 @@ combineToSettings Flags {..} Environment {..} mConf = do
       let mmc :: (MonetisationConfiguration -> Maybe a) -> Maybe a
           mmc func = mc confMonetisationConfig >>= func
       let plan =
-            Stripe.PlanId . T.pack
+            T.pack
               <$> (flagStripePlan <|> envStripePlan <|> mmc monetisationConfStripePlan)
-      let config =
-            ( \sk ->
-                StripeConfig
-                  { Stripe.secretKey = StripeKey $ TE.encodeUtf8 $ T.pack sk,
-                    stripeEndpoint = Nothing
-                  }
-            )
+      let secretKey =
+            T.pack
               <$> ( flagStripeSecretKey <|> envStripeSecretKey
                       <|> mmc monetisationConfStripeSecretKey
                   )
@@ -76,31 +69,17 @@ combineToSettings Flags {..} Environment {..} mConf = do
               <$> ( flagStripePublishableKey <|> envStripePublishableKey
                       <|> mmc monetisationConfStripePublishableKey
                   )
-      let fetcherSets =
-            deriveLooperSettings
-              (seconds 0)
-              (minutes 1)
-              flagLooperStripeEventsFetcher
-              envLooperStripeEventsFetcher
-              (mmc monetisationConfStripeEventsFetcher)
-      let retrierSets =
-            deriveLooperSettings
-              (seconds 30)
-              (hours 24)
-              flagLooperStripeEventsRetrier
-              envLooperStripeEventsRetrier
-              (mmc monetisationConfStripeEventsRetrier)
       let maxItemsFree =
             fromMaybe 5 $
               flagMaxItemsFree <|> envMaxItemsFree <|> mmc monetisationConfMaxItemsFree
       pure $ do
-        ss <- StripeSettings <$> plan <*> config <*> publicKey
+        ss <- StripeSettings <$> plan <*> secretKey <*> publicKey
+        price <- flagPrice <|> envPrice <|> mmc monetisationConfPrice
         pure $
           MonetisationSettings
             { monetisationSetStripeSettings = ss,
-              monetisationSetStripeEventsFetcher = fetcherSets,
-              monetisationSetStripeEventsRetrier = retrierSets,
-              monetisationSetMaxItemsFree = maxItemsFree
+              monetisationSetMaxItemsFree = maxItemsFree,
+              monetisationSetPrice = price
             }
   pure Settings {..}
 
@@ -130,14 +109,10 @@ environmentParser =
       <*> Env.var (fmap Just . Env.str) "STRIPE_PLAN" (mE "stripe plan id for subscriptions")
       <*> Env.var (fmap Just . Env.str) "STRIPE_SECRET_KEY" (mE "stripe secret key")
       <*> Env.var (fmap Just . Env.str) "STRIPE_PUBLISHABLE_KEY" (mE "stripe publishable key")
-      <*> looperVarEnv "STRIPE_EVENTS_FETCHER"
-      <*> looperVarEnv "STRIPE_EVENTS_RETRIER"
       <*> Env.var (fmap Just . Env.auto) "MAX_ITEMS_FREE" (mE "maximum items that a free user can have")
+      <*> Env.var (fmap Just . Env.str) "PRICE" (mE "A text description of the plan price")
   where
     mE h = Env.def Nothing <> Env.keep <> Env.help h
-
-looperVarEnv :: String -> Env.Parser Env.Error LooperEnvironment
-looperVarEnv n = Env.prefixed "LOOPER_" $ looperEnvironmentParser n
 
 getFlags :: IO Flags
 getFlags = do
@@ -234,8 +209,6 @@ parseFlags =
             help "The publishable key for stripe"
           ]
       )
-    <*> getLooperFlags "stripe-events-fetcher"
-    <*> getLooperFlags "stripe-events-retrier"
     <*> option
       (Just <$> auto)
       ( mconcat
@@ -243,5 +216,14 @@ parseFlags =
             value Nothing,
             metavar "INT",
             help "How many items a user can sync in the free plan"
+          ]
+      )
+    <*> option
+      (Just <$> str)
+      ( mconcat
+          [ long "price",
+            value Nothing,
+            metavar "PRICE",
+            help "A text description of the price"
           ]
       )

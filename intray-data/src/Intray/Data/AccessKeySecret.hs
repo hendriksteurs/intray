@@ -39,8 +39,8 @@ accessKeySecretText (AccessKeySecret bs) = TE.decodeUtf8 $ SB16.encode bs
 parseAccessKeySecretText :: Text -> Either String AccessKeySecret
 parseAccessKeySecretText t =
   case SB16.decode $ TE.encodeUtf8 t of
-    (d, "") -> Right $ AccessKeySecret d
-    _ -> Left $ "Invalid Base16 access key secret: " <> show t
+    Right d -> Right $ AccessKeySecret d
+    Left err -> Left $ unlines [unwords ["Invalid Base16 access key secret: " <> show t, err]]
 
 generateRandomAccessKeySecret :: IO AccessKeySecret
 generateRandomAccessKeySecret = AccessKeySecret . SB.pack <$> replicateM 16 randomIO

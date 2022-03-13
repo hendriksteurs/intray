@@ -1,26 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           intray-server
 version:        0.0.0.0
 synopsis:       Intray Server
-description:    Please see README.md
-category:       Intray
-homepage:       https://github.com/NorfairKing/intray-server#readme
-bug-reports:    https://github.com/NorfairKing/intray-server/issues
-author:         Tom Sydney Kerckhove
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2016-2018 Tom Sydney Kerckhove
-license:        AllRightsReserved
-license-file:   LICENSE
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray-server
 
 library
   exposed-modules:
@@ -50,6 +37,8 @@ library
       Intray.Server.Handler.GetShowItem
       Intray.Server.Handler.PostAddItem
       Intray.Server.Handler.PostChangePassphrase
+      Intray.Server.Handler.PostInitiateStripeCheckoutSession
+      Intray.Server.Handler.PostStripeHook
       Intray.Server.Handler.PostSync
       Intray.Server.Handler.Public
       Intray.Server.Handler.Public.GetPricing
@@ -58,44 +47,34 @@ library
       Intray.Server.Handler.Stripe
       Intray.Server.Handler.Utils
       Intray.Server.Item
-      Intray.Server.Looper
-      Intray.Server.Looper.DB
-      Intray.Server.Looper.Import
-      Intray.Server.Looper.Stripe
-      Intray.Server.Looper.StripeEventsFetcher
       Intray.Server.OptParse
       Intray.Server.OptParse.Types
       Intray.Server.Serve
       Intray.Server.SigningKey
-      Intray.Server.Stripe
       Intray.Server.Types
       IntrayServer
-      Web.Stripe.Conduit
   other-modules:
       Paths_intray_server
   hs-source-dirs:
       src
   default-extensions:
       NoImplicitPrelude
-  ghc-options: -Wall
   build-depends:
       aeson
     , aeson-pretty
-    , async
     , autodocodec
     , autodocodec-yaml
     , base >=4.7 && <5
     , bytestring
-    , cache
     , conduit
     , containers
     , envparse
     , exceptions
     , file-embed
+    , http-client
     , intray-api
     , intray-data
     , jose
-    , looper
     , markdown
     , mergeless
     , mergeless-persistent
@@ -113,11 +92,11 @@ library
     , servant-auth-server
     , servant-docs
     , servant-server
-    , stripe-core
-    , stripe-haskell
+    , stripe-client
     , text
     , time
     , typed-uuid
+    , unordered-containers
     , wai
     , wai-cors
     , warp >=3.2
@@ -130,7 +109,7 @@ executable intray-server
       Paths_intray_server
   hs-source-dirs:
       app
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base
     , intray-server

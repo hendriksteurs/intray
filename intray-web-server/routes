@@ -14,8 +14,9 @@
 /access-keys                       AccessKeysR          GET POST
 /access-keys/revoke/#AccessKeyUUID AccessKeyRevokeR     POST
 
-/checkout/success                  CheckoutSuccessR     GET
-/checkout/canceled                 CheckoutCanceledR    GET
+/checkout/stripe                   CheckoutR GET
+/checkout/stripe/success           CheckoutSuccessR     GET
+/checkout/stripe/canceled          CheckoutCanceledR    GET
 
 -- Subsites
 /auth                              AuthR   Auth            getAuth

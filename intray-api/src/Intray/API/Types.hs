@@ -2,12 +2,10 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedLists #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE StandaloneDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -39,10 +37,8 @@ import Autodocodec
 import Control.Exception
 import Control.Monad.Logger
 import Data.Aeson (FromJSON (..), ToJSON (..))
-import Data.Hashable
 import Data.Set (Set)
 import qualified Data.Set as S
-import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import Data.UUID.Typed
 import Import
@@ -51,8 +47,6 @@ import Network.Wai
 import Servant.Auth
 import Servant.Auth.Server
 import Servant.Auth.Server.Internal.Class
-import Text.Read
-import qualified Web.Stripe.Plan as Stripe
 
 type ProtectAPI = Auth '[JWT, IntrayAccessKey] AuthCookie
 
@@ -129,10 +123,8 @@ instance HasCodec LoginForm where
         <*> requiredField "password" "Password" .= loginFormPassword
 
 data Pricing = Pricing
-  { pricingPlan :: !Stripe.PlanId,
-    pricingTrialPeriod :: !(Maybe Int),
-    pricingPrice :: !Stripe.Amount,
-    pricingCurrency :: !Stripe.Currency,
+  { pricingPlan :: !Text,
+    pricingPrice :: !Text,
     pricingStripePublishableKey :: !Text,
     pricingMaxItemsFree :: !Int
   }
@@ -146,53 +138,9 @@ instance HasCodec Pricing where
     object "Pricing" $
       Pricing
         <$> requiredField "plan" "stripe plan" .= pricingPlan
-        <*> optionalField "trial-period" "length of the trial period, in days" .= pricingTrialPeriod
         <*> requiredField "price" "price" .= pricingPrice
-        <*> requiredField "currency" "currency" .= pricingCurrency
         <*> requiredField "publishable-key" "publishable key" .= pricingStripePublishableKey
         <*> requiredField "max-items-free" "how many items a free account can have" .= pricingMaxItemsFree
-
-instance Validity Stripe.Currency where
-  validate = trivialValidation
-
--- Temporary, until we get rid of our current stripe dependency
-instance HasCodec Stripe.Currency where
-  codec =
-    bimapCodec
-      (maybe (Left "unknown currency") Right . readMaybe . T.unpack . T.toUpper)
-      (T.toLower . T.pack . show)
-      codec
-
-instance ToJSON Stripe.Currency where
-  toJSON = toJSONViaCodec
-  toEncoding = toEncodingViaCodec
-
-deriving instance Validity Stripe.PlanId
-
-deriving instance Hashable Stripe.PlanId
-
-instance HasCodec Stripe.PlanId where
-  codec = dimapCodec Stripe.PlanId (\(Stripe.PlanId s) -> s) codec
-
-instance ToJSON Stripe.PlanId where
-  toJSON = toJSONViaCodec
-  toEncoding = toEncodingViaCodec
-
-instance FromJSON Stripe.PlanId where
-  parseJSON = parseJSONViaCodec
-
-instance Validity Stripe.Amount where
-  validate (Stripe.Amount a) = delve "getAmount" a
-
-instance HasCodec Stripe.Amount where
-  codec = dimapCodec Stripe.Amount (\(Stripe.Amount a) -> a) codec
-
-instance ToJSON Stripe.Amount where
-  toJSON = toJSONViaCodec
-  toEncoding = toEncodingViaCodec
-
-instance FromJSON Stripe.Amount where
-  parseJSON = parseJSONViaCodec
 
 instance HasCodec LogLevel where
   codec =

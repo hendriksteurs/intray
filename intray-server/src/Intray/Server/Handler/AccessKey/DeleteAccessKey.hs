@@ -16,5 +16,5 @@ import Servant
 
 serveDeleteAccessKey :: AuthCookie -> AccessKeyUUID -> IntrayHandler NoContent
 serveDeleteAccessKey AuthCookie {..} uuid = do
-  runDB $ deleteWhere [AccessKeyIdentifier ==. uuid]
+  runDB $ deleteBy $ UniqueAccessKeyIdentifier uuid authCookieUserUUID
   pure NoContent

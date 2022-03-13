@@ -1,6 +1,6 @@
 { sources ? import ./sources.nix
 , pkgs ? import ./pkgs.nix { inherit sources; }
-, intrayPackages ? pkgs.intrayPackages
+, intrayReleasePackages ? pkgs.intrayReleasePackages
 , envname
 }:
 { lib, pkgs, config, ... }:
@@ -75,6 +75,16 @@ in
                         type = types.str;
                         example = "pk_test_XXXXXXXXXXXXXXXXXXXXXXXX";
                         description = "Stripe publishable key.";
+                      };
+                      max-items-free = mkOption {
+                        type = types.int;
+                        example = 5;
+                        description = "Maximum number of items a user can use without a subscription";
+                      };
+                      price = mkOption {
+                        type = types.str;
+                        example = "12 CHF";
+                        description = "Display price";
                       };
                     };
                   }
@@ -157,7 +167,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${pkgs.haskell.lib.justStaticExecutables intrayPackages.intray-server}/bin/intray-server
+              ${intrayReleasePackages.intray-server}/bin/intray-server
             '';
           serviceConfig =
             {
@@ -202,7 +212,7 @@ in
             ''
               mkdir -p "${workingDir}"
               cd "${workingDir}"
-              ${pkgs.haskell.lib.justStaticExecutables intrayPackages.intray-web-server}/bin/intray-web-server
+              ${intrayReleasePackages.intray-web-server}/bin/intray-web-server
             '';
           serviceConfig =
             {

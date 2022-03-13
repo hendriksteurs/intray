@@ -27,5 +27,5 @@ runSingleClient func = do
         liftIO $
           do
             man <- newManager tlsManagerSettings
-            let env = ClientEnv man burl Nothing
+            let env = mkClientEnv man burl
             runClientM func env

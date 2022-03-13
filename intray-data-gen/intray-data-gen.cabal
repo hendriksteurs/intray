@@ -1,24 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           intray-data-gen
 version:        0.0.0.0
 synopsis:       Generators for intray-data
-category:       Intray
-homepage:       https://github.com/NorfairKing/intray-server#readme
-bug-reports:    https://github.com/NorfairKing/intray-server/issues
-author:         Tom Sydney Kerckhove
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2017-2018 Tom Sydney Kerckhove
-license:        AllRightsReserved
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray-server
 
 library
   exposed-modules:
@@ -28,7 +17,6 @@ library
       Paths_intray_data_gen
   hs-source-dirs:
       src
-  ghc-options: -Wall
   build-depends:
       QuickCheck
     , base >=4.7 && <5

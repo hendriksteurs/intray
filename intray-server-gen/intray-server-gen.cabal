@@ -1,26 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           intray-server-gen
 version:        0.0.0.0
 synopsis:       Test utils for intray-server
-description:    Please see README.md
-category:       Intray
-homepage:       https://github.com/NorfairKing/intray-server#readme
-bug-reports:    https://github.com/NorfairKing/intray-server/issues
-author:         Tom Sydney Kerckhove
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2016 Tom Sydney Kerckhove
-license:        AllRightsReserved
-license-file:   LICENSE
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray-server
 
 library
   exposed-modules:
@@ -30,12 +17,10 @@ library
       Paths_intray_server_gen
   hs-source-dirs:
       src
-  ghc-options: -Wall
   build-depends:
       QuickCheck >=2.9
     , base
     , bytestring >=0.10
-    , cache
     , containers
     , cookie >=0.4
     , genvalidity-bytestring
@@ -62,7 +47,6 @@ library
     , servant-auth-server
     , servant-client
     , servant-server
-    , stripe-core
     , sydtest
     , sydtest-persistent-sqlite
     , sydtest-wai
@@ -135,7 +119,7 @@ benchmark intray-server-bench
       Paths_intray_server_gen
   hs-source-dirs:
       bench
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -fno-warn-name-shadowing
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       QuickCheck
     , base

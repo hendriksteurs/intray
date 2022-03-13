@@ -4,6 +4,16 @@ with final.haskell.lib;
 
 let
   sources = import ./sources.nix;
+
+
+  generateOpenAPIClient = import (sources.openapi-code-generator + "/nix/generate-client.nix") { pkgs = final; };
+  generatedStripe = generateOpenAPIClient {
+    name = "stripe-client";
+    configFile = ../stripe-client-gen.yaml;
+    src = sources.stripe-spec + "/openapi/spec3.yaml";
+  };
+  generatedStripeCode = generatedStripe.code;
+
 in
 {
   intrayPackages =
@@ -131,27 +141,22 @@ in
                 ln -s ${icons-woff2} static/semantic/themes/default/assets/fonts/icons.woff2
                 ln -s ${intrayAndroidRelease} static/intray.apk
               '';
-            postInstall =
-              let
-                linkcheck = (import sources.linkcheck).linkcheck;
-                seocheck = (import sources.seocheck).seocheck;
-              in
-              ''
-                ${old.postInstall or ""}
+            postInstall = ''
+              ${old.postInstall or ""}
 
-                export INTRAY_WEB_SERVER_API_URL=http://localhost:8000 # dummy
+              export INTRAY_WEB_SERVER_API_URL=http://localhost:8000 # dummy
 
-                ${final.intrayPackages.intray-server}/bin/intray-server --port 8000 &
-                $out/bin/intray-web-server --port 8080 &
+              ${final.intrayPackages.intray-server}/bin/intray-server --port 8000 &
+              $out/bin/intray-web-server --port 8080 &
 
-                sleep 0.5
+              sleep 0.5
 
-                ${linkcheck}/bin/linkcheck http://localhost:8080
-                ${seocheck}/bin/seocheck http://localhost:8080
+              ${final.linkcheck}/bin/linkcheck http://localhost:8080
+              ${final.seocheck}/bin/seocheck http://localhost:8080
 
-                ${final.killall}/bin/killall intray-web-server
-                ${final.killall}/bin/killall intray-server
-              '';
+              ${final.killall}/bin/killall intray-web-server
+              ${final.killall}/bin/killall intray-server
+            '';
           }
         );
     };
@@ -168,6 +173,9 @@ in
     };
 
   intrayNotification = import ./notification.nix { pkgs = final; };
+
+  inherit generatedStripeCode;
+
   haskellPackages =
     previous.haskellPackages.override (
       old:
@@ -175,62 +183,12 @@ in
         overrides =
           composeExtensions (old.overrides or (_: _: { })) (
             self: super:
-              let
-                stripeHaskellRepo =
-                  final.fetchFromGitHub {
-                    owner = "NorfairKing";
-                    repo = "stripe";
-                    rev = "008e992cae9c9bdb025bcf575c1bdf1037632a8a";
-                    sha256 =
-                      "sha256:1sxp8phdw1ahndy6h9q4ad0hdfraxyy5qnjd7w80v6m83py419gk";
-                  };
-                yesodStaticRemoteRepo =
-                  final.fetchFromGitHub {
-                    owner = "NorfairKing";
-                    repo = "yesod-static-remote";
-                    rev = "22c0a92c1d62f1b8d432003844ef0636a9131b08";
-                    sha256 =
-                      "sha256:1mz1fb421wccx7mbpn9qaj214w4sl4qali5rclx9fqp685jkfj05";
-                  };
-                servantAuthRepo =
-                  final.fetchFromGitHub {
-                    owner = "haskell-servant";
-                    repo = "servant-auth";
-                    rev = "23971e889f8cbe8790305bda8915f00aa8be5ad9";
-                    sha256 =
-                      "sha256:0q1n0s126ywqw3g9xiiaw59s9jn2543v7p4zgxw99p68pihdlysv";
-                  };
-                stripeHaskellPkg =
-                  name:
-                  dontCheck (
-                    self.callCabal2nix name (stripeHaskellRepo + "/${name}") { }
-                  );
-                servantAuthPkg =
-                  name:
-                  doJailbreak (
-                    self.callCabal2nix name (servantAuthRepo + "/${name}") { }
-                  );
-              in
               {
-                yesod-static-remote = dontCheck (self.callCabal2nix "yesod-static-remote" yesodStaticRemoteRepo { });
-                servant-auth-server = doJailbreak (super.servant-auth-server);
-                looper = self.callCabal2nix "looper" (sources.looper + "/looper") { };
+                yesod-static-remote = dontCheck (self.callCabal2nix "yesod-static-remote" sources.yesod-static-remote { });
                 envparse = self.callHackage "envparse" "0.4.1" { };
                 yesod-autoreload = self.callCabal2nix "yesod-autoreload" sources.yesod-autoreload { };
-              } // genAttrs [
-                "stripe-core"
-                "stripe-haskell"
-                "stripe-http-client"
-                "stripe-http-streams"
-              ]
-                stripeHaskellPkg // genAttrs [
-                "servant-auth"
-                "servant-auth-client"
-                "servant-auth-docs"
-                "servant-auth-swagger"
-                "servant-auth-server"
-              ]
-                servantAuthPkg // final.intrayPackages
+                stripe-client = generatedStripe.package;
+              } // final.intrayPackages
           );
       }
     );

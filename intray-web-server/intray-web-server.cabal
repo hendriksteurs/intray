@@ -25,7 +25,6 @@ library
       Intray.Web.Server.Handler.Home
       Intray.Web.Server.Handler.ImageItem
       Intray.Web.Server.Handler.IncompletionList
-      Intray.Web.Server.Handler.Pricing
       Intray.Web.Server.Handler.Process
       Intray.Web.Server.OptParse
       Intray.Web.Server.OptParse.Types
@@ -39,7 +38,6 @@ library
       src
   default-extensions:
       NoImplicitPrelude
-  ghc-options: -Wall
   build-depends:
       aeson
     , aeson-pretty
@@ -75,8 +73,6 @@ library
     , servant-auth-client
     , servant-client
     , shakespeare
-    , stripe-core
-    , stripe-haskell
     , template-haskell
     , text
     , time

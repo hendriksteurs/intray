@@ -7,9 +7,6 @@ import Control.Monad.Logger
 import Database.Persist.Sqlite
 import Import
 import Intray.API
-import Looper
-import qualified Web.Stripe.Client as Stripe
-import qualified Web.Stripe.Types as Stripe
 
 data Flags = Flags
   { flagConfigFile :: !(Maybe FilePath),
@@ -23,9 +20,8 @@ data Flags = Flags
     flagStripePlan :: !(Maybe String),
     flagStripeSecretKey :: !(Maybe String),
     flagStripePublishableKey :: !(Maybe String),
-    flagLooperStripeEventsFetcher :: LooperFlags,
-    flagLooperStripeEventsRetrier :: LooperFlags,
-    flagMaxItemsFree :: !(Maybe Int)
+    flagMaxItemsFree :: !(Maybe Int),
+    flagPrice :: !(Maybe Text)
   }
   deriving (Show, Eq)
 
@@ -58,9 +54,8 @@ data MonetisationConfiguration = MonetisationConfiguration
   { monetisationConfStripePlan :: !(Maybe String),
     monetisationConfStripeSecretKey :: !(Maybe String),
     monetisationConfStripePublishableKey :: !(Maybe String),
-    monetisationConfStripeEventsFetcher :: !(Maybe LooperConfiguration),
-    monetisationConfStripeEventsRetrier :: !(Maybe LooperConfiguration),
-    monetisationConfMaxItemsFree :: !(Maybe Int)
+    monetisationConfMaxItemsFree :: !(Maybe Int),
+    monetisationConfPrice :: !(Maybe Text)
   }
   deriving (Show, Eq)
 
@@ -74,9 +69,8 @@ instance HasCodec MonetisationConfiguration where
           .= monetisationConfStripePlan
         <*> optionalFieldOrNull "stripe-secret-key" "The secret key for calling the stripe api" .= monetisationConfStripeSecretKey
         <*> optionalFieldOrNull "stripe-publishable-key" "The publishable key for calling the stripe api" .= monetisationConfStripePublishableKey
-        <*> optionalFieldOrNull "events-fetcher" "The configuration for the stripe events fetcher" .= monetisationConfStripeEventsFetcher
-        <*> optionalFieldOrNull "events-retrier" "The configuration for the stripe events fetcher" .= monetisationConfStripeEventsRetrier
         <*> optionalFieldOrNull "max-items-free" "The number of items a free user can have on the server" .= monetisationConfMaxItemsFree
+        <*> optionalFieldOrNull "price" "A string description of the price" .= monetisationConfPrice
 
 data Environment = Environment
   { envConfigFile :: !(Maybe FilePath),
@@ -88,9 +82,8 @@ data Environment = Environment
     envStripePlan :: !(Maybe String),
     envStripeSecretKey :: !(Maybe String),
     envStripePublishableKey :: !(Maybe String),
-    envLooperStripeEventsFetcher :: LooperEnvironment,
-    envLooperStripeEventsRetrier :: LooperEnvironment,
-    envMaxItemsFree :: !(Maybe Int)
+    envMaxItemsFree :: !(Maybe Int),
+    envPrice :: !(Maybe Text)
   }
   deriving (Show, Eq)
 
@@ -108,15 +101,14 @@ data Settings = Settings
 
 data MonetisationSettings = MonetisationSettings
   { monetisationSetStripeSettings :: !StripeSettings,
-    monetisationSetStripeEventsFetcher :: LooperSettings,
-    monetisationSetStripeEventsRetrier :: LooperSettings,
-    monetisationSetMaxItemsFree :: !Int
+    monetisationSetMaxItemsFree :: !Int,
+    monetisationSetPrice :: !Text
   }
   deriving (Show)
 
 data StripeSettings = StripeSettings
-  { stripeSetPlan :: !Stripe.PlanId,
-    stripeSetStripeConfig :: Stripe.StripeConfig,
-    stripeSetPublishableKey :: Text
+  { stripeSetPlan :: !Text, -- Stripe plan id
+    stripeSetSecretKey :: Text, -- FIXME: Must be lazy for tests.
+    stripeSetPublishableKey :: !Text
   }
   deriving (Show)

@@ -54,7 +54,8 @@ intrayProtectedAccountServer =
     { getAccountInfo = withAuthResultAndPermission PermitGetAccountInfo serveGetAccountInfo,
       postChangePassphrase =
         withAuthResultAndPermission PermitPostChangePassphrase servePostChangePassphrase,
-      deleteAccount = withAuthResultAndPermission PermitDeleteAccount serveDeleteAccount
+      deleteAccount = withAuthResultAndPermission PermitDeleteAccount serveDeleteAccount,
+      postInitiateStripeCheckoutSession = withAuthResultAndPermission PermitInitiateCheckout servePostInitiateStripeCheckoutSession
     }
 
 intrayProtectedAccessKeyServer :: IntrayProtectedAccessKeySite (AsServerT IntrayHandler)
@@ -81,7 +82,8 @@ intrayPublicServer =
   IntrayPublicSite
     { postRegister = servePostRegister,
       postLogin = servePostLogin,
-      getPricing = serveGetPricing
+      getPricing = serveGetPricing,
+      postStripeHook = servePostStripeHook
     }
 
 withAuthResult :: ThrowAll a => (AuthCookie -> a) -> (AuthResult AuthCookie -> a)

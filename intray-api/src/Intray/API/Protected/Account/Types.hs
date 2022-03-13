@@ -88,3 +88,35 @@ instance HasCodec ChangePassphrase where
       ChangePassphrase
         <$> requiredField "old-passphrase" "old passphrase" .= changePassphraseOld
         <*> requiredField "new-passphrase" "new passphrase" .= changePassphraseNew
+
+data InitiateStripeCheckoutSession = InitiateStripeCheckoutSession
+  { initiateStripeCheckoutSessionSuccessUrl :: Text,
+    initiateStripeCheckoutSessionCanceledUrl :: Text
+  }
+  deriving stock (Show, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec InitiateStripeCheckoutSession)
+
+instance Validity InitiateStripeCheckoutSession
+
+instance HasCodec InitiateStripeCheckoutSession where
+  codec =
+    object "InitiateStripeCheckoutSession" $
+      InitiateStripeCheckoutSession
+        <$> requiredField "success" "success url" .= initiateStripeCheckoutSessionSuccessUrl
+        <*> requiredField "canceled" "canceled url" .= initiateStripeCheckoutSessionCanceledUrl
+
+data InitiatedCheckoutSession = InitiatedCheckoutSession
+  { initiatedCheckoutSessionId :: Text,
+    initiatedCheckoutSessionCustomerId :: Maybe Text
+  }
+  deriving stock (Show, Eq, Generic)
+  deriving (FromJSON, ToJSON) via (Autodocodec InitiatedCheckoutSession)
+
+instance Validity InitiatedCheckoutSession
+
+instance HasCodec InitiatedCheckoutSession where
+  codec =
+    object "InitiatedCheckoutSession" $
+      InitiatedCheckoutSession
+        <$> requiredField "session" "session identifier" .= initiatedCheckoutSessionId
+        <*> optionalField "customer" "customer identifier" .= initiatedCheckoutSessionCustomerId

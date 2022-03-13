@@ -24,13 +24,13 @@ sync =
         case errOrClientStore of
           Left err -> liftIO $ die $ unlines ["Sync failed:", show err]
           Right resp -> do
-            liftIO $ putStr $ showMergeStats req resp
+            liftIO $ putStr $ showMergeStats resp
             let after = mergeSyncResponse before resp
             anyUnsyncedWarning after
             pure after
 
-showMergeStats :: SyncRequest ci si a -> SyncResponse ci si a -> String
-showMergeStats SyncRequest {..} SyncResponse {..} =
+showMergeStats :: SyncResponse ci si a -> String
+showMergeStats SyncResponse {..} =
   unlines
     [ unwords [show $ length syncResponseServerAdded, "added   remotely"],
       unwords [show $ length syncResponseServerDeleted, "deleted remotely"],

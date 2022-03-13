@@ -1,25 +1,13 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 
 name:           intray-cli
 version:        0.0.0.0
-synopsis:       A command line interface for the intray app.
-description:    Please see README.md
 category:       Intray
-homepage:       https://github.com/NorfairKing/intray-cli#readme
-bug-reports:    https://github.com/NorfairKing/intray-cli/issues
-author:         Tom Sydney Kerckhove & Nick Van den Broeck
-maintainer:     syd.kerckhove@gmail.com
-copyright:      Copyright: (c) 2017-2018 Tom Sydney Kerckhove
-license:        AllRightsReserved
 build-type:     Simple
-
-source-repository head
-  type: git
-  location: https://github.com/NorfairKing/intray-cli
 
 library
   exposed-modules:
@@ -50,7 +38,6 @@ library
       src/
   default-extensions:
       NoImplicitPrelude
-  ghc-options: -Wall
   build-depends:
       aeson >=1.0
     , aeson-pretty >=0.8

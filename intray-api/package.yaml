@@ -1,12 +1,6 @@
 name: intray-api
 version: '0.0.0.0'
 synopsis: Intray API
-category: Intray
-author: Tom Sydney Kerckhove
-maintainer: syd.kerckhove@gmail.com
-copyright: ! 'Copyright: (c) 2016-2018 Tom Sydney Kerckhove'
-license: AllRightsReserved
-github: NorfairKing/intray
 default-extensions:
 - NoImplicitPrelude
 
@@ -35,7 +29,6 @@ library:
   - servant-auth
   - servant-auth-server
   - servant-blaze
-  - stripe-core
   - text
   - time
   - typed-uuid

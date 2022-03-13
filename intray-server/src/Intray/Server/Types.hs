@@ -4,17 +4,19 @@ module Intray.Server.Types
   )
 where
 
-import Data.Cache
+import Control.Monad.Logger
 import Database.Persist.Sqlite
 import Import
 import Intray.API
 import Intray.Server.OptParse.Types
 import Servant
 import Servant.Auth.Server
-import Web.Stripe.Plan as Stripe
+
+type LF = Loc -> LogSource -> LogLevel -> LogStr -> IO ()
 
 data IntrayServerEnv = IntrayServerEnv
-  { envHost :: Text,
+  { envHost :: !Text,
+    envLogFunc :: !LF,
     envConnectionPool :: !ConnectionPool,
     envCookieSettings :: !CookieSettings,
     envJWTSettings :: !JWTSettings,
@@ -26,7 +28,7 @@ data IntrayServerEnv = IntrayServerEnv
 data MonetisationEnv = MonetisationEnv
   { monetisationEnvStripeSettings :: StripeSettings,
     monetisationEnvMaxItemsFree :: !Int,
-    monetisationEnvPlanCache :: !(Cache Stripe.PlanId Stripe.Plan)
+    monetisationEnvPrice :: !Text
   }
 
-type IntrayHandler = ReaderT IntrayServerEnv Handler
+type IntrayHandler = ReaderT IntrayServerEnv (LoggingT Handler)

@@ -6,7 +6,7 @@
 }:
 
 let
-  cli = pkgs.haskell.lib.justStaticExecutables pkgs.intrayPackages.intray-cli;
+  cli = pkgs.intrayReleasePackages.intray-cli;
 in
 pkgs.writeShellScript "intray-notification" ''
   set -eou pipefail

@@ -1,18 +1,9 @@
 name: intray-server-gen
 version: '0.0.0.0'
 synopsis: Test utils for intray-server
-description: Please see README.md
-category: Intray
-author: Tom Sydney Kerckhove
-maintainer: syd.kerckhove@gmail.com
-copyright: ! 'Copyright: (c) 2016 Tom Sydney Kerckhove'
-license: AllRightsReserved
-github: NorfairKing/intray-server
 
 library:
   source-dirs: src
-  ghc-options: -Wall
-
   dependencies:
   - QuickCheck >=2.9
   - base
@@ -22,7 +13,6 @@ library:
   - genvalidity-bytestring
   - genvalidity-containers
   - genvalidity-sydtest
-  - cache
   - genvalidity-mergeless
   - genvalidity-text
   - genvalidity-time
@@ -44,7 +34,6 @@ library:
   - servant-auth-server
   - servant-client
   - servant-server
-  - stripe-core
   - sydtest
   - sydtest-persistent-sqlite
   - sydtest-wai
@@ -98,8 +87,6 @@ benchmarks:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
-    - -Wall
-    - -fno-warn-name-shadowing
     dependencies:
     - QuickCheck
     - base
