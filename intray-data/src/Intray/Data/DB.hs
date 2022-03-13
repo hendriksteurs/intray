@@ -46,9 +46,9 @@ User
     deriving Generic
 
 
-StripeCustomer
+StripeCustomer sql=customer
     user AccountUUID
-    customer Stripe.CustomerId
+    customer Stripe.CustomerId sql=stripe_customer
     UniqueStripeCustomer user customer
 
     deriving Show
