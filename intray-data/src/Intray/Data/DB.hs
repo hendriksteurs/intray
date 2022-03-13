@@ -1,5 +1,7 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingStrategies #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -23,9 +25,7 @@ import Intray.Data.Import
 import Intray.Data.ItemType
 import Intray.Data.ItemUUID
 import Intray.Data.Permission
-import Intray.Data.Stripe ()
 import Intray.Data.Username
-import qualified Web.Stripe.Types as Stripe
 
 share
   [mkPersist sqlSettings, mkMigrate "migrateAll"]
